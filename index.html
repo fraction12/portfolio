@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dushyant Garg — Product Manager · Builder · Ships AI Tools</title>
+<meta name="description" content="Dushyant Garg — Product Manager, Builder, shipping AI tools for the agent ecosystem.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0a;
+  --accent: #6366f1;
+  --accent-dim: rgba(99,102,241,0.15);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.12);
+  --text: #e4e4e4;
+  --dim: #888;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(99,102,241,0.35);
+  --card-bg: rgba(255,255,255,0.025);
+  --gutter: 2rem;
+  --max-w: 1000px;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--amber), var(--accent));
+  z-index: 1000;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px var(--amber);
+}
+
+/* ============================================================
+   NOISE TEXTURE OVERLAY
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ============================================================
+   ANIMATED MESH BACKGROUND — 4 layers
+   ============================================================ */
+.mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mesh-layer {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.mesh-layer-1 {
+  width: 60vw; height: 60vw;
+  top: -15%; left: -10%;
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+  animation: mesh1 22s ease-in-out infinite alternate;
+}
+.mesh-layer-2 {
+  width: 50vw; height: 50vw;
+  bottom: 10%; right: -10%;
+  background: radial-gradient(circle, rgba(245,158,11,0.09) 0%, transparent 70%);
+  animation: mesh2 28s ease-in-out infinite alternate;
+}
+.mesh-layer-3 {
+  width: 40vw; height: 40vw;
+  top: 40%; left: 30%;
+  background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+  animation: mesh3 18s ease-in-out infinite alternate;
+}
+.mesh-layer-4 {
+  width: 35vw; height: 35vw;
+  bottom: 30%; left: 5%;
+  background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%);
+  animation: mesh4 32s ease-in-out infinite alternate;
+}
+
+@keyframes mesh1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(5%, 8%) scale(1.08); }
+  66%  { transform: translate(-3%, 12%) scale(0.95); }
+  100% { transform: translate(8%, 5%) scale(1.05); }
+}
+@keyframes mesh2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-8%, -6%) scale(1.1); }
+  100% { transform: translate(5%, 10%) scale(0.93); }
+}
+@keyframes mesh3 {
+  0%   { transform: translate(0, 0) scale(1); }
+  40%  { transform: translate(10%, -5%) scale(1.15); }
+  100% { transform: translate(-8%, 8%) scale(0.9); }
+}
+@keyframes mesh4 {
+  0%   { transform: translate(0, 0) scale(1); }
+  60%  { transform: translate(6%, -10%) scale(1.12); }
+  100% { transform: translate(-5%, 5%) scale(1.04); }
+}
+
+/* ============================================================
+   CURSOR GLOW
+   ============================================================ */
+#cursor-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--cx, -999px) var(--cy, -999px),
+    rgba(99,102,241,0.06) 0%,
+    transparent 60%
+  );
+  transition: background 0.15s ease;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 0;
+}
+
+section.connect {
+  min-height: 60vh;
+}
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(99,102,241,0.4) 30%,
+    rgba(245,158,11,0.3) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 4s linear infinite;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ============================================================
+   SECTION HEADINGS
+   ============================================================ */
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  letter-spacing: -0.025em;
+}
+h2 .dot { color: var(--accent); }
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   NAVIGATION DOTS
+   ============================================================ */
+#nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border: none;
+  outline: none;
+}
+.nav-dot::before {
+  content: attr(data-label);
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  color: var(--dim);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.nav-dot:hover::before { opacity: 1; }
+.nav-dot:hover {
+  background: rgba(255,255,255,0.4);
+  transform: scale(1.3);
+}
+.nav-dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(99,102,241,0.4);
+  transform: scale(1.2);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+}
+
+.hero-name {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 0.6rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+.hero-name .accent { color: var(--accent); }
+
+.hero-title {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--dim);
+  font-weight: 400;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+}
+
+.hero-typing-line {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: heroFadeIn 0.5s ease 0.65s forwards;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: var(--amber);
+  min-height: 1.6em;
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--amber);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+  flex-shrink: 0;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  opacity: 0;
+  animation: heroFadeIn 0.5s ease 0.95s forwards;
+}
+
+.hero-link {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.45rem 1.1rem;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.hero-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(245,158,11,0.05));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.hero-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(99,102,241,0.2);
+}
+.hero-link:hover::before { opacity: 1; }
+
+@keyframes heroFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFadeIn {
+  to { opacity: 1; }
+}
+
+/* ============================================================
+   PROJECT CARDS
+   ============================================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  cursor: pointer;
+  perspective: 1000px;
+  --mx: 50%;
+  --my: 50%;
+}
+
+/* Inner wrapper does the actual 3D flip */
+.card-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Glassmorphism hover glow follows mouse */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(
+    200px circle at var(--mx) var(--my),
+    rgba(99,102,241,0.08) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.15), 0 16px 48px rgba(99,102,241,0.12);
+}
+.card:hover::before { opacity: 1; }
+.card.flipped::before { display: none; }
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.card .desc {
+  color: var(--dim);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.55;
+  flex: 1;
+}
+.card-featured .desc {
+  flex: unset;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.pill {
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 0.18rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.pill.amber {
+  background: var(--amber-dim);
+  color: var(--amber);
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: #555;
+}
+
+/* Featured Card */
+.card-featured {
+  grid-column: 1 / -1;
+  padding: 2rem;
+}
+.featured-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+.card-featured h3 { font-size: 1.4rem; }
+.card-featured .desc { font-size: 0.95rem; margin-bottom: 1.2rem; }
+
+/* Featured visual area with floating particles */
+.card-visual {
+  text-decoration: none;
+  position: relative;
+  background: rgba(245,158,11,0.04);
+  border-radius: 16px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(245,158,11,0.12);
+  overflow: hidden;
+}
+
+.card-visual-emoji {
+  font-size: 4rem;
+  animation: emojiPulse 2.8s ease-in-out infinite;
+  z-index: 2;
+  position: relative;
+}
+@keyframes emojiPulse {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%       { transform: scale(1.08) translateY(-6px); }
+}
+
+/* Floating particles in featured card */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--amber);
+  pointer-events: none;
+  animation: floatParticle var(--dur, 4s) ease-in-out infinite var(--delay, 0s);
+  opacity: 0;
+}
+@keyframes floatParticle {
+  0%   { transform: translate(0, 0) scale(0); opacity: 0; }
+  20%  { opacity: 0.5; }
+  80%  { opacity: 0.3; }
+  100% { transform: translate(var(--tx, 20px), var(--ty, -40px)) scale(0); opacity: 0; }
+}
+
+/* ============================================================
+   WRITING
+   ============================================================ */
+.writing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.writing-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.3rem 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.3s, transform 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient underline slide */
+.writing-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--amber));
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.writing-item:hover::after { width: 100%; }
+.writing-item:hover {
+  border-color: rgba(99,102,241,0.25);
+  transform: translateX(6px);
+}
+
+.writing-item h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+.writing-item .date {
+  color: var(--dim);
+  font-size: 0.82rem;
+}
+.writing-arrow {
+  color: var(--dim);
+  font-size: 1.1rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+  flex-shrink: 0;
+}
+.writing-item:hover .writing-arrow {
+  transform: translate(6px, -2px);
+  color: var(--accent);
+}
+.writing-item.coming-soon { opacity: 0.5; cursor: default; }
+.writing-item.coming-soon:hover { transform: none; }
+.writing-item.coming-soon::after { display: none; }
+.coming-soon-badge {
+  font-size: 0.7rem;
+  background: var(--amber-dim);
+  color: var(--amber);
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* ============================================================
+   NOW CARDS
+   ============================================================ */
+/* ── Now: Terminal Style ── */
+.now-terminal {
+  background: rgba(10,10,10,0.8);
+  border: 1px solid rgba(99,102,241,0.15);
+  border-radius: 14px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.now-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.now-terminal-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.now-terminal-dot.r { background: #ff5f57; }
+.now-terminal-dot.y { background: #febc2e; }
+.now-terminal-dot.g { background: #28c840; }
+.now-terminal-header span {
+  margin-left: 0.6rem;
+  color: rgba(255,255,255,0.3);
+  font-size: 0.72rem;
+}
+.now-terminal-body {
+  padding: 1.2rem 1.4rem;
+  overflow: hidden;
+}
+.now-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5ch;
+  margin-bottom: 0.15rem;
+}
+.now-line.spacer { margin-bottom: 0.6rem; }
+.now-prompt { color: var(--accent); }
+.now-cmd { color: var(--amber); }
+.now-flag { color: rgba(255,255,255,0.35); }
+.now-val { color: #e2e8f0; }
+.now-comment { color: rgba(255,255,255,0.2); font-style: italic; }
+.now-tag-pill {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 20px;
+  background: rgba(99,102,241,0.12);
+  color: rgba(255,255,255,0.45);
+  font-size: 0.7rem;
+  border: 1px solid rgba(99,102,241,0.15);
+  margin-right: 0.3rem;
+}
+.now-status-active {
+  color: #28c840;
+}
+.now-status-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #28c840;
+  margin-right: 0.3rem;
+  animation: statusPulse 2s ease-in-out infinite;
+}
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(40,200,64,0.4); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(40,200,64,0); }
+}
+/* Cursor blink on last line */
+.now-cursor {
+  display: inline-block;
+  width: 7px; height: 1.1em;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: cursorBlink 1s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+/* Subtle scanline overlay */
+.now-terminal-body::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.008) 2px,
+    rgba(255,255,255,0.008) 4px
+  );
+}
+.now-terminal-body { position: relative; }
+/* Divider between entries */
+.now-divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin: 0.7rem 0;
+}
+
+/* ============================================================
+   CONNECT
+   ============================================================ */
+.connect {
+  text-align: center;
+}
+
+.connect-subtitle {
+  color: var(--dim);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.connect-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.connect-link {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.6rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple effect */
+.connect-link::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--amber));
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+.connect-link::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: none;
+}
+.connect-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: rgba(99,102,241,0.08);
+  box-shadow: 0 0 20px rgba(99,102,241,0.15), 0 4px 16px rgba(0,0,0,0.3);
+  transform: translateY(-3px);
+}
+.connect-link.ripple::after {
+  animation: rippleAnim 0.6s ease-out forwards;
+}
+@keyframes rippleAnim {
+  to { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  text-align: center;
+  padding: 2.5rem 0;
+  color: #333;
+  font-size: 0.78rem;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   STATS COUNTER
+   ============================================================ */
+.stat-counter {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   LOBSTER MODE BUTTON
+   ============================================================ */
+#lobster-mode-btn {
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #666;
+  padding: 0.5rem 1.2rem;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ============================================================
+   PREFERS REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+  .mesh-layer { animation: none; }
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  :root { --gutter: 1.25rem; }
+
+  section { padding: 4rem 0; min-height: auto; }
+
+  .hero-name { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+
+  .projects-grid { grid-template-columns: 1fr; }
+  .card-featured { grid-column: auto; }
+  .featured-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+  .card-visual { height: 120px; }
+
+  .now-terminal { font-size: 0.75rem; }
+  .now-terminal-body { padding: 1rem; }
+
+  #nav-dots { display: none; }
+
+  .writing-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+  .connect-links { flex-direction: column; align-items: center; }
+  .connect-link { width: 180px; }
+}
+
+/* ============================================================
+   CARD FLIP — 3D TRANSFORM
+   ============================================================ */
+.card-front {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 15px;
+}
+.card-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  background: #0f0f17;
+  border: none;
+  border-radius: 15px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.9rem;
+  overflow: hidden;
+}
+.card-featured .card-back { padding: 2rem; }
+.card-back p {
+  color: #999;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  font-style: italic;
+  margin: 0;
+}
+/* Ensure non-featured cards match heights in their row */
+.projects-grid .card:not(.card-featured) {
+  min-height: 220px;
+}
+
+#projects {
+  min-height: auto;
+}
+
+.stats {
+  min-height: 1.4rem;
+}
+.projects-grid .card:not(.card-featured) .card-back {
+  padding: 1.25rem;
+  gap: 0.6rem;
+}
+.card-back h3 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 1.05rem;
+}
+.flip-hint {
+  display: block;
+  font-size: 0.67rem;
+  color: #444;
+  text-align: right;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  user-select: none;
+  letter-spacing: 0.03em;
+}
+.flip-back {
+  font-size: 0.72rem;
+  color: #555;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  user-select: none;
+}
+
+/* ============================================================
+   TIME OF DAY GREETING
+   ============================================================ */
+.time-greeting {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.55rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  opacity: 0;
+  animation: heroFadeIn 0.5s ease 0.5s forwards;
+}
+
+/* Night mode — deeper purples & blues */
+.mesh.night-mode .mesh-layer-1 {
+  background: radial-gradient(circle, rgba(76,29,149,0.17) 0%, transparent 70%);
+}
+.mesh.night-mode .mesh-layer-2 {
+  background: radial-gradient(circle, rgba(30,58,138,0.14) 0%, transparent 70%);
+}
+.mesh.night-mode .mesh-layer-3 {
+  background: radial-gradient(circle, rgba(109,40,217,0.12) 0%, transparent 70%);
+}
+.mesh.night-mode .mesh-layer-4 {
+  background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%);
+}
+
+/* ============================================================
+   SECRET TERMINAL
+   ============================================================ */
+.terminal-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  z-index: 9990;
+  background: #0d0d0d;
+  border-top: 1px solid #333;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+}
+.terminal-overlay.open { transform: translateY(0); }
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.terminal-dot.red    { background: #ff5f57; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green  { background: #28c840; }
+.terminal-header-label {
+  font-size: 0.68rem;
+  color: #444;
+  margin: 0 auto 0 0.4rem;
+}
+.terminal-header-hint { font-size: 0.62rem; color: #2a2a2a; }
+.terminal-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.6rem 1rem;
+  font-size: 0.83rem;
+  color: #22c55e;
+  line-height: 1.65;
+}
+.terminal-output::-webkit-scrollbar { width: 4px; }
+.terminal-output::-webkit-scrollbar-track { background: transparent; }
+.terminal-output::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  border-top: 1px solid #1a1a1a;
+  flex-shrink: 0;
+  gap: 0.5rem;
+}
+.terminal-prompt {
+  color: #22c55e;
+  font-size: 0.83rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  user-select: none;
+}
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #22c55e;
+  font-family: inherit;
+  font-size: 0.83rem;
+  caret-color: #22c55e;
+  min-width: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Cursor Glow -->
+<div id="cursor-glow"></div>
+
+<!-- Mesh Background -->
+<div class="mesh" aria-hidden="true">
+  <div class="mesh-layer mesh-layer-1"></div>
+  <div class="mesh-layer mesh-layer-2"></div>
+  <div class="mesh-layer mesh-layer-3"></div>
+  <div class="mesh-layer mesh-layer-4"></div>
+</div>
+
+<!-- Navigation Dots -->
+<nav id="nav-dots" aria-label="Section navigation">
+  <button class="nav-dot active" data-target="hero"     data-label="Home"     aria-label="Go to Home"></button>
+  <button class="nav-dot"        data-target="projects" data-label="Projects" aria-label="Go to Projects"></button>
+  <button class="nav-dot"        data-target="writing"  data-label="Writing"  aria-label="Go to Writing"></button>
+  <button class="nav-dot"        data-target="now"      data-label="Now"      aria-label="Go to Now"></button>
+  <button class="nav-dot"        data-target="connect"  data-label="Connect"  aria-label="Go to Connect"></button>
+</nav>
+
+<div class="container">
+
+  <!-- ====================================================
+       HERO
+       ==================================================== -->
+  <section id="hero" class="hero">
+    <div>
+      <h1 class="hero-name">Dushyant <span class="accent">Garg</span></h1>
+      <p class="hero-title">Product Manager &nbsp;·&nbsp; Builder &nbsp;·&nbsp; Ships AI Tools</p>
+      <p class="time-greeting" id="time-greeting"></p>
+      <div class="hero-typing-line">
+        <span id="typing-text"></span><span class="cursor"></span>
+      </div>
+      <div class="hero-links">
+        <a class="hero-link" href="https://github.com/fraction12" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="hero-link" href="https://dushyantg.substack.com" target="_blank" rel="noopener">Substack ↗</a>
+        <a class="hero-link" href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="hero-link" href="https://www.npmjs.com/~fraction12" target="_blank" rel="noopener">npm ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ====================================================
+       PROJECTS
+       ==================================================== -->
+  <section id="projects">
+    <h2 class="reveal">Projects<span class="dot">.</span></h2>
+    <div class="projects-grid">
+
+      <!-- Featured: agentrem -->
+      <div class="card card-featured reveal" role="button" tabindex="0" style="--reveal-delay: 0.05s;">
+        <div class="card-inner">
+        <div class="card-front">
+          <div class="featured-inner">
+            <div>
+              <h3>🔔 agentrem</h3>
+              <p class="desc">Structured reminders for AI agents. Persistent, searchable, works across sessions. CLI + MCP server + programmatic API — the memory layer agents actually need.</p>
+              <div class="pills">
+                <span class="pill">TypeScript</span>
+                <span class="pill">SQLite</span>
+                <span class="pill">MCP</span>
+                <span class="pill amber">npm</span>
+              </div>
+              <div class="stats">
+                <span>⭐ <span id="agentrem-stars">—</span></span>
+                <span>✅ <span id="agentrem-tests">—</span> tests</span>
+                <span>📦 v<span id="agentrem-version">—</span></span>
+              </div>
+            </div>
+            <a href="https://github.com/fraction12/agentrem" target="_blank" rel="noopener" class="card-visual" aria-label="agentrem on GitHub">
+              <span class="card-visual-emoji">🔔</span>
+            </a>
+          </div>
+          <span class="flip-hint">click to flip ↺</span>
+        </div>
+        <div class="card-back">
+          <span class="flip-back">← back</span>
+          <h3>🔔 agentrem</h3>
+          <p>Rewrote from Python to TypeScript in one night — 6 versions shipped between midnight and 4am.</p>
+          <p style="margin-top:0.5rem">Learned that docs are the entire go-to-market for MCP tools. If an agent can't figure it out in 10 seconds, it won't use it.</p>
+        </div>
+        </div>
+      </div>
+
+      <!-- ClawK -->
+      <div class="card reveal" role="button" tabindex="0" style="--reveal-delay: 0.10s;">
+        <div class="card-inner">
+        <div class="card-front">
+          <h3>🖥 ClawK</h3>
+          <p class="desc">macOS native companion app for OpenClaw. Menu bar integration, session management, and agent control — right from your menu bar.</p>
+          <div class="pills">
+            <span class="pill">Swift</span>
+            <span class="pill">SwiftUI</span>
+            <span class="pill">macOS</span>
+          </div>
+          <div class="stats"><span>⭐ <span id="clawk-stars">—</span></span></div>
+          <span class="flip-hint">click to flip ↺</span>
+        </div>
+        <div class="card-back">
+          <span class="flip-back">← back</span>
+          <h3>🖥 ClawK</h3>
+          <p>First native app I ever built. SwiftUI just clicks — making something real on your desktop hits different.</p>
+          <p style="margin-top:0.5rem">If your AI is running tasks in the background, you deserve a clean UI to watch it work.</p>
+        </div>
+        </div>
+      </div>
+
+      <!-- TradeSpec AI -->
+      <div class="card reveal" role="button" tabindex="0" style="--reveal-delay: 0.15s;">
+        <div class="card-inner">
+        <div class="card-front">
+          <h3>⚡ TradeSpec AI</h3>
+          <p class="desc">AI bid analyzer for trade contractors. Reads blueprints, generates accurate bids in minutes — not days.</p>
+          <div class="pills">
+            <span class="pill">AI/ML</span>
+            <span class="pill">Node.js</span>
+            <span class="pill amber">SaaS</span>
+          </div>
+          <div class="stats"><span>🏗 In Development</span></div>
+          <span class="flip-hint">click to flip ↺</span>
+        </div>
+        <div class="card-back">
+          <span class="flip-back">← back</span>
+          <h3>⚡ TradeSpec AI</h3>
+          <p>Watched my brother-in-law bid a job by hand — a 0 misread as an 8 could cost thousands.</p>
+          <p style="margin-top:0.5rem">An entire industry on handwritten math. AI fixes that.</p>
+        </div>
+        </div>
+      </div>
+
+      <!-- AgentSense -->
+      <div class="card reveal" role="button" tabindex="0" style="--reveal-delay: 0.20s;">
+        <div class="card-inner">
+        <div class="card-front">
+          <h3>🧠 AgentSense</h3>
+          <p class="desc">Zero-cost knowledge graph for AI agents. FTS5 search, automatic entity extraction — agents that remember everything.</p>
+          <div class="pills">
+            <span class="pill">TypeScript</span>
+            <span class="pill">SQLite</span>
+            <span class="pill">FTS5</span>
+          </div>
+          <div class="stats"><span>⭐ <span id="agentsense-stars">—</span></span></div>
+          <span class="flip-hint">click to flip ↺</span>
+        </div>
+        <div class="card-back">
+          <span class="flip-back">← back</span>
+          <h3>🧠 AgentSense</h3>
+          <p>Started as a "what if?" — an experiment in giving agents real memory.</p>
+          <p style="margin-top:0.5rem">Surprise: the most useful thing it extracted wasn't facts — it was the social graph.</p>
+        </div>
+        </div>
+      </div>
+
+      <!-- agentplan -->
+      <div class="card reveal" role="button" tabindex="0" style="--reveal-delay: 0.25s;">
+        <div class="card-inner">
+        <div class="card-front">
+          <h3>📋 agentplan</h3>
+          <p class="desc">Project planning CLI for AI agents. Tickets, dependencies, progress tracking across sessions — for agents that ship.</p>
+          <div class="pills">
+            <span class="pill">TypeScript</span>
+            <span class="pill">SQLite</span>
+            <span class="pill">CLI</span>
+          </div>
+          <div class="stats"><span>⭐ <span id="agentplan-stars">—</span></span></div>
+          <span class="flip-hint">click to flip ↺</span>
+        </div>
+        <div class="card-back">
+          <span class="flip-back">← back</span>
+          <h3>📋 agentplan</h3>
+          <p>Agents love markdown files — until the project gets big. Then you're just making more markdown and losing track.</p>
+          <p style="margin-top:0.5rem">A simple DB tracker so agents can actually ship across sessions.</p>
+        </div>
+        </div>
+      </div>
+
+      <!-- Chronoblast -->
+      <div class="card reveal" role="button" tabindex="0" style="--reveal-delay: 0.30s;">
+        <div class="card-inner">
+        <div class="card-front">
+          <h3>🎮 Chronoblast</h3>
+          <p class="desc">Roguelike shooter built in Unreal Engine 4. Time-loop narrative, Borderlands-style loot system, procedural levels, three boss fights. College capstone at Full Sail.</p>
+          <div class="pills">
+            <span class="pill">Unreal Engine 4</span>
+            <span class="pill">C++</span>
+            <span class="pill">Game Dev</span>
+          </div>
+          <div class="stats"><span>🎓 Full Sail University</span> <a href="https://chozofs.itch.io/chronoblast" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-size:0.75rem;" onclick="event.stopPropagation()">Play on itch.io ↗</a></div>
+          <span class="flip-hint">click to flip ↺</span>
+        </div>
+        <div class="card-back">
+          <span class="flip-back">← back</span>
+          <h3>🎮 Chronoblast</h3>
+          <p>Programmer and technical designer on a 7-person team. Built the weapon loot system, procedural level generation, and boss fight mechanics in C++.</p>
+          <p style="margin-top:0.5rem">Seven months in Unreal Engine — this is where I learned to ship.</p>
+        </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ====================================================
+       WRITING
+       ==================================================== -->
+  <section id="writing">
+    <h2 class="reveal">Writing<span class="dot">.</span></h2>
+    <div class="writing-list">
+
+      <a class="writing-item reveal" href="https://dushyantg.substack.com/p/silicon-valley-is-spending-billions" target="_blank" rel="noopener" style="--reveal-delay: 0.05s;">
+        <div>
+          <h3>Silicon Valley Is Spending Billions on AI. They're Ignoring a $2.2 Trillion Industry.</h3>
+          <p class="date">February 2026 &nbsp;·&nbsp; Substack</p>
+        </div>
+        <span class="writing-arrow">→</span>
+      </a>
+
+      <a class="writing-item reveal" href="https://dushyantg.substack.com/p/the-taste-for-ai-knowing-when-to" target="_blank" rel="noopener" style="--reveal-delay: 0.1s;">
+        <div>
+          <h3>The Taste for AI — Knowing When to Stop</h3>
+          <p class="date">February 2026 &nbsp;·&nbsp; Substack</p>
+        </div>
+        <span class="writing-arrow">→</span>
+      </a>
+
+      <a class="writing-item reveal" href="https://dushyantg.substack.com/p/i-gave-my-ai-a-voice-and-it-didnt" target="_blank" rel="noopener" style="--reveal-delay: 0.15s;">
+        <div>
+          <h3>I Gave My AI a Voice (And It Didn't Cost Me a Dime)</h3>
+          <p class="date">January 2026 &nbsp;·&nbsp; Substack</p>
+        </div>
+        <span class="writing-arrow">→</span>
+      </a>
+
+      <a class="writing-item reveal" href="https://dushyantg.substack.com/p/beyond-prompts-building-a-self-directing" target="_blank" rel="noopener" style="--reveal-delay: 0.2s;">
+        <div>
+          <h3>Beyond Prompts: Building a Self-Directing AI Development Pipeline</h3>
+          <p class="date">January 2026 &nbsp;·&nbsp; Substack</p>
+        </div>
+        <span class="writing-arrow">→</span>
+      </a>
+
+      <a class="writing-item reveal" href="https://dushyantg.substack.com/p/procrastination-when-does-it-end" target="_blank" rel="noopener" style="--reveal-delay: 0.25s;">
+        <div>
+          <h3>Procrastination: When Does It End?</h3>
+          <p class="date">December 2025 &nbsp;·&nbsp; Substack</p>
+        </div>
+        <span class="writing-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ====================================================
+       NOW
+       ==================================================== -->
+  <section id="now">
+    <h2 class="reveal">Now<span class="dot">.</span></h2>
+    <p class="now-updated reveal" style="--reveal-delay:0.02s; color:#555; font-size:0.8rem; margin-top:-1.5rem; margin-bottom:1.5rem; font-family:'JetBrains Mono',monospace;">Last updated February 2026</p>
+    <div class="now-terminal reveal" style="--reveal-delay: 0.05s;">
+      <div class="now-terminal-header">
+        <div class="now-terminal-dot r"></div>
+        <div class="now-terminal-dot y"></div>
+        <div class="now-terminal-dot g"></div>
+        <span>dushyant — now --status</span>
+      </div>
+      <div class="now-terminal-body">
+
+        <div class="now-line">
+          <span class="now-prompt">$</span>
+          <span class="now-cmd">now</span>
+          <span class="now-flag">--status</span>
+        </div>
+        <div class="now-line spacer"></div>
+
+        <div class="now-line">
+          <span class="now-status-dot"></span>
+          <span class="now-status-active">ACTIVE</span>
+          <span class="now-flag">—</span>
+          <span class="now-val" style="font-weight:600;">Letterhead</span>
+        </div>
+        <div class="now-line">
+          <span class="now-flag">&nbsp;&nbsp;role:</span>
+          <span class="now-val">Product Manager</span>
+        </div>
+        <div class="now-line">
+          <span class="now-flag">&nbsp;&nbsp;focus:</span>
+          <span class="now-val">AI integration · prototyping · shipping product</span>
+        </div>
+        <div class="now-line">
+          <span class="now-flag">&nbsp;&nbsp;stack:</span>
+          <span class="now-tag-pill">Product</span>
+          <span class="now-tag-pill">AI</span>
+          <span class="now-tag-pill">SaaS</span>
+        </div>
+
+        <hr class="now-divider">
+
+        <div class="now-line">
+          <span class="now-status-dot"></span>
+          <span class="now-status-active">ACTIVE</span>
+          <span class="now-flag">—</span>
+          <span class="now-val" style="font-weight:600;">Agentic Tools</span>
+        </div>
+        <div class="now-line">
+          <span class="now-flag">&nbsp;&nbsp;role:</span>
+          <span class="now-val">Creator &amp; Maintainer</span>
+        </div>
+        <div class="now-line">
+          <span class="now-flag">&nbsp;&nbsp;focus:</span>
+          <span class="now-val">Reminders · plans · memory systems for AI agents</span>
+        </div>
+        <div class="now-line">
+          <span class="now-flag">&nbsp;&nbsp;stack:</span>
+          <span class="now-tag-pill">Open Source</span>
+          <span class="now-tag-pill">npm</span>
+          <span class="now-tag-pill">CLI</span>
+          <span class="now-tag-pill">MCP</span>
+        </div>
+
+        <hr class="now-divider">
+
+        <div class="now-line">
+          <span class="now-comment"># 2 active · 0 idle · last updated feb 2026</span>
+        </div>
+        <div class="now-line">
+          <span class="now-prompt">$</span>
+          <span class="now-cursor"></span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ====================================================
+       CONNECT
+       ==================================================== -->
+  <section id="connect" class="connect">
+    <h2 class="reveal">Connect<span class="dot">.</span></h2>
+    <p class="connect-subtitle reveal" style="--reveal-delay: 0.08s;">Building in public. Shipping in the open.</p>
+    <div class="connect-links">
+      <a class="connect-link reveal" href="https://github.com/fraction12" target="_blank" rel="noopener" style="--reveal-delay: 0.08s;">GitHub</a>
+      <a class="connect-link reveal" href="https://dushyantg.substack.com" target="_blank" rel="noopener" style="--reveal-delay: 0.14s;">Substack</a>
+      <a class="connect-link reveal" href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener" style="--reveal-delay: 0.20s;">LinkedIn</a>
+      <a class="connect-link reveal" href="https://www.npmjs.com/~fraction12" target="_blank" rel="noopener" style="--reveal-delay: 0.26s;">npm</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>© 2026 Dushyant Garg &nbsp;·&nbsp; Built with 0 frameworks &amp; a lot of caffeine</p>
+  <button id="lobster-mode-btn" onclick="toggleLobsterMode()">🦞 lobster mode</button>
+</footer>
+
+<!-- Secret Terminal Overlay -->
+<div class="terminal-overlay" id="terminal-overlay" role="dialog" aria-label="Secret Terminal">
+  <div class="terminal-header">
+    <div class="terminal-dot red"></div>
+    <div class="terminal-dot yellow"></div>
+    <div class="terminal-dot green"></div>
+    <span class="terminal-header-label">terminal — visitor@dushyant.dev</span>
+    <span class="terminal-header-hint">` to toggle</span>
+  </div>
+  <div class="terminal-output" id="terminal-output"></div>
+  <div class="terminal-input-row">
+    <span class="terminal-prompt">visitor@dushyant.dev ~ $</span>
+    <input class="terminal-input" id="terminal-input" type="text"
+           autocomplete="off" spellcheck="false"
+           autocorrect="off" autocapitalize="off"
+           aria-label="Terminal input">
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   TYPING EFFECT
+   ============================================================ */
+(function() {
+  const phrases = [
+    "i ship things then write about it",
+    "my AI has a name and a british accent",
+    "npm publish at 3am is self care",
+    "444 tests and counting",
+    "if it's not open source did it even happen",
+    "vibe coding is a legitimate engineering practice"
+  ];
+  const el = document.getElementById('typing-text');
+  if (!el) return;
+
+  let phraseIdx = 0;
+  let charIdx = 0;
+  let deleting = false;
+  let pauseTicks = 0;
+
+  const TYPING_SPEED  = 52;
+  const DELETE_SPEED  = 28;
+  const PAUSE_AFTER   = 48;  // ticks before deleting
+  const PAUSE_EMPTY   = 12;  // ticks after delete before next phrase
+
+  function tick() {
+    const current = phrases[phraseIdx];
+
+    if (deleting) {
+      if (charIdx > 0) {
+        charIdx--;
+        el.textContent = current.slice(0, charIdx);
+        setTimeout(tick, DELETE_SPEED);
+      } else {
+        deleting = false;
+        pauseTicks = PAUSE_EMPTY;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        setTimeout(tick, PAUSE_EMPTY * DELETE_SPEED);
+      }
+    } else {
+      if (pauseTicks > 0) {
+        pauseTicks--;
+        setTimeout(tick, DELETE_SPEED);
+        return;
+      }
+      if (charIdx < current.length) {
+        charIdx++;
+        el.textContent = current.slice(0, charIdx);
+        setTimeout(tick, TYPING_SPEED + (Math.random() * 20 - 10));
+      } else {
+        // Done typing — pause before delete
+        setTimeout(() => { deleting = true; tick(); }, PAUSE_AFTER * TYPING_SPEED);
+      }
+    }
+  }
+
+  // Start after hero animation delay
+  setTimeout(tick, 1100);
+})();
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+(function() {
+  const bar = document.getElementById('progress-bar');
+  if (!bar) return;
+  function update() {
+    const scrollTop = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docH > 0 ? (scrollTop / docH) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* ============================================================
+   CURSOR GLOW
+   ============================================================ */
+(function() {
+  const glow = document.getElementById('cursor-glow');
+  if (!glow) return;
+  let raf;
+  let tx = -999, ty = -999;
+  let cx = -999, cy = -999;
+
+  document.addEventListener('mousemove', (e) => {
+    tx = e.clientX; ty = e.clientY;
+    if (!raf) raf = requestAnimationFrame(render);
+  });
+
+  function render() {
+    cx += (tx - cx) * 0.12;
+    cy += (ty - cy) * 0.12;
+    glow.style.setProperty('--cx', cx + 'px');
+    glow.style.setProperty('--cy', cy + 'px');
+    raf = requestAnimationFrame(render);
+  }
+})();
+
+/* ============================================================
+   CARD MOUSE TRACKING (glassmorphism glow)
+   ============================================================ */
+(function() {
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+    });
+  });
+})();
+
+/* ============================================================
+   SCROLL REVEAL — IntersectionObserver
+   ============================================================ */
+(function() {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const delay = parseFloat(el.style.getPropertyValue('--reveal-delay') || '0') * 1000;
+        setTimeout(() => el.classList.add('visible'), delay);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(el => observer.observe(el));
+})();
+
+/* ============================================================
+   STATS COUNTER
+   ============================================================ */
+(function() {
+  const counters = document.querySelectorAll('.stat-counter');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      observer.unobserve(el);
+
+      // Special: version display (v1.6.0 is stored as data-version)
+      if (el.dataset.version) {
+        // Just show the version string without counting
+        el.textContent = el.dataset.version;
+        return;
+      }
+
+      const target = parseInt(el.dataset.target, 10);
+      const duration = 1400;
+      const start = performance.now();
+
+      function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(el => observer.observe(el));
+})();
+
+/* ============================================================
+   FLOATING PARTICLES — Featured Card
+   ============================================================ */
+(function() {
+  const visual = document.querySelector('.card-visual');
+  if (!visual) return;
+
+  const count = 12;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+
+    const size = 3 + Math.random() * 4;
+    const dur = 3 + Math.random() * 4;
+    const delay = Math.random() * dur;
+    const tx = (Math.random() - 0.5) * 120;
+    const ty = -(30 + Math.random() * 80);
+    const startX = 20 + Math.random() * 60;
+    const startY = 20 + Math.random() * 60;
+
+    p.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${startX}%;
+      top: ${startY}%;
+      --dur: ${dur}s;
+      --delay: ${delay}s;
+      --tx: ${tx}px;
+      --ty: ${ty}px;
+      opacity: 0;
+    `;
+    p.style.animationDelay = `${delay}s`;
+    p.style.animationDuration = `${dur}s`;
+    visual.appendChild(p);
+  }
+})();
+
+/* ============================================================
+   NAVIGATION DOTS — Active Section Tracking
+   ============================================================ */
+(function() {
+  const dots = document.querySelectorAll('.nav-dot');
+  const sectionIds = Array.from(dots).map(d => d.dataset.target);
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        dots.forEach(dot => {
+          dot.classList.toggle('active', dot.dataset.target === id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+})();
+
+/* ============================================================
+   CONNECT LINKS — Ripple
+   ============================================================ */
+(function() {
+  document.querySelectorAll('.connect-link').forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      link.classList.remove('ripple');
+      void link.offsetWidth; // reflow
+      link.classList.add('ripple');
+    });
+    link.addEventListener('animationend', () => {
+      link.classList.remove('ripple');
+    });
+  });
+})();
+
+/* ============================================================
+   CARD FLIP — click to toggle .flipped
+   ============================================================ */
+(function() {
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't flip when clicking links inside the card
+      if (e.target.closest('a')) return;
+      card.classList.toggle('flipped');
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.classList.toggle('flipped');
+      }
+    });
+  });
+})();
+
+// ── TIME OF DAY GREETING ────────────────────────────────────────────────
+(function() {
+  const h = new Date().getHours();
+  const greetingEl = document.getElementById('time-greeting');
+  const mesh = document.querySelector('.mesh');
+
+  let greeting = '';
+  if      (h >= 5  && h < 12) greeting = 'morning. coffee first. ☕';
+  else if (h >= 12 && h < 17) greeting = 'afternoon grind. 💻';
+  else if (h >= 17 && h < 21) greeting = 'evening mode. 🌆';
+  else if (h >= 21 && h < 24) greeting = 'still going. 🌙';
+  else                         greeting = "you're up late too huh. 🦉";
+
+  if (greetingEl) greetingEl.textContent = greeting;
+
+  // Night mode orbs (6pm–6am)
+  if (mesh && (h >= 18 || h < 6)) {
+    mesh.classList.add('night-mode');
+  }
+})();
+
+// ── LIVE GITHUB + NPM STATS ─────────────────────────────────────────────
+(async () => {
+  const repos = [
+    { id: 'agentrem-stars', repo: 'fraction12/agentrem' },
+    { id: 'clawk-stars', repo: 'fraction12/ClawK' },
+    { id: 'agentsense-stars', repo: 'fraction12/agentsense' },
+    { id: 'agentplan-stars', repo: 'fraction12/agentplan' },
+  ];
+
+  // Fetch GitHub stars
+  for (const { id, repo } of repos) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${repo}`);
+      if (res.ok) {
+        const data = await res.json();
+        const el = document.getElementById(id);
+        if (el) el.textContent = data.stargazers_count;
+      }
+    } catch {}
+  }
+
+  // Fetch npm version + test count from package.json description or README
+  try {
+    const res = await fetch('https://registry.npmjs.org/agentrem/latest');
+    if (res.ok) {
+      const data = await res.json();
+      const verEl = document.getElementById('agentrem-version');
+      if (verEl) verEl.textContent = data.version;
+
+      // Update the typing phrase too
+      const testMatch = data.description?.match(/(\d+)\s*test/i);
+      const testsEl = document.getElementById('agentrem-tests');
+      if (testsEl) {
+        // Try to get from README badge or default to fetched info
+        testsEl.textContent = '444'; // Will update when we add test count to npm
+        testsEl.setAttribute('data-target', '444');
+      }
+    }
+  } catch {}
+})();
+
+// ── LOBSTER EASTER EGG 🦞 ──────────────────────────────────────────────
+(() => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const lobster = document.createElement('div');
+  lobster.id = 'lobster';
+  lobster.textContent = '🦞';
+  lobster.style.cssText = `
+    position: fixed; z-index: 9999; font-size: 2.5rem; pointer-events: none;
+    transition: none; opacity: 0; user-select: none;
+  `;
+  document.body.appendChild(lobster);
+
+  const messages = document.createElement('div');
+  messages.style.cssText = `
+    position: fixed; z-index: 10000; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; color: #f59e0b; background: rgba(10,10,10,0.9);
+    border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 0.4rem 0.7rem;
+    pointer-events: none; opacity: 0; white-space: nowrap; user-select: none;
+    transition: opacity 0.3s;
+  `;
+  document.body.appendChild(messages);
+
+  const phrases = [
+    "don't mind me, just vibing",
+    "this website was built at 3am",
+    "i live here now",
+    "🦞 > 🦐 and it's not close",
+    "have you tried npm install lobster?",
+    "i'm in your DOM, walking your divs",
+    "catch me if you can",
+    "*snip snip*",
+    "tell no one you saw me",
+    "i reviewed the code. ship it.",
+    "the tests pass. trust me.",
+    "lobster fact: we don't age. google it.",
+    "okay bye",
+    "psst... hire this guy",
+    "vibe check: passed ✅",
+    "i'm the 445th test",
+  ];
+
+  const behaviors = [
+    // Walk across bottom
+    (cb) => {
+      const y = window.innerHeight - 60;
+      const startX = -50;
+      const endX = window.innerWidth + 50;
+      lobster.style.top = y + 'px';
+      lobster.style.left = startX + 'px';
+      lobster.style.opacity = '1';
+      lobster.style.transform = 'scaleX(1)';
+      let x = startX;
+      const walk = () => {
+        x += 2;
+        lobster.style.left = x + 'px';
+        // Wobble
+        lobster.style.transform = `scaleX(1) rotate(${Math.sin(x * 0.05) * 5}deg)`;
+        if (x < endX) requestAnimationFrame(walk);
+        else { lobster.style.opacity = '0'; cb(); }
+      };
+      walk();
+    },
+    // Peek from right edge
+    (cb) => {
+      const y = 200 + Math.random() * (window.innerHeight - 400);
+      lobster.style.top = y + 'px';
+      lobster.style.left = (window.innerWidth - 10) + 'px';
+      lobster.style.opacity = '1';
+      lobster.style.transform = 'scaleX(-1)';
+      // Peek in
+      let t = 0;
+      const peek = () => {
+        t++;
+        const offset = Math.min(t * 0.8, 35);
+        lobster.style.left = (window.innerWidth - 10 - offset) + 'px';
+        if (t < 44) requestAnimationFrame(peek);
+        else {
+          // Show message
+          const msg = phrases[Math.floor(Math.random() * phrases.length)];
+          messages.textContent = msg;
+          messages.style.top = (y - 30) + 'px';
+          messages.style.left = (window.innerWidth - 60 - msg.length * 6) + 'px';
+          messages.style.opacity = '1';
+          setTimeout(() => {
+            messages.style.opacity = '0';
+            // Retreat
+            let r = 0;
+            const retreat = () => {
+              r++;
+              lobster.style.left = (window.innerWidth - 45 + r * 1.5) + 'px';
+              if (r < 40) requestAnimationFrame(retreat);
+              else { lobster.style.opacity = '0'; cb(); }
+            };
+            retreat();
+          }, 2500);
+        }
+      };
+      peek();
+    },
+    // Drop from top
+    (cb) => {
+      const x = 100 + Math.random() * (window.innerWidth - 200);
+      lobster.style.left = x + 'px';
+      lobster.style.top = '-50px';
+      lobster.style.opacity = '1';
+      lobster.style.transform = 'rotate(0deg)';
+      let y = -50;
+      let vy = 0;
+      const targetY = window.innerHeight - 60;
+      let bounces = 0;
+      const fall = () => {
+        vy += 0.5; // gravity
+        y += vy;
+        lobster.style.top = y + 'px';
+        lobster.style.transform = `rotate(${vy * 3}deg)`;
+        if (y >= targetY) {
+          y = targetY;
+          vy = -vy * 0.5;
+          bounces++;
+          if (bounces >= 3) {
+            const msg = phrases[Math.floor(Math.random() * phrases.length)];
+            messages.textContent = msg;
+            messages.style.top = (y - 35) + 'px';
+            messages.style.left = (x - 20) + 'px';
+            messages.style.opacity = '1';
+            setTimeout(() => {
+              messages.style.opacity = '0';
+              lobster.style.opacity = '0';
+              cb();
+            }, 2500);
+            return;
+          }
+        }
+        if (bounces < 3) requestAnimationFrame(fall);
+      };
+      fall();
+    },
+    // Climb up left edge
+    (cb) => {
+      lobster.style.left = '10px';
+      lobster.style.top = (window.innerHeight + 50) + 'px';
+      lobster.style.opacity = '1';
+      lobster.style.transform = 'rotate(90deg)';
+      let y = window.innerHeight + 50;
+      const targetY = 100 + Math.random() * 300;
+      const climb = () => {
+        y -= 1.5;
+        lobster.style.top = y + 'px';
+        lobster.style.transform = `rotate(90deg) translateX(${Math.sin(y * 0.03) * 3}px)`;
+        if (y > targetY) requestAnimationFrame(climb);
+        else {
+          const msg = phrases[Math.floor(Math.random() * phrases.length)];
+          messages.textContent = msg;
+          messages.style.top = (y - 10) + 'px';
+          messages.style.left = '50px';
+          messages.style.opacity = '1';
+          setTimeout(() => {
+            messages.style.opacity = '0';
+            // Slide back down fast
+            let sy = y;
+            const slide = () => {
+              sy += 4;
+              lobster.style.top = sy + 'px';
+              if (sy < window.innerHeight + 50) requestAnimationFrame(slide);
+              else { lobster.style.opacity = '0'; cb(); }
+            };
+            slide();
+          }, 2500);
+        }
+      };
+      climb();
+    },
+  ];
+
+  function scheduleNext() {
+    const delay = 15000 + Math.random() * 30000; // 15-45 seconds
+    setTimeout(() => {
+      const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+      behavior(() => scheduleNext());
+    }, delay);
+  }
+
+  let lobsterMode = false;
+  let modeInterval = null;
+  let activeLobsters = [];
+
+  // First appearance after 8 seconds
+  setTimeout(() => {
+    const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+    behavior(() => scheduleNext());
+  }, 8000);
+
+  function spawnExtraLobster() {
+    const el = document.createElement('div');
+    el.textContent = '🦞';
+    el.style.cssText = `
+      position: fixed; z-index: 9998; font-size: ${1.5 + Math.random() * 2}rem;
+      pointer-events: none; user-select: none; opacity: 1;
+    `;
+    document.body.appendChild(el);
+    activeLobsters.push(el);
+
+    const startX = Math.random() * window.innerWidth;
+    const startY = Math.random() < 0.5 ? -50 : window.innerHeight + 50;
+    let x = startX, y = startY;
+    const speedX = (Math.random() - 0.5) * 4;
+    const speedY = startY < 0 ? (1 + Math.random() * 2) : -(1 + Math.random() * 2);
+    const spin = (Math.random() - 0.5) * 8;
+    let angle = 0;
+    let frame = 0;
+
+    const move = () => {
+      if (!lobsterMode && frame > 60) {
+        el.style.opacity = '0';
+        setTimeout(() => { el.remove(); activeLobsters = activeLobsters.filter(l => l !== el); }, 300);
+        return;
+      }
+      x += speedX;
+      y += speedY;
+      angle += spin;
+      frame++;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.transform = `rotate(${angle}deg)`;
+      if (x < -100 || x > window.innerWidth + 100 || y < -100 || y > window.innerHeight + 100) {
+        el.remove();
+        activeLobsters = activeLobsters.filter(l => l !== el);
+        return;
+      }
+      requestAnimationFrame(move);
+    };
+    move();
+  }
+
+  window.toggleLobsterMode = function() {
+    lobsterMode = !lobsterMode;
+    const btn = document.getElementById('lobster-mode-btn');
+
+    if (lobsterMode) {
+      btn.textContent = '🦞 LOBSTER MODE: ON';
+      btn.style.borderColor = 'rgba(245,158,11,0.5)';
+      btn.style.color = '#f59e0b';
+      btn.style.background = 'rgba(245,158,11,0.1)';
+      btn.style.boxShadow = '0 0 20px rgba(245,158,11,0.2)';
+
+      // Spawn lobsters every 400ms
+      modeInterval = setInterval(() => {
+        if (activeLobsters.length < 30) spawnExtraLobster();
+      }, 400);
+
+      // Announcement
+      const announce = document.createElement('div');
+      announce.textContent = '🦞 LOBSTER MODE ACTIVATED 🦞';
+      announce.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+        z-index: 10001; font-family: 'JetBrains Mono', monospace; font-size: 1.4rem;
+        color: #f59e0b; background: rgba(10,10,10,0.95); border: 1px solid rgba(245,158,11,0.4);
+        border-radius: 12px; padding: 1rem 2rem; pointer-events: none; opacity: 0;
+        transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center; white-space: nowrap;
+      `;
+      document.body.appendChild(announce);
+      requestAnimationFrame(() => {
+        announce.style.opacity = '1';
+        announce.style.transform = 'translate(-50%, -50%) scale(1)';
+      });
+      setTimeout(() => {
+        announce.style.opacity = '0';
+        announce.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        setTimeout(() => announce.remove(), 400);
+      }, 2000);
+
+    } else {
+      btn.textContent = '🦞 lobster mode';
+      btn.style.borderColor = 'rgba(255,255,255,0.08)';
+      btn.style.color = '#666';
+      btn.style.background = 'rgba(255,255,255,0.03)';
+      btn.style.boxShadow = 'none';
+      clearInterval(modeInterval);
+      // Lobsters will naturally fade out via the frame > 60 check
+    }
+  };
+})();
+
+// ── SECRET TERMINAL ─────────────────────────────────────────────────────
+(function() {
+  const overlay  = document.getElementById('terminal-overlay');
+  const output   = document.getElementById('terminal-output');
+  const input    = document.getElementById('terminal-input');
+  if (!overlay || !output || !input) return;
+
+  let opened = false;
+  let cmdHistory = [];
+  let histIdx = -1;
+
+  function print(text, cls) {
+    const line = document.createElement('div');
+    line.style.whiteSpace = 'pre-wrap';
+    if (cls) line.style.color = cls;
+    line.textContent = text;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function printHTML(html) {
+    const line = document.createElement('div');
+    line.innerHTML = html;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function openTerminal() {
+    overlay.classList.add('open');
+    input.focus();
+    if (!opened) {
+      opened = true;
+      print('welcome to dushyant.dev terminal. type \'help\' to get started.');
+    }
+  }
+
+  function closeTerminal() {
+    overlay.classList.remove('open');
+  }
+
+  // Backtick toggles terminal (unless focus is on an input/textarea)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '`') {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' && document.activeElement !== input) return;
+      if (tag === 'TEXTAREA') return;
+      e.preventDefault();
+      overlay.classList.contains('open') ? closeTerminal() : openTerminal();
+    }
+  });
+
+  // Commands
+  const commands = {
+    help: () => 'available commands: help, whoami, ls, cat, projects, clear, lobster, matrix, coffee, exit',
+    whoami: () => 'visitor. curious one, apparently.',
+    ls: (args) => {
+      if (args === '-la') {
+        const now = 'Feb 22 03:04';
+        return [
+          'total 48',
+          `drwxr-xr-x  7 dushyant staff  224 ${now} agentrem/`,
+          `drwxr-xr-x  5 dushyant staff  160 ${now} ClawK/`,
+          `drwxr-xr-x  6 dushyant staff  192 ${now} TradeSpec-AI/`,
+          `drwxr-xr-x  4 dushyant staff  128 ${now} AgentSense/`,
+          `drwxr-xr-x  4 dushyant staff  128 ${now} agentplan/`,
+          `-rw-r--r--  1 dushyant staff   42 ${now} README.md`,
+          `-rw-------  1 dushyant staff   22 ${now} .lobster-mode`,
+        ].join('\n');
+      }
+      return 'agentrem/  ClawK/  TradeSpec-AI/  AgentSense/  agentplan/  README.md  .lobster-mode';
+    },
+    cat: (args) => {
+      if (args === 'README.md') return 'hi. i\'m dushyant. i build things.\n\nthat\'s it. that\'s the readme.';
+      if (args === '.lobster-mode') return '🦞🦞🦞🦞🦞🦞🦞🦞🦞🦞';
+      if (args) return `cat: ${args}: No such file or directory`;
+      return 'cat: missing operand';
+    },
+    projects: () => [
+      '🔔 agentrem       — persistent reminder layer for AI agents (TypeScript, SQLite, MCP)',
+      '🖥  ClawK          — macOS menu bar app for OpenClaw (Swift, SwiftUI)',
+      '⚡ TradeSpec AI   — AI bid analyzer for trade contractors (Node.js, AI/ML)',
+      '🧠 AgentSense     — zero-cost knowledge graph for AI agents (TypeScript, FTS5)',
+      '📋 agentplan      — project planning CLI for AI agents (TypeScript, SQLite)',
+    ].join('\n'),
+    clear: () => { output.innerHTML = ''; return null; },
+    lobster: () => {
+      if (typeof window.toggleLobsterMode === 'function') window.toggleLobsterMode();
+      return '🦞 LOBSTER MODE TOGGLED';
+    },
+    matrix: () => {
+      // fill with random chars for 3s
+      const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+      let matrixInterval;
+      let count = 0;
+      matrixInterval = setInterval(() => {
+        let row = '';
+        for (let i = 0; i < 60; i++) row += chars[Math.floor(Math.random() * chars.length)];
+        print(row);
+        count++;
+        if (count >= 18) {
+          clearInterval(matrixInterval);
+          output.innerHTML = '';
+          print('wake up, neo.');
+        }
+      }, 160);
+      return null;
+    },
+    coffee: () => {
+      const progressLine = document.createElement('div');
+      progressLine.style.whiteSpace = 'pre';
+      progressLine.style.color = '#22c55e';
+      output.appendChild(progressLine);
+      output.scrollTop = output.scrollHeight;
+
+      let pct = 0;
+      const bar = setInterval(() => {
+        pct += 4;
+        const filled = Math.floor(pct / 10);
+        const empty = 10 - filled;
+        progressLine.textContent = `brewing... [${'█'.repeat(filled)}${'░'.repeat(empty)}] ${pct}%`;
+        output.scrollTop = output.scrollHeight;
+        if (pct >= 100) {
+          clearInterval(bar);
+          progressLine.textContent = 'brewing... [██████████] 100%';
+          print('☕ done. now get back to work.');
+        }
+      }, 120);
+      return null;
+    },
+    exit: () => {
+      print('bye. come back soon.');
+      setTimeout(closeTerminal, 700);
+      return null;
+    },
+  };
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const raw = input.value.trim();
+      if (!raw) return;
+
+      // Echo the command
+      print(`visitor@dushyant.dev ~ $ ${raw}`, '#22c55e');
+
+      // History
+      cmdHistory.unshift(raw);
+      if (cmdHistory.length > 20) cmdHistory.pop();
+      histIdx = -1;
+
+      input.value = '';
+
+      // Parse
+      const [cmd, ...rest] = raw.split(' ');
+      const args = rest.join(' ');
+
+      // sudo
+      if (cmd === 'sudo') {
+        if (args.trim() === 'rm -rf /') {
+          print('permission denied. nice try though. 🦞');
+        } else {
+          print("you're not root here buddy");
+        }
+        return;
+      }
+
+      if (commands[cmd]) {
+        let result;
+        if (cmd === 'ls') {
+          result = commands.ls(args || '');
+        } else if (cmd === 'cat') {
+          result = commands.cat(args || '');
+        } else {
+          result = commands[cmd]();
+        }
+        if (result !== null && result !== undefined) print(result);
+      } else {
+        print(`command not found: ${raw}. try 'help'`);
+      }
+    }
+
+    // Command history navigation
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (histIdx < cmdHistory.length - 1) {
+        histIdx++;
+        input.value = cmdHistory[histIdx];
+      }
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (histIdx > 0) {
+        histIdx--;
+        input.value = cmdHistory[histIdx];
+      } else {
+        histIdx = -1;
+        input.value = '';
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
