@@ -1,0 +1,16 @@
+# Vercel
+.vercel
+
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+
+# Astro
+.astro/
+
+# Environment
+.env
+.env.*
+!.env.example

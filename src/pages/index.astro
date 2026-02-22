@@ -1,0 +1,76 @@
+---
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import Projects from '../components/Projects.astro';
+import Writing from '../components/Writing.astro';
+import Now from '../components/Now.astro';
+import Connect from '../components/Connect.astro';
+import Footer from '../components/Footer.astro';
+import Terminal from '../components/Terminal.astro';
+import '../styles/animations.css';
+import '../styles/base.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dushyant Garg — Product Manager · Builder · Ships AI Tools</title>
+  <meta name="description" content="Dushyant Garg — Product Manager, Builder, shipping AI tools for the agent ecosystem.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Progress Bar -->
+  <div id="progress-bar"></div>
+
+  <!-- Cursor Glow -->
+  <div id="cursor-glow"></div>
+
+  <!-- Mesh Background -->
+  <div class="mesh" aria-hidden="true">
+    <div class="mesh-layer mesh-layer-1"></div>
+    <div class="mesh-layer mesh-layer-2"></div>
+    <div class="mesh-layer mesh-layer-3"></div>
+    <div class="mesh-layer mesh-layer-4"></div>
+  </div>
+
+  <Navigation />
+
+  <div class="container">
+    <Hero />
+    <div class="section-divider"></div>
+    <Projects />
+    <div class="section-divider"></div>
+    <Writing />
+    <div class="section-divider"></div>
+    <Now />
+    <div class="section-divider"></div>
+    <Connect />
+  </div>
+
+  <Footer />
+  <Terminal />
+
+  <script>
+    import '../scripts/typing-carousel.js';
+    import '../scripts/scroll.js';
+    import '../scripts/cursor.js';
+    import '../scripts/cards.js';
+    import '../scripts/scroll-reveal.js';
+    import '../scripts/stats-counter.js';
+    import '../scripts/particles.js';
+    import '../scripts/nav-dots.js';
+    import '../scripts/connect.js';
+    import '../scripts/card-flip.js';
+    import '../scripts/greeting.js';
+    import '../scripts/api-stats.js';
+    import '../scripts/lobster.js';
+    import '../scripts/terminal.js';
+  </script>
+
+</body>
+</html>
