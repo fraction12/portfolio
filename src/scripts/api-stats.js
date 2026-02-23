@@ -2,6 +2,7 @@
 (async () => {
   const repos = [
     { id: 'agentrem-stars', repo: 'fraction12/agentrem' },
+    { id: 'openrank-stars', repo: 'fraction12/open-rank' },
     { id: 'clawk-stars', repo: 'fraction12/ClawK' },
     { id: 'agentsense-stars', repo: 'fraction12/agentsense' },
     { id: 'agentplan-stars', repo: 'fraction12/agentplan' },
