@@ -102,15 +102,15 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
   <div class="jarvis-list">
     {entries.map((entry, index) => (
       <>
-        <article class="term-card reveal" style={`--reveal-delay: ${0.05 + index * 0.05}s;`}>
-          <div class="term-card-header">
-            <div class="term-card-dot r"></div>
-            <div class="term-card-dot y"></div>
-            <div class="term-card-dot g"></div>
+        <article class="now-terminal reveal" style={`--reveal-delay: ${0.05 + index * 0.05}s;`}>
+          <div class="now-terminal-header">
+            <div class="now-terminal-dot r"></div>
+            <div class="now-terminal-dot y"></div>
+            <div class="now-terminal-dot g"></div>
             <span>jarvis — log --entry {entry.entryNumber}</span>
           </div>
 
-          <div class="term-card-body">
+          <div class="now-terminal-body">
             <h3 class="jarvis-entry-title">{entry.title}</h3>
             <p class="jarvis-date">{entry.formattedDate}</p>
             <div class="jarvis-body" set:html={entry.bodyHtml}></div>
@@ -149,6 +149,7 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     font-weight: 600;
     color: var(--text);
     font-size: 1.05rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   }
 
   .jarvis-date {
@@ -163,6 +164,7 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     line-height: 1.7;
     font-size: 0.95rem;
     margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   }
 
   .jarvis-body :global(p) {
