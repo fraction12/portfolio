@@ -1,0 +1,156 @@
+---
+interface DockItem {
+  key: 'home' | 'projects' | 'writing' | 'jarvis' | 'now' | 'connect';
+  href: string;
+  label: string;
+  icon: string;
+}
+
+interface Props {
+  current?: DockItem['key'];
+}
+
+const { current = 'home' } = Astro.props;
+
+const items: DockItem[] = [
+  { key: 'home', href: '/', label: 'Home', icon: '◆' },
+  { key: 'projects', href: '/projects', label: 'Projects', icon: '◫' },
+  { key: 'writing', href: '/writing', label: 'Writing', icon: '✎' },
+  { key: 'jarvis', href: '/jarvis', label: 'Jarvis', icon: '●' },
+  { key: 'now', href: '/now', label: 'Now', icon: '◈' },
+  { key: 'connect', href: '/connect', label: 'Connect', icon: '◇' }
+];
+---
+
+<nav class="dock" aria-label="Primary">
+  <ul class="dock-list">
+    {items.map((item) => {
+      const isActive = item.key === current;
+      return (
+        <li>
+          <a
+            href={item.href}
+            class:list={['dock-item', { active: isActive }]}
+            aria-current={isActive ? 'page' : undefined}
+            aria-label={item.label}
+          >
+            <span class="dock-label">{item.label}</span>
+            <span class="dock-icon" aria-hidden="true">{item.icon}</span>
+            <span class="dock-active-dot" aria-hidden="true"></span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
+
+<style>
+  .dock {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 8px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .dock-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dock-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text);
+    width: 24px;
+    height: 32px;
+  }
+
+  .dock-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+    transform: scale(1);
+    transition: transform 220ms ease, opacity 220ms ease;
+    opacity: 0.9;
+  }
+
+  .dock-item:hover .dock-icon,
+  .dock-item:focus-visible .dock-icon {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+
+  .dock-label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translate(-50%, 10px);
+    opacity: 0;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.68rem;
+    white-space: nowrap;
+    color: var(--text);
+    transition: transform 220ms ease, opacity 220ms ease;
+  }
+
+  .dock-item:hover .dock-label,
+  .dock-item:focus-visible .dock-label {
+    opacity: 0.85;
+    transform: translate(-50%, 0);
+  }
+
+  .dock-active-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--accent);
+    left: 50%;
+    bottom: -3px;
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  .dock-item.active .dock-active-dot {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  @media (max-width: 768px) {
+    .dock {
+      padding: 7px 12px;
+    }
+
+    .dock-list {
+      gap: 16px;
+    }
+
+    .dock-icon {
+      font-size: 0.95rem;
+    }
+
+    .dock-item {
+      width: 20px;
+      height: 28px;
+    }
+
+    .dock-label {
+      display: none;
+    }
+  }
+</style>

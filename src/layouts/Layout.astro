@@ -1,0 +1,57 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import Dock from '../components/Dock.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/base.css';
+import '../styles/animations.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  current?: 'home' | 'projects' | 'writing' | 'jarvis' | 'now' | 'connect';
+}
+
+const {
+  title = 'Dushyant Garg',
+  description = 'Dushyant Garg — I make products and sometimes the software too. Open-source AI tools, games, and writing.',
+  current = 'home'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <ViewTransitions />
+</head>
+<body>
+  <div id="cursor-glow"></div>
+
+  <div class="mesh" aria-hidden="true">
+    <div class="mesh-layer mesh-layer-1"></div>
+    <div class="mesh-layer mesh-layer-2"></div>
+    <div class="mesh-layer mesh-layer-3"></div>
+    <div class="mesh-layer mesh-layer-4"></div>
+  </div>
+
+  <main class="page-main" transition:animate="fade">
+    <slot />
+  </main>
+
+  <Footer />
+  <Dock current={current} />
+
+  <script>
+    import '../scripts/cursor.js';
+    import '../scripts/particles.js';
+    import '../scripts/scroll-reveal.js';
+    import '../scripts/lobster.js';
+  </script>
+</body>
+</html>

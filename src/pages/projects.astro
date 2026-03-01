@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Projects from '../components/Projects.astro';
+---
+
+<Layout current="projects" title="Projects — Dushyant Garg">
+  <div class="container">
+    <section class="page-intro">
+      <h1 class="page-title reveal">Projects<span class="dot">.</span></h1>
+    </section>
+    <Projects />
+  </div>
+
+  <script>
+    import '../scripts/card-flip.js';
+    import '../scripts/cards.js';
+    import '../scripts/api-stats.js';
+    import '../scripts/stats-counter.js';
+  </script>
+</Layout>

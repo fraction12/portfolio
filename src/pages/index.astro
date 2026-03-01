@@ -1,79 +1,52 @@
 ---
-import Navigation from '../components/Navigation.astro';
+import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import Projects from '../components/Projects.astro';
-import Writing from '../components/Writing.astro';
-import JarvisLog from '../components/JarvisLog.astro';
-import Now from '../components/Now.astro';
-import Connect from '../components/Connect.astro';
-import Footer from '../components/Footer.astro';
-import Terminal from '../components/Terminal.astro';
-import '../styles/animations.css';
-import '../styles/base.css';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dushyant Garg</title>
-  <meta name="description" content="Dushyant Garg — I make products and sometimes the software too. Open-source AI tools, games, and writing.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-</head>
-<body>
-
-  <!-- Progress Bar -->
-  <div id="progress-bar"></div>
-
-  <!-- Cursor Glow -->
-  <div id="cursor-glow"></div>
-
-  <!-- Mesh Background -->
-  <div class="mesh" aria-hidden="true">
-    <div class="mesh-layer mesh-layer-1"></div>
-    <div class="mesh-layer mesh-layer-2"></div>
-    <div class="mesh-layer mesh-layer-3"></div>
-    <div class="mesh-layer mesh-layer-4"></div>
-  </div>
-
-  <Navigation />
-
+<Layout current="home" title="Dushyant Garg">
   <div class="container">
     <Hero />
-    <div class="section-divider"></div>
-    <Projects />
-    <div class="section-divider"></div>
-    <Writing />
-    <div class="section-divider"></div>
-    <JarvisLog />
-    <div class="section-divider"></div>
-    <Now />
-    <div class="section-divider"></div>
-    <Connect />
+
+    <section class="hub-grid-section" aria-label="Explore sections">
+      <div class="hub-grid">
+        <a class="hub-card reveal" href="/projects" style="--reveal-delay: 0.04s;">
+          <span class="hub-card-icon" aria-hidden="true">◫</span>
+          <h3>Projects</h3>
+          <p>Things I&apos;ve built and shipped</p>
+        </a>
+
+        <a class="hub-card reveal" href="/writing" style="--reveal-delay: 0.08s;">
+          <span class="hub-card-icon" aria-hidden="true">✎</span>
+          <h3>Writing</h3>
+          <p>Essays and observations</p>
+        </a>
+
+        <a class="hub-card reveal" href="/jarvis" style="--reveal-delay: 0.12s;">
+          <span class="hub-card-icon" aria-hidden="true">●</span>
+          <h3>
+            Jarvis
+            <span class="hub-status-dot" aria-hidden="true"></span>
+          </h3>
+          <p>Dispatches from inside the machine</p>
+        </a>
+
+        <a class="hub-card reveal" href="/now" style="--reveal-delay: 0.16s;">
+          <span class="hub-card-icon" aria-hidden="true">◈</span>
+          <h3>Now</h3>
+          <p>What I&apos;m working on</p>
+        </a>
+
+        <a class="hub-card reveal" href="/connect" style="--reveal-delay: 0.2s;">
+          <span class="hub-card-icon" aria-hidden="true">◇</span>
+          <h3>Connect</h3>
+          <p>Get in touch</p>
+        </a>
+      </div>
+    </section>
   </div>
 
-  <Footer />
-  <Terminal />
-
   <script>
-    import '../scripts/typing-carousel.js';
-    import '../scripts/scroll.js';
-    import '../scripts/cursor.js';
-    import '../scripts/cards.js';
-    import '../scripts/scroll-reveal.js';
-    import '../scripts/stats-counter.js';
-    import '../scripts/particles.js';
-    import '../scripts/nav-dots.js';
-    import '../scripts/connect.js';
-    import '../scripts/card-flip.js';
     import '../scripts/greeting.js';
-    import '../scripts/api-stats.js';
-    import '../scripts/lobster.js';
-    import '../scripts/terminal.js';
+    import '../scripts/typing-carousel.js';
   </script>
-
-</body>
-</html>
+</Layout>
