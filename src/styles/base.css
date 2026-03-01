@@ -594,7 +594,8 @@ h2 .dot { color: var(--accent); }
 /* ============================================================
    NOW CARDS
    ============================================================ */
-/* ── Now: Terminal Style ── */
+/* ── Shared Terminal Card Style (Now, JarvisLog, etc.) ── */
+.term-card,
 .now-terminal {
   background: rgba(10,10,10,0.8);
   border: 1px solid rgba(99,102,241,0.15);
@@ -604,6 +605,7 @@ h2 .dot { color: var(--accent); }
   font-size: 0.82rem;
   line-height: 1.7;
 }
+.term-card-header,
 .now-terminal-header {
   display: flex;
   align-items: center;
@@ -612,18 +614,21 @@ h2 .dot { color: var(--accent); }
   background: rgba(255,255,255,0.03);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
+.term-card-dot,
 .now-terminal-dot {
   width: 10px; height: 10px;
   border-radius: 50%;
 }
-.now-terminal-dot.r { background: #ff5f57; }
-.now-terminal-dot.y { background: #febc2e; }
-.now-terminal-dot.g { background: #28c840; }
+.term-card-dot.r, .now-terminal-dot.r { background: #ff5f57; }
+.term-card-dot.y, .now-terminal-dot.y { background: #febc2e; }
+.term-card-dot.g, .now-terminal-dot.g { background: #28c840; }
+.term-card-header span,
 .now-terminal-header span {
   margin-left: 0.6rem;
   color: rgba(255,255,255,0.3);
   font-size: 0.72rem;
 }
+.term-card-body,
 .now-terminal-body {
   padding: 1.2rem 1.4rem;
   overflow: hidden;
@@ -673,6 +678,7 @@ h2 .dot { color: var(--accent); }
 }
 
 /* Subtle scanline overlay */
+.term-card-body::after,
 .now-terminal-body::after {
   content: '';
   position: absolute;
@@ -686,7 +692,7 @@ h2 .dot { color: var(--accent); }
     rgba(255,255,255,0.008) 4px
   );
 }
-.now-terminal-body { position: relative; }
+.term-card-body, .now-terminal-body { position: relative; }
 /* Divider between entries */
 .now-divider {
   border: none;
@@ -832,8 +838,8 @@ footer {
   .featured-inner { grid-template-columns: 1fr; gap: 1.5rem; }
   .card-visual { height: 120px; }
 
-  .now-terminal { font-size: 0.75rem; }
-  .now-terminal-body { padding: 1rem; }
+  .term-card, .now-terminal { font-size: 0.75rem; }
+  .term-card-body, .now-terminal-body { padding: 1rem; }
 
   .writing-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
 }

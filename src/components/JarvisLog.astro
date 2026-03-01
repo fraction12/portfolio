@@ -102,16 +102,16 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
   <div class="jarvis-list">
     {entries.map((entry, index) => (
       <>
-        <article class="jarvis-terminal reveal" style={`--reveal-delay: ${0.05 + index * 0.05}s;`}>
-          <div class="jarvis-terminal-header">
-            <div class="jarvis-terminal-dot r"></div>
-            <div class="jarvis-terminal-dot y"></div>
-            <div class="jarvis-terminal-dot g"></div>
+        <article class="term-card reveal" style={`--reveal-delay: ${0.05 + index * 0.05}s;`}>
+          <div class="term-card-header">
+            <div class="term-card-dot r"></div>
+            <div class="term-card-dot y"></div>
+            <div class="term-card-dot g"></div>
             <span>jarvis — log --entry {entry.entryNumber}</span>
           </div>
 
-          <div class="jarvis-terminal-body">
-            <h3>{entry.title}</h3>
+          <div class="term-card-body">
+            <h3 class="jarvis-entry-title">{entry.title}</h3>
             <p class="jarvis-date">{entry.formattedDate}</p>
             <div class="jarvis-body" set:html={entry.bodyHtml}></div>
           </div>
@@ -122,7 +122,7 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
   </div>
 
   <div class="jarvis-cursor-line reveal" style={`--reveal-delay: ${0.05 + entries.length * 0.05}s;`}>
-    <span class="jarvis-prompt">$</span>
+    <span class="now-prompt">$</span>
     <span class="jarvis-cursor" aria-hidden="true"></span>
   </div>
 </section>
@@ -144,41 +144,7 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     margin: 0.1rem 0;
   }
 
-  .jarvis-terminal {
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .jarvis-terminal-header {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.55rem 0.85rem;
-    border-bottom: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--dim);
-    font-size: 0.8rem;
-    letter-spacing: 0.01em;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  }
-
-  .jarvis-terminal-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 999px;
-  }
-
-  .jarvis-terminal-dot.r { background: #ff5f57; }
-  .jarvis-terminal-dot.y { background: #febc2e; }
-  .jarvis-terminal-dot.g { background: #28c840; }
-
-  .jarvis-terminal-body {
-    padding: 1rem 1.1rem 1.15rem;
-  }
-
-  .jarvis-terminal-body h3 {
+  .jarvis-entry-title {
     margin: 0;
     font-weight: 600;
     color: var(--text);
@@ -225,10 +191,6 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     font-size: 0.9rem;
   }
 
-  .jarvis-prompt {
-    color: var(--accent);
-  }
-
   .jarvis-cursor {
     width: 8px;
     height: 1.1em;
@@ -237,5 +199,4 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     animation: cursorBlink 1.1s step-end infinite;
     opacity: 0.85;
   }
-
 </style>
