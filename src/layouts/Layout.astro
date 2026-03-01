@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import Terminal from '../components/Terminal.astro';
 import Dock from '../components/Dock.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/base.css';
@@ -45,6 +46,7 @@ const {
   </main>
 
   <Footer />
+  <Terminal />
   <Dock current={current} />
 
   <script>
@@ -52,6 +54,7 @@ const {
     import '../scripts/particles.js';
     import '../scripts/scroll-reveal.js';
     import '../scripts/lobster.js';
+    import '../scripts/terminal.js';
   </script>
 </body>
 </html>
