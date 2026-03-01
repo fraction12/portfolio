@@ -1,9 +1,12 @@
 /* ============================================================
    FLOATING PARTICLES — Featured Card
    ============================================================ */
-(function() {
+function initParticles() {
   const visual = document.querySelector('.card-visual');
   if (!visual) return;
+  if (visual.dataset.particlesInit === 'true') return;
+
+  visual.dataset.particlesInit = 'true';
 
   const count = 12;
   for (let i = 0; i < count; i++) {
@@ -33,4 +36,6 @@
     p.style.animationDuration = `${dur}s`;
     visual.appendChild(p);
   }
-})();
+}
+
+document.addEventListener('astro:page-load', initParticles);

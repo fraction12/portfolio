@@ -1,5 +1,5 @@
 // ── LIVE GITHUB + NPM STATS ─────────────────────────────────────────────
-(async () => {
+async function initApiStats() {
   const repos = [
     { id: 'agentrem-stars', repo: 'fraction12/agentrem' },
     { id: 'openrank-stars', repo: 'fraction12/open-rank' },
@@ -38,4 +38,6 @@
       }
     }
   } catch {}
-})();
+}
+
+document.addEventListener('astro:page-load', initApiStats);

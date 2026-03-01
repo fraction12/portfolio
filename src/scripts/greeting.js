@@ -1,5 +1,5 @@
 // ── TIME OF DAY GREETING ────────────────────────────────────────────────
-(function() {
+function initGreeting() {
   const h = new Date().getHours();
   const greetingEl = document.getElementById('time-greeting');
   const mesh = document.querySelector('.mesh');
@@ -17,4 +17,6 @@
   if (mesh && (h >= 18 || h < 6)) {
     mesh.classList.add('night-mode');
   }
-})();
+}
+
+document.addEventListener('astro:page-load', initGreeting);

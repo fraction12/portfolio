@@ -1,8 +1,11 @@
 /* ============================================================
    CARD MOUSE TRACKING (glassmorphism glow)
    ============================================================ */
-(function() {
+function initCardTracking() {
   document.querySelectorAll('.card').forEach(card => {
+    if (card.dataset.trackingInit === 'true') return;
+    card.dataset.trackingInit = 'true';
+
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -11,4 +14,6 @@
       card.style.setProperty('--my', y + 'px');
     });
   });
-})();
+}
+
+document.addEventListener('astro:page-load', initCardTracking);

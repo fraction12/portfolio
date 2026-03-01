@@ -1,8 +1,10 @@
 /* ============================================================
    STATS COUNTER
    ============================================================ */
-(function() {
+function initStatsCounter() {
   const counters = document.querySelectorAll('.stat-counter');
+  if (!counters.length) return;
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
@@ -34,4 +36,6 @@
   }, { threshold: 0.5 });
 
   counters.forEach(el => observer.observe(el));
-})();
+}
+
+document.addEventListener('astro:page-load', initStatsCounter);

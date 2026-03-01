@@ -1,7 +1,9 @@
 /* ============================================================
    TYPING EFFECT
    ============================================================ */
-(function() {
+let typingRunId = 0;
+
+function initTypingCarousel() {
   const phrases = [
     "i ship things then write about it",
     "my AI has a name and a british accent",
@@ -12,6 +14,7 @@
   ];
   const el = document.getElementById('typing-text');
   if (!el) return;
+  const runId = ++typingRunId;
 
   let phraseIdx = 0;
   let charIdx = 0;
@@ -24,6 +27,7 @@
   const PAUSE_EMPTY   = 12;  // ticks after delete before next phrase
 
   function tick() {
+    if (runId !== typingRunId) return;
     const current = phrases[phraseIdx];
 
     if (deleting) {
@@ -56,4 +60,6 @@
 
   // Start after hero animation delay
   setTimeout(tick, 1100);
-})();
+}
+
+document.addEventListener('astro:page-load', initTypingCarousel);
