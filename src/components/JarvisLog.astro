@@ -96,34 +96,55 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     };
   })
   .sort((a, b) => b.date.getTime() - a.date.getTime() || b.entryNumber - a.entryNumber);
+
+const lastUpdated = entries.length > 0
+  ? entries[0].date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }).toLowerCase()
+  : '';
 ---
 
 <section id="jarvis">
-  <div class="jarvis-list">
-    {entries.map((entry, index) => (
-      <>
-        <article class="now-terminal reveal" style={`--reveal-delay: ${0.05 + index * 0.05}s;`}>
-          <div class="now-terminal-header">
-            <div class="now-terminal-dot r"></div>
-            <div class="now-terminal-dot y"></div>
-            <div class="now-terminal-dot g"></div>
-            <span>jarvis — log --entry {entry.entryNumber}</span>
-          </div>
+  <div class="now-terminal reveal" style="--reveal-delay: 0.05s;">
+    <div class="now-terminal-header">
+      <div class="now-terminal-dot r"></div>
+      <div class="now-terminal-dot y"></div>
+      <div class="now-terminal-dot g"></div>
+      <span>jarvis — log --recent</span>
+    </div>
 
-          <div class="now-terminal-body">
-            <h3 class="jarvis-entry-title">{entry.title}</h3>
-            <p class="jarvis-date">{entry.formattedDate}</p>
+    <div class="now-terminal-body">
+      <div class="now-line">
+        <span class="now-prompt">$</span>
+        <span class="now-cmd">jarvis</span>
+        <span class="now-flag">log --recent</span>
+      </div>
+      <div class="now-line spacer"></div>
+
+      {entries.map((entry, index) => (
+        <>
+          {index > 0 && <hr class="now-divider" />}
+          <div class="now-line">
+            <span class="now-dot-green" aria-hidden="true">●</span>
+            <span class="now-val" style="font-weight:600;">{entry.title}</span>
+          </div>
+          <div class="now-line">
+            <span class="now-flag">&nbsp;&nbsp;date:</span>
+            <span class="now-val">{entry.formattedDate}</span>
+          </div>
+          <div class="jarvis-body-line">
             <div class="jarvis-body" set:html={entry.bodyHtml}></div>
           </div>
-        </article>
-        {index < entries.length - 1 && <hr class="jarvis-entry-divider reveal" style={`--reveal-delay: ${0.08 + index * 0.05}s;`} />}
-      </>
-    ))}
-  </div>
+        </>
+      ))}
 
-  <div class="jarvis-cursor-line reveal" style={`--reveal-delay: ${0.05 + entries.length * 0.05}s;`}>
-    <span class="now-prompt">$</span>
-    <span class="jarvis-cursor" aria-hidden="true"></span>
+      <div class="now-line spacer"></div>
+      <div class="now-line">
+        <span class="now-comment"># {entries.length} {entries.length === 1 ? 'entry' : 'entries'} · last updated {lastUpdated}</span>
+      </div>
+      <div class="now-line">
+        <span class="now-prompt">$</span>
+        <span class="now-cursor"></span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -132,38 +153,30 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     min-height: auto;
   }
 
-  .jarvis-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
+  .now-dot-green {
+    color: #28c840;
+    font-size: 0.7em;
+    margin-right: 0.4rem;
+    flex-shrink: 0;
   }
 
-  .jarvis-entry-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0.1rem 0;
-  }
-
-  .jarvis-entry-title {
-    margin: 0;
-    font-weight: 600;
-    color: var(--text);
-    font-size: 1.05rem;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  }
-
-  .jarvis-date {
-    margin-top: 0.3rem;
+  .now-comment {
     color: var(--dim);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    opacity: 0.6;
     font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+
+  .jarvis-body-line {
+    padding-left: 1.4rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
   }
 
   .jarvis-body {
     color: var(--dim);
     line-height: 1.7;
     font-size: 0.95rem;
-    margin-top: 0.75rem;
     font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   }
 
@@ -181,24 +194,5 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     color: var(--text);
     text-decoration-color: rgba(255, 255, 255, 0.25);
     text-underline-offset: 2px;
-  }
-
-  .jarvis-cursor-line {
-    margin-top: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-    color: var(--dim);
-    font-size: 0.9rem;
-  }
-
-  .jarvis-cursor {
-    width: 8px;
-    height: 1.1em;
-    background: #28c840;
-    border-radius: 2px;
-    animation: cursorBlink 1.1s step-end infinite;
-    opacity: 0.85;
   }
 </style>
