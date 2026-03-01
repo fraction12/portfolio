@@ -17,6 +17,7 @@
   --card-bg: rgba(255,255,255,0.025);
   --gutter: 2rem;
   --max-w: 1000px;
+  --dock-safe-space: 112px;
 }
 
 html {
@@ -125,7 +126,7 @@ body::before {
 .page-main {
   position: relative;
   z-index: 2;
-  padding-bottom: 80px;
+  padding-bottom: max(80px, var(--dock-safe-space));
 }
 
 section {
@@ -264,12 +265,17 @@ h2 .dot { color: var(--accent); }
 .hub-grid-section {
   min-height: auto;
   padding-top: 1rem;
+  padding-bottom: calc(2rem + var(--dock-safe-space));
+  margin-bottom: 1rem;
 }
 
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  max-width: 760px;
+  margin: 0 auto;
+  align-items: stretch;
 }
 
 .hub-card {
@@ -323,12 +329,6 @@ h2 .dot { color: var(--accent); }
   margin-top: 0.2rem;
   color: var(--dim);
   font-size: 0.88rem;
-}
-
-.hub-grid .hub-card:last-child {
-  grid-column: 1 / -1;
-  justify-self: center;
-  width: min(100%, calc(50% - 0.5rem));
 }
 
 .hub-status-dot {
@@ -765,7 +765,7 @@ h2 .dot { color: var(--accent); }
    ============================================================ */
 footer {
   text-align: center;
-  padding: 2.5rem 0;
+  padding: 2.5rem 0 max(70px, calc(var(--dock-safe-space) - 20px));
   color: #333;
   font-size: 0.78rem;
   position: relative;
@@ -818,6 +818,7 @@ footer {
    ============================================================ */
 @media (max-width: 768px) {
   :root { --gutter: 1.25rem; }
+  :root { --dock-safe-space: 104px; }
 
   section { padding: 4rem 0; min-height: auto; }
 
@@ -825,7 +826,6 @@ footer {
   section.hero { min-height: calc(100vh - 4rem); }
 
   .hub-grid { grid-template-columns: 1fr; }
-  .hub-grid .hub-card:last-child { grid-column: auto; width: 100%; }
 
   .projects-grid { grid-template-columns: 1fr; }
   .card-featured { grid-column: auto; }

@@ -47,21 +47,21 @@ function renderMarkdownToHtml(markdown: string): string {
 }
 
 function parseFrontmatter(rawContent: string): { meta: Record<string, string>; body: string } {
-  const content = rawContent.trim();
-  if (!content.startsWith('---')) {
+  const content = rawContent.replace(/^\uFEFF/, '').trim();
+  const match = content.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/);
+  if (!match) {
     return { meta: {}, body: content };
   }
 
-  const parts = content.split('---');
-  const frontmatter = parts[1] ?? '';
-  const body = parts.slice(2).join('---').trim();
+  const frontmatter = match[1] ?? '';
+  const body = (match[2] ?? '').trim();
   const meta: Record<string, string> = {};
 
   for (const line of frontmatter.split('\n')) {
     const separatorIndex = line.indexOf(':');
     if (separatorIndex === -1) continue;
     const key = line.slice(0, separatorIndex).trim();
-    const value = line.slice(separatorIndex + 1).trim();
+    const value = line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '');
     meta[key] = value;
   }
 
@@ -99,11 +99,6 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
 ---
 
 <section id="jarvis">
-  <h2 class="reveal">
-    Jarvis&apos;s Log<span class="dot">.</span>
-    <span class="jarvis-signal" aria-hidden="true"></span>
-  </h2>
-
   <div class="jarvis-list">
     {entries.map((entry, index) => (
       <>
@@ -135,18 +130,6 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
 <style>
   #jarvis {
     min-height: auto;
-  }
-
-  .jarvis-signal {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: #28c840;
-    margin-left: 0.45rem;
-    vertical-align: middle;
-    box-shadow: 0 0 0 0 rgba(40, 200, 64, 0.45);
-    animation: pulse 2s ease-in-out infinite;
   }
 
   .jarvis-list {
@@ -255,14 +238,4 @@ const entries: JarvisEntry[] = Object.entries(rawEntries)
     opacity: 0.85;
   }
 
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-      box-shadow: 0 0 0 0 rgba(40, 200, 64, 0.45);
-    }
-    70% {
-      opacity: 0.75;
-      box-shadow: 0 0 0 6px rgba(40, 200, 64, 0);
-    }
-  }
 </style>
