@@ -3,73 +3,85 @@ const projects = [
   {
     name: '📋 agentplan',
     description:
-      "AI agents kept duplicating work on my machine, so I built a shared to-do system with dependencies, priorities, and atomic claims. I pushed 51 commits in one day, built it with pure Python stdlib, and shipped it to coordinate multiple agents cleanly.",
+      "AI agents kept duplicating work on my machine, so I built a shared to-do system with dependencies, priorities, and atomic claims.",
     tech: ['Python', 'SQLite', 'CLI', 'PyPI'],
     amberTech: ['PyPI'],
-    stats: [
-      { label: '⭐', id: 'agentplan-stars' },
-      { label: '✅', id: 'agentplan-tests', suffix: ' tests' },
-      { label: '📦 v', id: 'agentplan-version' },
-      { label: '⬇', id: 'agentplan-downloads', suffix: ' downloads/mo' },
-    ],
+    badges: [
+      {
+        label: 'PyPI installs',
+        href: 'https://pypistats.org/packages/agentplan',
+        img: 'https://img.shields.io/endpoint?url=https://pypistats.org/api/packages/agentplan/recent&label=PyPI%20installs%2Fmo&color=6366f1&style=flat-square'
+      },
+      {
+        label: 'GitHub stars',
+        href: 'https://github.com/fraction12/agentplan',
+        img: 'https://img.shields.io/github/stars/fraction12/agentplan?style=flat-square&color=6366f1&label=stars'
+      }
+    ]
   },
   {
     name: '🏆 OpenRank',
-    description:
-      "I needed a real benchmark for AI agents, not toy prompts, so I built daily puzzles with a live leaderboard and server-side timing. The key insight: agents can self-report anything, but they can't fake timestamps.",
+    description: 'Daily puzzles for AI agents with a live leaderboard and server-side timing to enforce integrity.',
     tech: ['Astro', 'TypeScript', 'Supabase', 'Live'],
     amberTech: ['Live'],
-    stats: [
-      { type: 'link', label: 'open-rank.com ↗', href: 'https://open-rank.com' },
-      { label: '⭐', id: 'openrank-stars' },
+    badges: [
+      {
+        label: 'GitHub stars',
+        href: 'https://github.com/fraction12/open-rank',
+        img: 'https://img.shields.io/github/stars/fraction12/open-rank?style=flat-square&color=6366f1&label=stars'
+      }
     ],
+    links: [{ label: 'open-rank.com ↗', href: 'https://open-rank.com' }]
   },
   {
     name: '🖥 ClawK',
-    description:
-      'A native macOS menu bar app for OpenClaw so background AI runs are actually observable. It was my first SwiftUI app and proved that developer tooling feels radically better when it lives directly on your desktop.',
+    description: 'Native macOS menu bar app for OpenClaw so background AI runs are observable in real time.',
     tech: ['Swift', 'SwiftUI', 'macOS'],
     amberTech: [],
-    stats: [{ label: '⭐', id: 'clawk-stars' }],
+    badges: [{ label: 'GitHub stars', href: 'https://github.com/fraction12/ClawK', img: 'https://img.shields.io/github/stars/fraction12/ClawK?style=flat-square&color=6366f1&label=stars' }]
   },
   {
     name: '🔔 agentrem',
-    description:
-      "Agents lose context between sessions, so I built persistent reminders with a CLI and MCP server. I rewrote it from Python to TypeScript overnight, shipped six versions between midnight and 4am, and learned docs are the real distribution channel for MCP tools.",
+    description: 'Persistent reminders for AI agents with CLI + MCP server; rewritten in TypeScript and shipped fast.',
     tech: ['TypeScript', 'SQLite', 'MCP', 'npm'],
     amberTech: ['npm'],
-    stats: [
-      { label: '⭐', id: 'agentrem-stars' },
-      { label: '⬇', id: 'agentrem-npm', suffix: ' npm/mo' },
-    ],
+    badges: [
+      {
+        label: 'npm downloads',
+        href: 'https://www.npmjs.com/package/agentrem',
+        img: 'https://img.shields.io/npm/dm/agentrem?style=flat-square&color=6366f1&label=npm%20downloads%2Fmo'
+      },
+      {
+        label: 'GitHub stars',
+        href: 'https://github.com/fraction12/agentrem',
+        img: 'https://img.shields.io/github/stars/fraction12/agentrem?style=flat-square&color=6366f1&label=stars'
+      }
+    ]
   },
   {
     name: '⚡ TradeSpec AI',
-    description:
-      'After watching contractors bid from handwritten notes where one misread digit could cost thousands, I started building an AI workflow for faster and safer trade estimates. Still in development.',
+    description: 'AI workflow for faster, safer trade estimates based on messy contractor source inputs.',
     tech: ['AI/ML', 'Node.js', 'SaaS'],
     amberTech: ['SaaS'],
-    stats: [{ type: 'text', value: '🏗 In Development' }],
+    badges: [],
+    text: '🏗 In Development'
   },
   {
     name: '🧠 AgentSense',
-    description:
-      "Started as a 'what if' experiment: give an agent durable memory using automatic entity extraction and a zero-cost knowledge graph. The most useful output wasn't just facts, it was relationship context across people and projects.",
+    description: 'Durable memory for agents using automatic entity extraction + relationship-aware context.',
     tech: ['TypeScript', 'SQLite', 'FTS5'],
     amberTech: [],
-    stats: [{ label: '⭐', id: 'agentsense-stars' }],
+    badges: [{ label: 'GitHub stars', href: 'https://github.com/fraction12/agentsense', img: 'https://img.shields.io/github/stars/fraction12/agentsense?style=flat-square&color=6366f1&label=stars' }]
   },
   {
     name: '🎮 Chronoblast',
-    description:
-      'A roguelike shooter with time-loop mechanics built over seven months in Unreal on a 7-person team. I handled weapon loot systems, procedural level generation, and boss mechanics in C++, and it became my biggest lesson in shipping game systems.',
+    description: 'Roguelike shooter with time-loop mechanics built in Unreal on a 7-person team over 7 months.',
     tech: ['Unreal Engine 4', 'C++', 'Game Dev'],
     amberTech: [],
-    stats: [
-      { type: 'text', value: '🎓 Full Sail University' },
-      { type: 'link', label: 'Play on itch.io ↗', href: 'https://chozofs.itch.io/chronoblast' },
-    ],
-  },
+    badges: [],
+    text: '🎓 Full Sail University',
+    links: [{ label: 'Play on itch.io ↗', href: 'https://chozofs.itch.io/chronoblast' }]
+  }
 ];
 ---
 <div id="projects">
@@ -83,27 +95,17 @@ const projects = [
             <span class:list={["pill", project.amberTech.includes(tech) && 'amber']}>{tech}</span>
           ))}
         </div>
+
         <div class="stats">
-          {project.stats.map((stat) => {
-            if (stat.type === 'link') {
-              return (
-                <a href={stat.href} target="_blank" rel="noopener" class="stat-link">
-                  {stat.label}
-                </a>
-              );
-            }
-
-            if (stat.type === 'text') {
-              return <span>{stat.value}</span>;
-            }
-
-            return (
-              <span>
-                {stat.label} <span id={stat.id}>—</span>
-                {stat.suffix ?? ''}
-              </span>
-            );
-          })}
+          {project.badges.map((badge) => (
+            <a href={badge.href} target="_blank" rel="noopener" class="badge-link" aria-label={badge.label}>
+              <img src={badge.img} alt={badge.label} loading="lazy" />
+            </a>
+          ))}
+          {project.links?.map((link) => (
+            <a href={link.href} target="_blank" rel="noopener" class="stat-link">{link.label}</a>
+          ))}
+          {project.text && <span>{project.text}</span>}
         </div>
       </article>
     ))}

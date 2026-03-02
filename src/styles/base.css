@@ -394,6 +394,15 @@ h2 .dot { color: var(--accent); }
   color: #8e8e8e;
 }
 
+.badge-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-link img {
+  height: 20px;
+}
+
 .stat-link {
   color: var(--accent);
   text-decoration: none;

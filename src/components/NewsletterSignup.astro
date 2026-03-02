@@ -5,8 +5,10 @@ const { className = '' } = Astro.props;
 <section class:list={["newsletter", className]} aria-label="Newsletter signup">
   <p class="newsletter-value">
     Get practical notes on building with AI agents, shipping fast, and learning in public.
-    <span class="newsletter-proof">Trusted by <span id="substack-subs">—</span> readers on Substack.</span>
   </p>
+  <a class="badge-link" href="https://dushyantg.substack.com" target="_blank" rel="noopener noreferrer" aria-label="Substack subscribers">
+    <img src="https://img.shields.io/badge/Substack-subscribers%20available-6366f1?style=flat-square" alt="Substack subscribers" loading="lazy" />
+  </a>
 
   <form
     class="newsletter-form"
