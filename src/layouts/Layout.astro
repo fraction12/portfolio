@@ -9,13 +9,18 @@ interface Props {
   title?: string;
   description?: string;
   current?: 'home' | 'projects' | 'writing' | 'jarvis' | 'now' | 'connect' | 'beliefs';
+  ogImage?: string;
 }
 
 const {
   title = 'Dushyant Garg',
-  description = 'Dushyant Garg — I make products and sometimes the software too. Open-source AI tools, games, and writing.',
-  current = 'home'
+  description = 'Dushyant Garg — PM building AI tools, open-source products, and writing dispatches from real execution.',
+  current = 'home',
+  ogImage = '/og-default.png'
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
+const ogTitle = title.includes('Dushyant Garg') ? title : `${title} — Dushyant Garg`;
 ---
 
 <!DOCTYPE html>
@@ -25,6 +30,17 @@ const {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={ogTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(ogImage, canonical).toString()} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={ogTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={new URL(ogImage, canonical).toString()} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
