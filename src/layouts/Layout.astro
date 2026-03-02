@@ -44,12 +44,12 @@ const ogTitle = title.includes('Dushyant Garg') ? title : `${title} — Dushyant
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <ViewTransitions />
+  <ViewTransitions fallback="animate" />
 </head>
 <body>
   <Nav current={current} />
 
-  <main class="page-main" transition:animate="fade">
+  <main class="page-main" transition:animate="fade" transition:name="page-content">
     <slot />
   </main>
 
