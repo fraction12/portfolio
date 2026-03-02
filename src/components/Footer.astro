@@ -1,6 +1,18 @@
 ---
+const year = new Date().getFullYear();
+const links = [
+  { label: 'GitHub', href: 'https://github.com/fraction12' },
+  { label: 'Substack', href: 'https://dushyantg.substack.com' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/dushyantgarg' },
+  { label: 'npm', href: 'https://www.npmjs.com/~fraction12' }
+];
 ---
-<footer>
-  <p>© 2026 Dushyant Garg</p>
-  <button id="lobster-mode-btn" onclick="toggleLobsterMode()">🦞 lobster mode</button>
+<footer class="site-footer">
+  <p class="site-footer-name">Dushyant Garg</p>
+  <p class="site-footer-meta">© {year}</p>
+  <nav class="site-footer-links" aria-label="Footer links">
+    {links.map((link) => (
+      <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+    ))}
+  </nav>
 </footer>

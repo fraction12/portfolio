@@ -791,15 +791,19 @@ h2 .dot { color: var(--accent); }
 /* ============================================================
    FOOTER
    ============================================================ */
-footer {
+.site-footer {
   text-align: center;
-  padding: 2.5rem 0 2rem;
-  color: #333;
-  font-size: 0.78rem;
+  padding: 2.5rem 1rem 2rem;
+  color: var(--dim);
   position: relative;
   z-index: 2;
-  letter-spacing: 0.05em;
+  border-top: 1px solid var(--border);
 }
+.site-footer-name { color: var(--text); font-weight: 600; }
+.site-footer-meta { font-size: var(--fs-small); margin-top: 0.2rem; }
+.site-footer-links { margin-top: 0.7rem; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; }
+.site-footer-links a { color: var(--dim); font-size: var(--fs-small); text-decoration: none; }
+.site-footer-links a:hover { color: var(--text); }
 
 /* ============================================================
    STATS COUNTER
