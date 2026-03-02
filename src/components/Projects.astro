@@ -10,6 +10,7 @@ const projects = [
       { label: '⭐', id: 'agentplan-stars' },
       { label: '✅', id: 'agentplan-tests', suffix: ' tests' },
       { label: '📦 v', id: 'agentplan-version' },
+      { label: '⬇', id: 'agentplan-downloads', suffix: ' downloads/mo' },
     ],
   },
   {
@@ -37,7 +38,10 @@ const projects = [
       "Agents lose context between sessions, so I built persistent reminders with a CLI and MCP server. I rewrote it from Python to TypeScript overnight, shipped six versions between midnight and 4am, and learned docs are the real distribution channel for MCP tools.",
     tech: ['TypeScript', 'SQLite', 'MCP', 'npm'],
     amberTech: ['npm'],
-    stats: [{ label: '⭐', id: 'agentrem-stars' }],
+    stats: [
+      { label: '⭐', id: 'agentrem-stars' },
+      { label: '⬇', id: 'agentrem-npm', suffix: ' npm/mo' },
+    ],
   },
   {
     name: '⚡ TradeSpec AI',
