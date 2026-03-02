@@ -9,6 +9,12 @@ interface FeedPost {
   readTimeMinutes: number;
 }
 
+interface Props {
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+
 const decodeXml = (input = '') =>
   input
     .replaceAll('&amp;', '&')
@@ -85,12 +91,14 @@ try {
   hasError = true;
   console.error('Failed to fetch Substack feed:', error);
 }
+
+const visiblePosts = typeof limit === 'number' ? posts.slice(0, limit) : posts;
 ---
 
-<section id="writing">
-  {posts.length > 0 ? (
+<div id="writing">
+  {visiblePosts.length > 0 ? (
     <div class="writing-list">
-      {posts.map((post, index) => (
+      {visiblePosts.map((post, index) => (
         <article class="writing-item reveal" style={`--reveal-delay: ${(index + 1) * 0.05}s;`}>
           <div>
             <h3>{post.title}</h3>
@@ -109,4 +117,4 @@ try {
       <a href="https://dushyantg.substack.com" target="_blank" rel="noopener noreferrer">Visit Substack →</a>
     </div>
   )}
-</section>
+</div>

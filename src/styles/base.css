@@ -16,7 +16,7 @@
   --border-hover: rgba(99,102,241,0.35);
   --card-bg: rgba(255,255,255,0.025);
   --gutter: 2rem;
-  --max-w: 1000px;
+  --max-w: 780px;
   --nav-height: 56px;
 }
 
@@ -71,7 +71,23 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 6rem 0;
+  padding: 3rem 0;
+}
+
+.section-stack {
+  padding: 2rem 0;
+}
+
+.section-tight {
+  padding-top: 0;
+}
+
+.section-top-space {
+  padding-top: 4rem;
+}
+
+.section-title {
+  margin-bottom: 1.4rem;
 }
 
 section.hero {
@@ -279,7 +295,7 @@ h2 .dot { color: var(--accent); }
    ============================================================ */
 .projects-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.2rem;
 }
 
@@ -650,6 +666,32 @@ h2 .dot { color: var(--accent); }
   animation: rippleAnim 0.6s ease-out forwards;
 }
 
+
+/* ============================================================
+   BELIEFS
+   ============================================================ */
+.beliefs-content {
+  gap: 1rem;
+}
+
+.belief-block {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  padding: 1.2rem 1.3rem;
+}
+
+.belief-block h2 {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0;
+}
+
+.belief-block p {
+  color: #c9c9c9;
+  font-size: 0.92rem;
+}
 
 /* ============================================================
    FOOTER

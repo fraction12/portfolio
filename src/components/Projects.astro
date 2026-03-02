@@ -68,7 +68,7 @@ const projects = [
   },
 ];
 ---
-<section id="projects">
+<div id="projects">
   <div class="projects-grid">
     {projects.map((project, index) => (
       <article class="card reveal" style={`--reveal-delay: ${(0.05 + index * 0.05).toFixed(2)}s;`}>
@@ -104,4 +104,4 @@ const projects = [
       </article>
     ))}
   </div>
-</section>
+</div>

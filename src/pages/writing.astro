@@ -9,7 +9,13 @@ import NewsletterSignup from '../components/NewsletterSignup.astro';
     <section class="page-intro">
       <h1 class="page-title reveal">Writing<span class="dot">.</span></h1>
     </section>
-    <Writing />
-    <NewsletterSignup className="reveal" />
+
+    <section class="section-stack">
+      <Writing />
+    </section>
+
+    <section class="section-stack section-tight">
+      <NewsletterSignup className="reveal" />
+    </section>
   </div>
 </Layout>

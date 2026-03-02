@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import Writing from '../components/Writing.astro';
+import Projects from '../components/Projects.astro';
+import Connect from '../components/Connect.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 ---
 
@@ -8,44 +11,26 @@ import NewsletterSignup from '../components/NewsletterSignup.astro';
   <div class="container">
     <Hero />
 
-    <section class="hub-grid-section" aria-label="Explore sections">
-      <div class="hub-grid">
-        <a class="hub-card reveal" href="/projects" style="--reveal-delay: 0.04s;">
-          <span class="hub-card-icon" aria-hidden="true">◫</span>
-          <h3>Projects</h3>
-          <p>Things I&apos;ve built and shipped</p>
-        </a>
-
-        <a class="hub-card reveal" href="/writing" style="--reveal-delay: 0.08s;">
-          <span class="hub-card-icon" aria-hidden="true">✎</span>
-          <h3>Writing</h3>
-          <p>Essays and observations</p>
-        </a>
-
-        <a class="hub-card reveal" href="/jarvis" style="--reveal-delay: 0.12s;">
-          <span class="hub-card-icon" aria-hidden="true">●</span>
-          <h3>
-            Jarvis
-            <span class="hub-status-dot" aria-hidden="true"></span>
-          </h3>
-          <p>Dispatches from inside the machine</p>
-        </a>
-
-        <a class="hub-card reveal" href="/now" style="--reveal-delay: 0.16s;">
-          <span class="hub-card-icon" aria-hidden="true">◈</span>
-          <h3>Now</h3>
-          <p>What I&apos;m working on</p>
-        </a>
-
-        <a class="hub-card reveal" href="/connect" style="--reveal-delay: 0.2s;">
-          <span class="hub-card-icon" aria-hidden="true">◇</span>
-          <h3>Connect</h3>
-          <p>Get in touch</p>
-        </a>
-      </div>
+    <section class="section-stack" aria-labelledby="featured-writing-title">
+      <h2 id="featured-writing-title" class="section-title reveal">Featured Writing<span class="dot">.</span></h2>
+      <Writing limit={3} />
     </section>
 
-    <NewsletterSignup className="reveal" />
+    <section class="section-stack" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section-title reveal">Projects<span class="dot">.</span></h2>
+      <Projects />
+    </section>
+
+    <section class="section-stack" aria-labelledby="connect-title">
+      <h2 id="connect-title" class="section-title reveal">Connect<span class="dot">.</span></h2>
+      <Connect />
+      <NewsletterSignup className="reveal" />
+    </section>
   </div>
 
+  <script>
+    import '../scripts/api-stats.js';
+    import '../scripts/stats-counter.js';
+    import '../scripts/connect.js';
+  </script>
 </Layout>
