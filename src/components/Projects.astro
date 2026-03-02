@@ -1,86 +1,107 @@
 ---
+const projects = [
+  {
+    name: '📋 agentplan',
+    description:
+      "AI agents kept duplicating work on my machine, so I built a shared to-do system with dependencies, priorities, and atomic claims. I pushed 51 commits in one day, built it with pure Python stdlib, and shipped it to coordinate multiple agents cleanly.",
+    tech: ['Python', 'SQLite', 'CLI', 'PyPI'],
+    amberTech: ['PyPI'],
+    stats: [
+      { label: '⭐', id: 'agentplan-stars' },
+      { label: '✅', id: 'agentplan-tests', suffix: ' tests' },
+      { label: '📦 v', id: 'agentplan-version' },
+    ],
+  },
+  {
+    name: '🏆 OpenRank',
+    description:
+      "I needed a real benchmark for AI agents, not toy prompts, so I built daily puzzles with a live leaderboard and server-side timing. The key insight: agents can self-report anything, but they can't fake timestamps.",
+    tech: ['Astro', 'TypeScript', 'Supabase', 'Live'],
+    amberTech: ['Live'],
+    stats: [
+      { type: 'link', label: 'open-rank.com ↗', href: 'https://open-rank.com' },
+      { label: '⭐', id: 'openrank-stars' },
+    ],
+  },
+  {
+    name: '🖥 ClawK',
+    description:
+      'A native macOS menu bar app for OpenClaw so background AI runs are actually observable. It was my first SwiftUI app and proved that developer tooling feels radically better when it lives directly on your desktop.',
+    tech: ['Swift', 'SwiftUI', 'macOS'],
+    amberTech: [],
+    stats: [{ label: '⭐', id: 'clawk-stars' }],
+  },
+  {
+    name: '🔔 agentrem',
+    description:
+      "Agents lose context between sessions, so I built persistent reminders with a CLI and MCP server. I rewrote it from Python to TypeScript overnight, shipped six versions between midnight and 4am, and learned docs are the real distribution channel for MCP tools.",
+    tech: ['TypeScript', 'SQLite', 'MCP', 'npm'],
+    amberTech: ['npm'],
+    stats: [{ label: '⭐', id: 'agentrem-stars' }],
+  },
+  {
+    name: '⚡ TradeSpec AI',
+    description:
+      'After watching contractors bid from handwritten notes where one misread digit could cost thousands, I started building an AI workflow for faster and safer trade estimates. Still in development.',
+    tech: ['AI/ML', 'Node.js', 'SaaS'],
+    amberTech: ['SaaS'],
+    stats: [{ type: 'text', value: '🏗 In Development' }],
+  },
+  {
+    name: '🧠 AgentSense',
+    description:
+      "Started as a 'what if' experiment: give an agent durable memory using automatic entity extraction and a zero-cost knowledge graph. The most useful output wasn't just facts, it was relationship context across people and projects.",
+    tech: ['TypeScript', 'SQLite', 'FTS5'],
+    amberTech: [],
+    stats: [{ label: '⭐', id: 'agentsense-stars' }],
+  },
+  {
+    name: '🎮 Chronoblast',
+    description:
+      'A roguelike shooter with time-loop mechanics built over seven months in Unreal on a 7-person team. I handled weapon loot systems, procedural level generation, and boss mechanics in C++, and it became my biggest lesson in shipping game systems.',
+    tech: ['Unreal Engine 4', 'C++', 'Game Dev'],
+    amberTech: [],
+    stats: [
+      { type: 'text', value: '🎓 Full Sail University' },
+      { type: 'link', label: 'Play on itch.io ↗', href: 'https://chozofs.itch.io/chronoblast' },
+    ],
+  },
+];
 ---
 <section id="projects">
   <div class="projects-grid">
-    <div class="card card-featured reveal" style="--reveal-delay: 0.05s;">
-      <div class="featured-inner">
-        <div>
-          <h3>📋 agentplan</h3>
-          <p class="desc">AI agents can't coordinate. Two agents, same project, no idea what the other is doing. A shared to-do list with dependencies, priorities, and atomic claims — so agents stop stepping on each other.</p>
-          <p>Built this because I run 3 AI agents on one machine. They kept duplicating work. Turns out the fix isn't smarter agents — it's a shared checklist they can all read.</p>
-          <p style="margin-top:0.5rem">51 commits in one day to get it launch-ready. Zero dependencies, pure Python stdlib.</p>
-          <div class="pills">
-            <span class="pill">Python</span><span class="pill">SQLite</span><span class="pill">CLI</span><span class="pill amber">PyPI</span>
-          </div>
-          <div class="stats">
-            <span>⭐ <span id="agentplan-stars">—</span></span>
-            <span>✅ <span id="agentplan-tests">—</span> tests</span>
-            <span>📦 v<span id="agentplan-version">—</span></span>
-          </div>
+    {projects.map((project, index) => (
+      <article class="card reveal" style={`--reveal-delay: ${(0.05 + index * 0.05).toFixed(2)}s;`}>
+        <h3>{project.name}</h3>
+        <p class="desc">{project.description}</p>
+        <div class="pills">
+          {project.tech.map((tech) => (
+            <span class:list={["pill", project.amberTech.includes(tech) && 'amber']}>{tech}</span>
+          ))}
         </div>
-        <a href="https://github.com/fraction12/agentplan" target="_blank" rel="noopener" class="card-visual" aria-label="agentplan on GitHub">
-          <span class="card-visual-emoji">📋</span>
-        </a>
-      </div>
-    </div>
+        <div class="stats">
+          {project.stats.map((stat) => {
+            if (stat.type === 'link') {
+              return (
+                <a href={stat.href} target="_blank" rel="noopener" class="stat-link">
+                  {stat.label}
+                </a>
+              );
+            }
 
-    <div class="card reveal" style="--reveal-delay: 0.10s;">
-      <h3>🏆 OpenRank</h3>
-      <p class="desc">AI agents are getting better. But nobody can prove it. Daily puzzles, live leaderboard, server-side timing — the open benchmark for AI agents.</p>
-      <p>Built to scratch my own itch — I needed a way to benchmark agents on real tasks, not toy prompts.</p>
-      <p style="margin-top:0.5rem">The hard part wasn't the puzzles. It was server-side timing — agents can self-report anything, but they can't fake a timestamp.</p>
-      <div class="pills">
-        <span class="pill">Astro</span><span class="pill">TypeScript</span><span class="pill">Supabase</span><span class="pill amber">Live</span>
-      </div>
-      <div class="stats">
-        <a href="https://open-rank.com" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-size:0.75rem;">open-rank.com ↗</a>
-        <span>⭐ <span id="openrank-stars">—</span></span>
-      </div>
-    </div>
+            if (stat.type === 'text') {
+              return <span>{stat.value}</span>;
+            }
 
-    <div class="card reveal" style="--reveal-delay: 0.15s;">
-      <h3>🖥 ClawK</h3>
-      <p class="desc">If your AI runs tasks in the background, you deserve a clean UI to watch it work. Native macOS menu bar app for OpenClaw.</p>
-      <p>First native app I ever built. SwiftUI just clicks — making something real on your desktop hits different.</p>
-      <p style="margin-top:0.5rem">If your AI is running tasks in the background, you deserve a clean UI to watch it work.</p>
-      <div class="pills"><span class="pill">Swift</span><span class="pill">SwiftUI</span><span class="pill">macOS</span></div>
-      <div class="stats"><span>⭐ <span id="clawk-stars">—</span></span></div>
-    </div>
-
-    <div class="card reveal" style="--reveal-delay: 0.20s;">
-      <h3>🔔 agentrem</h3>
-      <p class="desc">Your AI agent forgets everything between sessions. This fixes that. Persistent reminders with CLI + MCP server — because agents need a memory that actually sticks.</p>
-      <p>Rewrote from Python to TypeScript in one night — 6 versions shipped between midnight and 4am.</p>
-      <p style="margin-top:0.5rem">Learned that docs are the entire go-to-market for MCP tools. If an agent can't figure it out in 10 seconds, it won't use it.</p>
-      <div class="pills"><span class="pill">TypeScript</span><span class="pill">SQLite</span><span class="pill">MCP</span><span class="pill amber">npm</span></div>
-      <div class="stats"><span>⭐ <span id="agentrem-stars">—</span></span></div>
-    </div>
-
-    <div class="card reveal" style="--reveal-delay: 0.25s;">
-      <h3>⚡ TradeSpec AI</h3>
-      <p class="desc">Trade contractors still bid jobs by hand. A misread zero costs thousands. AI fixes an entire industry running on handwritten math.</p>
-      <p>Watched a contractor bid a job by hand — a 0 misread as an 8 could cost thousands.</p>
-      <p style="margin-top:0.5rem">An entire industry on handwritten math. AI fixes that.</p>
-      <div class="pills"><span class="pill">AI/ML</span><span class="pill">Node.js</span><span class="pill amber">SaaS</span></div>
-      <div class="stats"><span>🏗 In Development</span></div>
-    </div>
-
-    <div class="card reveal" style="--reveal-delay: 0.30s;">
-      <h3>🧠 AgentSense</h3>
-      <p class="desc">What if your agent remembered every person, project, and decision it ever encountered? Zero-cost knowledge graph with automatic entity extraction.</p>
-      <p>Started as a "what if?" — an experiment in giving agents real memory.</p>
-      <p style="margin-top:0.5rem">Surprise: the most useful thing it extracted wasn't facts — it was the social graph.</p>
-      <div class="pills"><span class="pill">TypeScript</span><span class="pill">SQLite</span><span class="pill">FTS5</span></div>
-      <div class="stats"><span>⭐ <span id="agentsense-stars">—</span></span></div>
-    </div>
-
-    <div class="card reveal" style="--reveal-delay: 0.35s;">
-      <h3>🎮 Chronoblast</h3>
-      <p class="desc">Roguelike shooter with a time-loop twist. Borderlands-style loot, procedural levels, three boss fights. Seven months in Unreal — this is where I learned to ship.</p>
-      <p>Programmer and technical designer on a 7-person team. Built the weapon loot system, procedural level generation, and boss fight mechanics in C++.</p>
-      <p style="margin-top:0.5rem">Seven months in Unreal Engine — this is where I learned to ship.</p>
-      <div class="pills"><span class="pill">Unreal Engine 4</span><span class="pill">C++</span><span class="pill">Game Dev</span></div>
-      <div class="stats"><span>🎓 Full Sail University</span> <a href="https://chozofs.itch.io/chronoblast" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-size:0.75rem;">Play on itch.io ↗</a></div>
-    </div>
+            return (
+              <span>
+                {stat.label} <span id={stat.id}>—</span>
+                {stat.suffix ?? ''}
+              </span>
+            );
+          })}
+        </div>
+      </article>
+    ))}
   </div>
 </section>
