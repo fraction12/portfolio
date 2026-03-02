@@ -385,67 +385,59 @@ h2 .dot { color: var(--accent); }
 }
 
 .writing-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 1.3rem 1.5rem;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
-  transition: border-color 0.3s, transform 0.3s;
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  overflow: hidden;
+  transition: border-color 0.2s ease;
 }
 
-/* Gradient underline slide */
-.writing-item::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 0%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--amber));
-  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.writing-item:hover::after { width: 100%; }
 .writing-item:hover {
-  border-color: rgba(99,102,241,0.25);
-  transform: translateX(6px);
+  border-color: rgba(99,102,241,0.3);
 }
 
 .writing-item h3 {
   font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
+  font-weight: 550;
+  margin-bottom: 0.3rem;
 }
+
 .writing-item .date {
   color: var(--dim);
   font-size: 0.82rem;
+  margin-bottom: 0.55rem;
 }
-.writing-arrow {
+
+.writing-description {
+  color: #bcbcbc;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.writing-read-link {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 0.08rem;
+}
+
+.writing-read-link:hover {
+  border-color: var(--text);
+}
+
+.writing-empty {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
   color: var(--dim);
-  font-size: 1.1rem;
-  transition: transform 0.3s ease, color 0.3s ease;
-  flex-shrink: 0;
 }
-.writing-item:hover .writing-arrow {
-  transform: translate(6px, -2px);
-  color: var(--accent);
-}
-.writing-item.coming-soon { opacity: 0.5; cursor: default; }
-.writing-item.coming-soon:hover { transform: none; }
-.writing-item.coming-soon::after { display: none; }
-.coming-soon-badge {
-  font-size: 0.7rem;
-  background: var(--amber-dim);
-  color: var(--amber);
-  padding: 0.15rem 0.5rem;
-  border-radius: 99px;
-  margin-left: 0.5rem;
-  vertical-align: middle;
+
+.writing-empty a {
+  display: inline-block;
+  margin-top: 0.7rem;
+  color: var(--text);
+  text-decoration: none;
 }
 
 /* ============================================================
