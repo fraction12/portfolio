@@ -6,31 +6,29 @@ import Projects from '../components/Projects.astro';
 import Connect from '../components/Connect.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import JarvisSpotlight from '../components/JarvisSpotlight.astro';
+import Section from '../components/Section.astro';
 ---
 
 <Layout current="home" title="Dushyant Garg">
   <div class="container">
     <Hero />
 
-    <section class="section-stack" aria-labelledby="featured-writing-title">
-      <h2 id="featured-writing-title" class="section-title reveal">Featured Writing<span class="dot">.</span></h2>
+    <Section title="Featured Writing" id="featured-writing-title">
       <Writing limit={3} />
-    </section>
+    </Section>
 
-    <section class="section-stack" aria-labelledby="projects-title">
-      <h2 id="projects-title" class="section-title reveal">Projects<span class="dot">.</span></h2>
+    <Section title="Projects" id="projects-title">
       <Projects />
-    </section>
+    </Section>
 
-    <section class="section-stack" aria-labelledby="jarvis-title">
+    <Section>
       <JarvisSpotlight />
-    </section>
+    </Section>
 
-    <section class="section-stack" aria-labelledby="connect-title">
-      <h2 id="connect-title" class="section-title reveal">Connect<span class="dot">.</span></h2>
+    <Section title="Connect" id="connect-title">
       <Connect />
       <NewsletterSignup className="reveal" />
-    </section>
+    </Section>
   </div>
 
   <script>

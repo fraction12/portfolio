@@ -1,18 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Projects from '../components/Projects.astro';
+import Section from '../components/Section.astro';
 ---
-
 <Layout current="projects" title="Projects — Dushyant Garg">
   <div class="container">
-    <section class="page-intro">
+    <Section className="page-intro section-tight">
       <h1 class="page-title reveal">Projects<span class="dot">.</span></h1>
-    </section>
-
-    <section class="section-stack">
+    </Section>
+    <Section>
       <Projects />
-    </section>
+    </Section>
   </div>
-
-
 </Layout>

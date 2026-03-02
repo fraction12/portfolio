@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 const { className = '' } = Astro.props;
 ---
 
@@ -26,6 +27,6 @@ const { className = '' } = Astro.props;
       placeholder="you@domain.com"
       required
     />
-    <button type="submit">Subscribe</button>
+    <Button type="submit">Subscribe</Button>
   </form>
 </section>

@@ -1,0 +1,10 @@
+---
+interface Props {
+  href: string;
+  active?: boolean;
+}
+const { href, active = false } = Astro.props;
+---
+<a class:list={['top-nav-link', { active }]} href={href}>
+  <slot />
+</a>

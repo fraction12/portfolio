@@ -2,20 +2,18 @@
 import Layout from '../layouts/Layout.astro';
 import Writing from '../components/Writing.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import Section from '../components/Section.astro';
 ---
-
 <Layout current="writing" title="Writing — Dushyant Garg">
   <div class="container">
-    <section class="page-intro">
+    <Section className="page-intro section-tight">
       <h1 class="page-title reveal">Writing<span class="dot">.</span></h1>
-    </section>
-
-    <section class="section-stack">
+    </Section>
+    <Section>
       <Writing />
-    </section>
-
-    <section class="section-stack section-tight">
+    </Section>
+    <Section className="section-tight">
       <NewsletterSignup className="reveal" />
-    </section>
+    </Section>
   </div>
 </Layout>

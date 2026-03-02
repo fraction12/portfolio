@@ -1,0 +1,5 @@
+---
+interface Props { href: string; className?: string; }
+const { href, className = '' } = Astro.props;
+---
+<a class:list={['social-link', className]} href={href} target="_blank" rel="noopener noreferrer"><slot /></a>

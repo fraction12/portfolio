@@ -1,0 +1,5 @@
+---
+interface Props { tone?: 'default' | 'amber'; }
+const { tone = 'default' } = Astro.props;
+---
+<span class:list={['pill', tone === 'amber' && 'amber']}><slot /></span>

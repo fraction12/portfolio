@@ -1,4 +1,6 @@
 ---
+import Card from './Card.astro';
+import Pill from './Pill.astro';
 const projects = [
   {
     name: '📋 agentplan',
@@ -87,12 +89,12 @@ const projects = [
 <div id="projects">
   <div class="projects-grid">
     {projects.map((project, index) => (
-      <article class="card reveal" style={`--reveal-delay: ${(0.05 + index * 0.05).toFixed(2)}s;`}>
+      <Card className="reveal" style={`--reveal-delay: ${(0.05 + index * 0.05).toFixed(2)}s;`}>
         <h3>{project.name}</h3>
         <p class="desc">{project.description}</p>
         <div class="pills">
           {project.tech.map((tech) => (
-            <span class:list={["pill", project.amberTech.includes(tech) && 'amber']}>{tech}</span>
+            <Pill tone={project.amberTech.includes(tech) ? 'amber' : 'default'}>{tech}</Pill>
           ))}
         </div>
 
@@ -107,7 +109,7 @@ const projects = [
           ))}
           {project.text && <span>{project.text}</span>}
         </div>
-      </article>
+      </Card>
     ))}
   </div>
 </div>

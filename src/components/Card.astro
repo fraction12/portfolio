@@ -1,0 +1,7 @@
+---
+interface Props { className?: string; style?: string; }
+const { className = '', style = '' } = Astro.props;
+---
+<article class:list={['card', className]} style={style}>
+  <slot />
+</article>
