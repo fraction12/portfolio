@@ -1,18 +1,24 @@
 ---
+const socials = [
+  { label: 'GitHub', href: 'https://github.com/fraction12' },
+  { label: 'Twitter/X', href: 'https://x.com/dushyantgarg' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/dushyantgarg' },
+  { label: 'Substack', href: 'https://dushyantg.substack.com' }
+];
 ---
-<!-- ====================================================
-     HERO
-     ==================================================== -->
+
 <section id="hero" class="hero">
-  <div>
-    <h1 class="hero-name">Dushyant <span class="accent">Garg</span></h1>
-    <p class="hero-title">I make products and sometimes the software too.</p>
-    <p class="time-greeting" id="time-greeting"></p>
-    <div class="hero-links">
-      <a class="hero-link" href="https://github.com/fraction12" target="_blank" rel="noopener">GitHub ↗</a>
-      <a class="hero-link" href="https://dushyantg.substack.com" target="_blank" rel="noopener">Substack ↗</a>
-      <a class="hero-link" href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a class="hero-link" href="https://www.npmjs.com/~fraction12" target="_blank" rel="noopener">npm ↗</a>
-    </div>
+  <div class="hero-inner">
+    <p class="hero-kicker">Dushyant Garg</p>
+    <h1 class="hero-name">PM by day. Builder by night.</h1>
+    <p class="hero-title">I ship products end-to-end, from strategy docs to working code.</p>
+
+    <nav class="hero-links" aria-label="Social links">
+      {socials.map((social) => (
+        <a class="hero-link" href={social.href} target="_blank" rel="noopener noreferrer">
+          {social.label}
+        </a>
+      ))}
+    </nav>
   </div>
 </section>

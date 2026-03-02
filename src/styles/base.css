@@ -112,89 +112,57 @@ h2 .dot { color: var(--accent); }
    ============================================================ */
 .hero {
   position: relative;
+  min-height: calc(100vh - 5rem);
+  display: flex;
+  align-items: center;
+}
+
+.hero-inner {
+  max-width: 720px;
+}
+
+.hero-kicker {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1rem;
 }
 
 .hero-name {
-  font-size: clamp(3rem, 8vw, 5rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
   line-height: 1.05;
-  margin-bottom: 0.6rem;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+  margin-bottom: 0.9rem;
 }
-.hero-name .accent { color: var(--accent); }
 
 .hero-title {
-  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
   color: var(--dim);
-  font-weight: 400;
-  margin-bottom: 1.2rem;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
-}
-
-.hero-typing-line {
-  display: flex;
-  align-items: center;
-  gap: 0;
   margin-bottom: 2rem;
-  opacity: 0;
-  animation: heroFadeIn 0.5s ease 0.65s forwards;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: clamp(0.85rem, 2vw, 1.05rem);
-  color: var(--amber);
-  min-height: 1.6em;
+  max-width: 62ch;
 }
-
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1.1em;
-  background: var(--amber);
-  margin-left: 2px;
-  vertical-align: text-bottom;
-  animation: blink 1s step-end infinite;
-  flex-shrink: 0;
-}
-
 
 .hero-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
-  opacity: 0;
-  animation: heroFadeIn 0.5s ease 0.95s forwards;
+  gap: 1rem;
 }
 
 .hero-link {
-  color: var(--dim);
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 0.45rem 1.1rem;
-  border-radius: 8px;
-  transition: all 0.25s ease;
-  position: relative;
-  overflow: hidden;
-}
-.hero-link::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(245,158,11,0.05));
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-.hero-link:hover {
   color: var(--text);
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(99,102,241,0.2);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 0.1rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
-.hero-link:hover::before { opacity: 1; }
+
+.hero-link:hover {
+  color: #fff;
+  border-color: var(--text);
+}
 
 /* ============================================================
    HUB GRID
@@ -710,7 +678,9 @@ footer {
 
   section { padding: 4rem 0; min-height: auto; }
 
-  .hero-name { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+  .hero-name { font-size: clamp(2.2rem, 10vw, 3.2rem); }
+  .hero-title { margin-bottom: 1.5rem; }
+  .hero-links { gap: 0.75rem; }
   section.hero { min-height: calc(100vh - 4rem); }
 
   .hub-grid { grid-template-columns: 1fr; }
@@ -731,15 +701,4 @@ footer {
   .connect-link { width: 180px; }
 }
 
-/* ============================================================
-   TIME OF DAY GREETING
-   ============================================================ */
-.time-greeting {
-  font-size: 0.85rem;
-  color: #555;
-  margin-bottom: 0.55rem;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  opacity: 0;
-  animation: heroFadeIn 0.5s ease 0.5s forwards;
-}
 
