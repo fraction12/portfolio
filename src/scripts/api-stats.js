@@ -1,4 +1,4 @@
-// ── LIVE GITHUB + NPM STATS ─────────────────────────────────────────────
+// ── LIVE GITHUB + PACKAGE STATS ─────────────────────────────────────────
 async function initApiStats() {
   const repos = [
     { id: 'agentrem-stars', repo: 'fraction12/agentrem' },
@@ -8,7 +8,6 @@ async function initApiStats() {
     { id: 'agentplan-stars', repo: 'fraction12/agentplan' },
   ];
 
-  // Fetch GitHub stars
   for (const { id, repo } of repos) {
     try {
       const res = await fetch(`https://api.github.com/repos/${repo}`);
@@ -20,22 +19,18 @@ async function initApiStats() {
     } catch {}
   }
 
-  // Fetch npm version + test count from package.json description or README
+  const agentplanTestsEl = document.getElementById('agentplan-tests');
+  if (agentplanTestsEl) {
+    agentplanTestsEl.textContent = '104';
+    agentplanTestsEl.setAttribute('data-target', '104');
+  }
+
   try {
-    const res = await fetch('https://registry.npmjs.org/agentrem/latest');
+    const res = await fetch('https://pypi.org/pypi/agentplan/json');
     if (res.ok) {
       const data = await res.json();
-      const verEl = document.getElementById('agentrem-version');
-      if (verEl) verEl.textContent = data.version;
-
-      // Update the typing phrase too
-      const testMatch = data.description?.match(/(\d+)\s*test/i);
-      const testsEl = document.getElementById('agentrem-tests');
-      if (testsEl) {
-        // Try to get from README badge or default to fetched info
-        testsEl.textContent = '444'; // Will update when we add test count to npm
-        testsEl.setAttribute('data-target', '444');
-      }
+      const verEl = document.getElementById('agentplan-version');
+      if (verEl) verEl.textContent = data?.info?.version ?? '—';
     }
   } catch {}
 }
