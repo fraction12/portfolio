@@ -1,7 +1,7 @@
 ---
 import NavLink from './NavLink.astro';
 interface NavItem {
-  key: 'home' | 'projects' | 'writing' | 'jarvis' | 'now' | 'connect' | 'beliefs';
+  key: 'home' | 'projects' | 'writing' | 'jarvis' | 'connect' | 'beliefs';
   href: string;
   label: string;
 }
@@ -12,7 +12,6 @@ const items: NavItem[] = [
   { key: 'projects', href: '/projects', label: 'Projects' },
   { key: 'writing', href: '/writing', label: 'Writing' },
   { key: 'jarvis', href: '/jarvis', label: 'Jarvis' },
-  { key: 'now', href: '/now', label: 'Now' },
   { key: 'beliefs', href: '/beliefs', label: 'Beliefs' },
   { key: 'connect', href: '/connect', label: 'Connect' }
 ];
