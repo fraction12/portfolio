@@ -291,6 +291,43 @@ h2 .dot { color: var(--accent); }
 
 
 /* ============================================================
+   JARVIS SPOTLIGHT
+   ============================================================ */
+.jarvis-spotlight {
+  min-height: auto;
+  border: 1px solid var(--border-hover);
+  background: linear-gradient(145deg, rgba(99,102,241,0.12), rgba(255,255,255,0.02));
+  border-radius: 16px;
+  padding: 1.4rem;
+}
+
+.jarvis-spotlight-kicker {
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.jarvis-spotlight-title {
+  font-size: clamp(1.4rem, 3.6vw, 2rem);
+  margin-bottom: 0.75rem;
+}
+
+.jarvis-spotlight-copy {
+  color: #c6c6c6;
+  max-width: 64ch;
+  margin-bottom: 1rem;
+}
+
+.jarvis-spotlight-link {
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.45);
+  padding-bottom: 0.08rem;
+}
+
+/* ============================================================
    PROJECT CARDS
    ============================================================ */
 .projects-grid {
