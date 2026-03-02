@@ -1,7 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
-import Terminal from '../components/Terminal.astro';
-import Dock from '../components/Dock.astro';
+import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/base.css';
 import '../styles/animations.css';
@@ -32,29 +31,17 @@ const {
   <ViewTransitions />
 </head>
 <body>
-  <div id="cursor-glow"></div>
-
-  <div class="mesh" aria-hidden="true">
-    <div class="mesh-layer mesh-layer-1"></div>
-    <div class="mesh-layer mesh-layer-2"></div>
-    <div class="mesh-layer mesh-layer-3"></div>
-    <div class="mesh-layer mesh-layer-4"></div>
-  </div>
+  <Nav current={current} />
 
   <main class="page-main" transition:animate="fade">
     <slot />
   </main>
 
   <Footer />
-  <Terminal />
-  <Dock current={current} />
 
   <script>
-    import '../scripts/cursor.js';
-    import '../scripts/particles.js';
     import '../scripts/scroll-reveal.js';
     import '../scripts/lobster.js';
-    import '../scripts/terminal.js';
   </script>
 </body>
 </html>

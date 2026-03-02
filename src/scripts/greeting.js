@@ -2,7 +2,6 @@
 function initGreeting() {
   const h = new Date().getHours();
   const greetingEl = document.getElementById('time-greeting');
-  const mesh = document.querySelector('.mesh');
 
   let greeting = '';
   if      (h >= 5  && h < 12) greeting = 'morning. coffee first. ☕';
@@ -13,10 +12,6 @@ function initGreeting() {
 
   if (greetingEl) greetingEl.textContent = greeting;
 
-  // Night mode orbs (6pm–6am)
-  if (mesh && (h >= 18 || h < 6)) {
-    mesh.classList.add('night-mode');
-  }
 }
 
 document.addEventListener('astro:page-load', initGreeting);
