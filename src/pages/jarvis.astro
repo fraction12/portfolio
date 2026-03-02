@@ -7,10 +7,79 @@ import JarvisLog from '../components/JarvisLog.astro';
   <div class="container">
     <section class="page-intro">
       <h1 class="page-title reveal">
-        Jarvis&apos;s Log<span class="dot">.</span>
+        Jarvis<span class="dot">.</span>
         <span class="page-title-signal" aria-hidden="true"></span>
       </h1>
+      <p class="jarvis-intro reveal" style="--reveal-delay: 0.04s;">
+        Jarvis is my personal AI Chief of Operations running full-time on my Mac Mini. It coordinates specialist agents,
+        keeps context alive across projects, and executes my day before I open my laptop. Think of it as an always-on
+        operating layer for work and life automation.
+      </p>
     </section>
-    <JarvisLog />
+
+    <section class="jarvis-capabilities reveal" style="--reveal-delay: 0.08s;" aria-labelledby="jarvis-capabilities-title">
+      <h2 id="jarvis-capabilities-title" class="jarvis-subtitle">What Jarvis does</h2>
+      <ul class="jarvis-feature-list">
+        <li>Generates morning briefings with priorities, blockers, and next actions.</li>
+        <li>Coordinates coding agents across repos and ships work in clean commit batches.</li>
+        <li>Runs scheduled cron shifts for maintenance, status checks, and reporting.</li>
+        <li>Manages reminders and follow-ups across personal and project workflows.</li>
+        <li>Executes smart home routines and device orchestration from the same command layer.</li>
+      </ul>
+    </section>
+
+    <section class="jarvis-log-section">
+      <h2 class="jarvis-subtitle reveal" style="--reveal-delay: 0.12s;">Recent Activity</h2>
+      <JarvisLog />
+    </section>
   </div>
 </Layout>
+
+<style>
+  .jarvis-intro {
+    max-width: 72ch;
+    margin-top: 0.9rem;
+    color: #bcbcbc;
+    font-size: 0.94rem;
+    line-height: 1.75;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+
+  .jarvis-capabilities {
+    min-height: auto;
+    margin-top: 1.4rem;
+    padding: 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .jarvis-subtitle {
+    margin-bottom: 0.85rem;
+    font-size: 0.86rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    font-weight: 600;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+
+  .jarvis-feature-list {
+    display: grid;
+    gap: 0.62rem;
+    padding-left: 1.2rem;
+    color: #d3d3d3;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+
+  .jarvis-log-section {
+    min-height: auto;
+    padding-top: 1.8rem;
+  }
+
+  .jarvis-log-section .jarvis-subtitle {
+    margin-bottom: 0.8rem;
+  }
+</style>
