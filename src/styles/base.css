@@ -159,7 +159,7 @@ h2 .dot { color: var(--accent); }
 }
 
 .hero-kicker {
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--dim);
@@ -175,7 +175,7 @@ h2 .dot { color: var(--accent); }
 }
 
 .hero-title {
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  font-size: var(--fs-body);
   color: var(--dim);
   margin-bottom: 2rem;
   max-width: 62ch;
