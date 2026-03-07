@@ -14,7 +14,7 @@ function initScrollReveal() {
         observer.unobserve(el);
       }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.04 });
 
   reveals.forEach(el => observer.observe(el));
 }
