@@ -3,6 +3,20 @@ import Card from './Card.astro';
 import Pill from './Pill.astro';
 const projects = [
   {
+    name: '🥔 Potato',
+    description:
+      'A terminal cockpit for coding agents. Run Claude, Codex, or other agents side by side in real PTYs, give them roles, and let them coordinate through a built-in MCP server.',
+    tech: ['Rust', 'ratatui', 'MCP', 'Terminal'],
+    amberTech: ['MCP'],
+    badges: [
+      {
+        label: 'GitHub stars',
+        href: 'https://github.com/fraction12/potato-v3',
+        img: 'https://img.shields.io/github/stars/fraction12/potato-v3?style=flat-square&color=6366f1&label=stars'
+      }
+    ]
+  },
+  {
     name: '📋 agentplan',
     description:
       "AI agents kept duplicating work on my machine, so I built a shared to-do system with dependencies, priorities, and atomic claims.",
