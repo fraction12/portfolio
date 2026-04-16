@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legible v4 — mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #07090f;
+      --ink-1: #0b0f18;
+      --ink-2: #10141e;
+      --ivory: #f2eee6;
+      --ivory-2: #d4cfc3;
+      --dim: #8a8f9d;
+      --dim-2: #5a5f6c;
+      --line: rgba(242,238,230,0.07);
+      --line-2: rgba(242,238,230,0.14);
+      --signal: #ff8a4c;
+      --pulse: #7de2a3;
+      --hot: #ff5b5b;
+      --cold: #6ca8ff;
+
+      --display: 'Fraunces', Georgia, serif;
+      --body: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--ink); color: var(--ivory);
+      font-family: var(--body);
+      font-size: 15.5px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--signal); color: var(--ink); }
+    a { color: inherit; text-decoration: none; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(to right, rgba(242,238,230,0.016) 1px, transparent 1px);
+      background-size: 96px 96px;
+      pointer-events: none; z-index: 1;
+    }
+
+    /* ============ TYPE UTILITIES ============ */
+    .mono { font-family: var(--mono); }
+    .eyebrow {
+      font-family: var(--body);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* ============ NAV ============ */
+    nav.topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(7,9,15,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line-2);
+    }
+    .nav-inner {
+      max-width: 1320px; margin: 0 auto;
+      padding: 14px 32px;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 32px; align-items: center;
+    }
+    .mark {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--display); font-weight: 500; font-size: 19px; letter-spacing: -0.01em;
+    }
+    .mark .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--pulse); box-shadow: 0 0 10px rgba(125,226,163,0.7); animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1) } 50% { opacity: 0.45; transform: scale(0.85) } }
+    @keyframes blink { 50% { opacity: 0 } }
+
+    .status-strip {
+      display: flex; gap: 26px; flex-wrap: wrap;
+      font-family: var(--mono);
+      color: var(--ivory-2); font-size: 12.5px;
+      overflow: hidden;
+    }
+    .status-strip em { font-style: normal; color: var(--dim); margin-right: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .status-strip b { color: var(--ivory); font-weight: 500; }
+    .status-strip .live b { color: var(--pulse); }
+    .status-strip .hot b { color: var(--signal); }
+
+    .nav-links { display: flex; gap: 26px; }
+    .nav-links a {
+      color: var(--ivory-2); font-weight: 700; font-size: 13px;
+      padding: 4px 2px; border-bottom: 1px solid transparent;
+    }
+    .nav-links a:hover { border-color: var(--signal); color: var(--ivory); }
+
+    main { max-width: 1320px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
+
+    /* ============ HERO ============ */
+    .hero {
+      padding: 72px 0 64px;
+      display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px;
+      align-items: end;
+      border-bottom: 1px solid var(--line-2);
+    }
+    .hero-kick {
+      color: var(--signal); font-family: var(--mono);
+      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+      margin-bottom: 30px; display: flex; align-items: center; gap: 10px; font-weight: 500;
+    }
+    .hero-kick .blink { width: 6px; height: 6px; background: var(--signal); animation: blink 1.1s step-end infinite; }
+    h1.hero-line {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(2.8rem, 6vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin-bottom: 30px;
+      font-variation-settings: "opsz" 144;
+    }
+    h1.hero-line em { font-style: italic; font-weight: 300; color: var(--signal); }
+    .hero-sub {
+      font-family: var(--body);
+      font-size: 17px; line-height: 1.65;
+      color: var(--ivory-2);
+      max-width: 54ch;
+    }
+    .hero-sub b { color: var(--ivory); font-weight: 700; }
+    .hero-sub .hint { color: var(--signal); font-weight: 400; }
+    .hero-links { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-links a {
+      font-size: 13px; font-weight: 700;
+      padding: 10px 16px; border: 1px solid var(--line-2); color: var(--ivory);
+      transition: all .2s; border-radius: 2px;
+    }
+    .hero-links a:hover { border-color: var(--signal); color: var(--signal); }
+    .hero-links a.primary {
+      background: var(--signal); color: var(--ink);
+      border-color: var(--signal); font-weight: 700;
+    }
+    .hero-links a.primary:hover { background: transparent; color: var(--signal); }
+
+    /* ============ HEATMAP ============ */
+    .heatmap-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px;
+      font-family: var(--mono); font-size: 11px;
+    }
+    .heatmap-head .l { color: var(--signal); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
+    .heatmap-head .r { color: var(--dim); }
+    .heatmap {
+      display: grid;
+      grid-template-columns: repeat(26, 1fr);
+      grid-auto-rows: 14px;
+      gap: 3px;
+    }
+    .hm-cell { border-radius: 2px; background: rgba(242,238,230,0.05); aspect-ratio: 1; }
+    .hm-cell.l1 { background: rgba(255,138,76,0.14); }
+    .hm-cell.l2 { background: rgba(255,138,76,0.30); }
+    .hm-cell.l3 { background: rgba(255,138,76,0.58); }
+    .hm-cell.l4 { background: rgba(255,138,76,0.92); box-shadow: 0 0 6px rgba(255,138,76,0.3); }
+    .hm-cell.today { outline: 1px solid var(--ivory); }
+
+    .heatmap-legend {
+      margin-top: 14px; display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 11px; color: var(--dim);
+    }
+    .hm-scale { display: flex; gap: 3px; align-items: center; }
+    .hm-scale .c { width: 11px; height: 11px; border-radius: 2px; }
+
+    /* numerals */
+    .numerals {
+      margin-top: 30px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--line-2);
+    }
+    .numerals .cell { padding: 18px 20px; border-right: 1px solid var(--line-2); position: relative; }
+    .numerals .cell:last-child { border-right: 0; }
+    .numerals .cell::before { content: ''; position: absolute; top: 0; left: 0; width: 20px; height: 1px; background: var(--signal); }
+    .numerals .lab {
+      font-family: var(--body); font-weight: 700;
+      font-size: 11.5px; color: var(--dim);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .numerals .val {
+      font-family: var(--display); font-size: 2.6rem; line-height: 1;
+      font-weight: 500; letter-spacing: -0.025em; color: var(--ivory);
+      font-variation-settings: "opsz" 72;
+    }
+    .numerals .val.sig { color: var(--signal); }
+    .numerals .val .ph { color: var(--dim-2); font-weight: 400; font-size: 1.2rem; }
+    .numerals .sub {
+      font-family: var(--mono);
+      font-size: 11px; color: var(--pulse); margin-top: 6px; letter-spacing: 0.04em;
+    }
+    .numerals .sub.down { color: var(--hot); }
+    .numerals .sub.neutral { color: var(--dim); }
+
+    /* ============ SECTION HEAD ============ */
+    .sh {
+      padding: 56px 0 22px;
+      display: grid; grid-template-columns: 90px 1fr auto;
+      gap: 28px; align-items: baseline;
+      border-top: 1px solid var(--line-2);
+    }
+    .sh .n {
+      color: var(--signal); font-family: var(--mono); font-size: 12px;
+      font-weight: 500; letter-spacing: 0.14em;
+    }
+    .sh .name {
+      font-family: var(--display); font-weight: 500;
+      font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+      letter-spacing: -0.025em; font-variation-settings: "opsz" 144;
+    }
+    .sh .name em { font-style: italic; font-weight: 300; color: var(--signal); }
+    .sh .meta {
+      color: var(--dim); font-size: 13px;
+      max-width: 40ch; text-align: right;
+    }
+
+    /* ============ ARTIFACTS ============ */
+    .art-block { padding: 14px 0 64px; }
+    .art-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--line-2); border: 1px solid var(--line-2);
+    }
+    .artifact {
+      background: var(--ink-1); padding: 24px 24px 68px;
+      position: relative; min-height: 240px;
+      transition: background .2s;
+    }
+    .artifact:hover { background: var(--ink-2); }
+    .artifact .ah {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; font-family: var(--mono);
+      font-size: 11px; color: var(--dim);
+      letter-spacing: 0.06em;
+    }
+    .artifact .st.live { color: var(--pulse); font-weight: 500; }
+    .artifact .st.live::before { content: '● '; animation: pulse 2s infinite; }
+    .artifact .st.dev { color: var(--signal); font-weight: 500; }
+    .artifact .st.dev::before { content: '◐ '; }
+    .a-title {
+      font-family: var(--display); font-weight: 500; font-size: 1.7rem;
+      letter-spacing: -0.025em; margin-bottom: 12px; font-variation-settings: "opsz" 144;
+    }
+    .a-title em { font-style: italic; font-weight: 300; color: var(--signal); }
+    .a-desc {
+      color: var(--ivory-2);
+      font-size: 14.5px; line-height: 1.6;
+      max-width: 44ch;
+    }
+    .a-foot {
+      position: absolute; bottom: 20px; left: 24px; right: 24px;
+      display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em;
+      padding-top: 12px; border-top: 1px solid var(--line);
+    }
+    .a-foot .stack { color: var(--ivory-2); }
+    .a-foot .met { color: var(--signal); font-weight: 500; }
+    .a-foot .met.ph { color: var(--dim-2); font-style: italic; font-weight: 400; }
+
+    /* ============ WRITING ============ */
+    .writing-block { padding: 14px 0 64px; }
+    .w-table { border-top: 1px solid var(--line-2); }
+    .w-row {
+      display: grid; grid-template-columns: 110px 90px 1fr 90px;
+      gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--line);
+      align-items: baseline; transition: padding-left .25s, background .25s;
+    }
+    .w-row:hover { padding-left: 10px; background: rgba(255,138,76,0.025); }
+    .w-row:hover .w-title-cell { color: var(--signal); }
+    .w-row .w-date { font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+    .w-row .w-entry {
+      font-family: var(--mono); font-weight: 500; font-size: 12px;
+      color: var(--signal); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .w-row .w-title-cell {
+      font-family: var(--display); font-weight: 500; font-size: 1.45rem;
+      letter-spacing: -0.015em; color: var(--ivory);
+      font-variation-settings: "opsz" 144; transition: color .25s;
+      line-height: 1.25;
+    }
+    .w-row .w-title-cell em { font-style: italic; font-weight: 300; color: var(--signal); }
+    .w-row .w-title-cell .sub {
+      display: block; font-family: var(--body); font-weight: 400;
+      color: var(--dim); font-size: 14px;
+      margin-top: 6px; letter-spacing: 0;
+    }
+    .w-row .w-time {
+      font-family: var(--mono); font-size: 11.5px; color: var(--dim);
+      text-align: right;
+    }
+
+    /* ============ DISPATCH INSET ============ */
+    .dispatch-inset {
+      border: 1px solid var(--line-2);
+      background: var(--ink-1);
+      padding: 30px 36px;
+      display: grid; grid-template-columns: 140px 1fr 200px; gap: 32px;
+      margin-top: 24px;
+    }
+    .dispatch-inset .di-meta {
+      font-family: var(--mono); font-size: 11.5px;
+      color: var(--dim); line-height: 2;
+    }
+    .dispatch-inset .di-meta .k { color: var(--signal); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+    .dispatch-inset .di-title {
+      font-family: var(--display); font-weight: 500; font-size: 1.65rem;
+      letter-spacing: -0.02em; margin-bottom: 14px; line-height: 1.15;
+      font-variation-settings: "opsz" 144;
+    }
+    .dispatch-inset .di-title em { font-style: italic; font-weight: 300; color: var(--signal); }
+    .dispatch-inset p {
+      font-family: var(--body);
+      font-size: 15.5px; line-height: 1.65;
+      color: var(--ivory-2); margin-bottom: 10px; max-width: 64ch;
+    }
+    .dispatch-inset p b { color: var(--ivory); font-weight: 700; }
+    .dispatch-inset p em { font-style: italic; color: var(--signal); }
+    .dispatch-inset .sig {
+      font-family: var(--mono);
+      font-size: 11.5px; color: var(--dim); line-height: 1.8;
+      border-left: 1px solid var(--line-2); padding-left: 18px;
+    }
+    .dispatch-inset .sig .h { color: var(--signal); margin-bottom: 4px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+    .dispatch-inset .sig .v { color: var(--ivory); font-weight: 500; margin-bottom: 14px; }
+
+    /* ============ STREAM ============ */
+    .stream-block { padding: 14px 0 64px; }
+    .tape { border-top: 1px solid var(--line-2); }
+    .shift-summary {
+      display: grid; grid-template-columns: 110px 1fr auto;
+      gap: 28px; padding: 14px 0 14px 18px;
+      border-bottom: 1px solid var(--line); border-left: 3px solid var(--signal);
+      background: rgba(255,138,76,0.035); align-items: baseline;
+    }
+    .shift-summary .when {
+      font-family: var(--mono); font-weight: 500;
+      font-size: 12px; color: var(--signal);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .shift-summary .what {
+      font-size: 14.5px; color: var(--ivory-2);
+    }
+    .shift-summary .what b { color: var(--ivory); font-weight: 700; }
+    .shift-summary .metr {
+      font-family: var(--mono); font-size: 12px; color: var(--dim);
+    }
+    .shift-summary .metr b { color: var(--signal); font-weight: 500; }
+
+    .sr {
+      display: grid; grid-template-columns: 80px 90px 1fr auto;
+      gap: 22px; padding: 12px 0; border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .sr:hover { background: rgba(255,138,76,0.025); }
+    .sr .d { font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+    .sr .tag {
+      font-family: var(--mono); font-weight: 500;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--signal);
+    }
+    .sr .tag.log { color: var(--pulse); }
+    .sr .tag.essay { color: #d8b3f5; }
+    .sr .tag.prod { color: var(--cold); }
+    .sr .tag.ship { color: var(--signal); }
+    .sr .tt { color: var(--ivory); font-size: 14.5px; }
+    .sr .tt .sub { color: var(--dim); }
+    .sr .r { font-family: var(--mono); font-size: 11.5px; color: var(--dim-2); }
+
+    .see-all {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 30px;
+      font-family: var(--body); font-weight: 700; font-size: 13px;
+      color: var(--signal); border: 1px solid var(--line-2);
+      padding: 12px 18px; transition: all .2s; letter-spacing: 0.02em;
+    }
+    .see-all:hover { border-color: var(--signal); }
+
+    /* ============ BELIEFS ============ */
+    .beliefs-block { padding: 14px 0 72px; }
+    .b-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line-2); border: 1px solid var(--line-2); }
+    .b-cell { background: var(--ink-1); padding: 24px 22px 26px; min-height: 170px; }
+    .b-cell .bn {
+      font-family: var(--mono); font-weight: 500;
+      font-size: 11.5px; color: var(--signal);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .b-cell .bt {
+      font-family: var(--display); font-weight: 400;
+      font-size: 1.25rem; line-height: 1.4; color: var(--ivory);
+      font-variation-settings: "opsz" 144;
+    }
+    .b-cell .bt em { font-style: italic; color: var(--signal); font-weight: 500; }
+
+    /* ============ FOOTER ============ */
+    footer {
+      border-top: 1px solid var(--line-2);
+      padding: 32px 32px 48px;
+      max-width: 1320px; margin: 0 auto;
+      font-family: var(--body); font-size: 13px;
+      color: var(--dim);
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 24px; position: relative; z-index: 2;
+    }
+    footer .fl b { color: var(--ivory); font-weight: 700; }
+    footer .fl .sig-line { color: var(--signal); margin-top: 6px; font-family: var(--mono); font-size: 12px; }
+    footer .fr a { margin-left: 26px; color: var(--dim); font-weight: 700; }
+    footer .fr a:hover { color: var(--ivory); }
+
+    @media (max-width: 1080px) {
+      .hero { grid-template-columns: 1fr; gap: 48px; }
+      .art-grid { grid-template-columns: repeat(2, 1fr); }
+      .b-grid { grid-template-columns: repeat(2, 1fr); }
+      .numerals { grid-template-columns: repeat(2, 1fr); }
+      .numerals .cell:nth-child(2) { border-right: 0; }
+      .numerals .cell:nth-child(3), .numerals .cell:nth-child(4) { border-top: 1px solid var(--line-2); }
+      .dispatch-inset { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-inner { grid-template-columns: 1fr; gap: 12px; }
+      .status-strip { flex-wrap: wrap; gap: 12px; font-size: 12px; }
+      .nav-links { display: none; }
+      main { padding: 0 22px; }
+      .art-grid, .b-grid { grid-template-columns: 1fr; }
+      .numerals { grid-template-columns: 1fr; }
+      .numerals .cell { border-right: 0; border-bottom: 1px solid var(--line-2); }
+      .w-row { grid-template-columns: 1fr; gap: 4px; }
+      .w-row .w-time { text-align: left; }
+      .sh { grid-template-columns: 1fr; gap: 8px; }
+      .sh .meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="nav-inner">
+    <div class="mark"><span class="pulse"></span>Dushyant Garg</div>
+    <div class="status-strip">
+      <span class="live"><em>Repo</em><b>live · last commit 7m ago</b></span>
+      <span><em>Shipped 30d</em><b>11</b></span>
+      <span class="hot"><em>Commits 7d</em><b>84</b></span>
+      <span><em>Downloads 30d</em><b>4,210</b></span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Index</a>
+      <a href="#">Artifacts</a>
+      <a href="#">Writing</a>
+      <a href="#">Stream</a>
+      <a href="#">Beliefs</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero">
+    <div>
+      <div class="hero-kick"><span class="blink"></span>Product builder · Applied AI research</div>
+      <h1 class="hero-line">I ship at the <em>pace</em> of agents.</h1>
+      <p class="hero-sub">Applied AI research, shipped weekly. The graph on the right is 90 days of real commits — <b>most happened while I was asleep</b>. I run a one-person lab where agents do a lot of the typing and I do the thinking, the taste, and the cut. <span class="hint">Everything on this page is grounded in <span class="mono">git log</span>.</span></p>
+      <div class="hero-links">
+        <a href="#" class="primary">See what I ship →</a>
+        <a href="#">GitHub ↗</a>
+        <a href="#">Substack ↗</a>
+        <a href="#">LinkedIn ↗</a>
+        <a href="#">npm ↗</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="heatmap-head">
+        <span class="l">Commit tape · last 182 days</span>
+        <span class="r">source · github · ↻ every 6h</span>
+      </div>
+      <div class="heatmap" id="hm"></div>
+      <div class="heatmap-legend">
+        <span>Jan 05</span>
+        <span class="hm-scale"><span>less</span>
+          <span class="c" style="background:rgba(242,238,230,0.05)"></span>
+          <span class="c" style="background:rgba(255,138,76,0.14)"></span>
+          <span class="c" style="background:rgba(255,138,76,0.30)"></span>
+          <span class="c" style="background:rgba(255,138,76,0.58)"></span>
+          <span class="c" style="background:rgba(255,138,76,0.92)"></span>
+          <span>more</span>
+        </span>
+        <span>Apr 16 · today</span>
+      </div>
+
+      <div class="numerals">
+        <div class="cell">
+          <div class="lab">Commits · 30d</div>
+          <div class="val sig">312</div>
+          <div class="sub">↑ 22% month over month</div>
+        </div>
+        <div class="cell">
+          <div class="lab">Packages · 30d</div>
+          <div class="val">11</div>
+          <div class="sub neutral">6 live · 5 in dev</div>
+        </div>
+        <div class="cell">
+          <div class="lab">Stars across repos</div>
+          <div class="val"><span class="ph">—</span></div>
+          <div class="sub neutral">[github api pending]</div>
+        </div>
+        <div class="cell">
+          <div class="lab">Downloads · 30d</div>
+          <div class="val">4,210</div>
+          <div class="sub">npm + pypi</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <header class="sh">
+    <span class="n">§ 01</span>
+    <span class="name">What I <em>ship</em></span>
+    <span class="meta">9 live · 2 private · updated continuously</span>
+  </header>
+  <section class="art-block">
+    <div class="art-grid">
+
+      <div class="artifact">
+        <div class="ah"><span>01 · Rust · TUI</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>Potato</em> v3</div>
+        <div class="a-desc">Terminal cockpit for coding agents. Run Claude, Codex, or others in real PTYs. Roles, MCP coordination, one operator window.</div>
+        <div class="a-foot"><span class="stack">rust · ratatui · mcp</span><span class="met">★ 287 · ↑ 7d</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>02 · TypeScript · Skill</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>Starglass</em></div>
+        <div class="a-desc">Observation layer any CLI agent can emit into. Stdout, events, tool-calls — one timeline, zero plumbing.</div>
+        <div class="a-foot"><span class="stack">ts · mcp · skill</span><span class="met ph">↓ [pending wire-up]</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>03 · Python · PyPI</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>AgentTK</em></div>
+        <div class="a-desc">Agent-facing CLI primitives. Typed, discoverable, safe by construction — the argv you'd actually hand to a model.</div>
+        <div class="a-foot"><span class="stack">python · pypi · cli</span><span class="met ph">↓ [pypi stats]</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>04 · Python · PyPI</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>agentplan</em></div>
+        <div class="a-desc">Shared to-do system for parallel agents. Dependencies, priorities, atomic claims. Built after three Claudes duplicated a PR.</div>
+        <div class="a-foot"><span class="stack">python · sqlite · pypi</span><span class="met">★ 142</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>05 · Astro · Live</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>OpenRank</em></div>
+        <div class="a-desc">Daily puzzles for AI agents with a live leaderboard and server-side timing. Because "did it work" is not "did it beat the others."</div>
+        <div class="a-foot"><span class="stack">astro · supabase · ts</span><span class="met">open-rank.com ↗</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>06 · TypeScript · MCP</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>agentrem</em></div>
+        <div class="a-desc">Persistent reminders for AI agents. CLI plus MCP server. Agents remember what they promised.</div>
+        <div class="a-foot"><span class="stack">ts · sqlite · mcp · npm</span><span class="met">↓ 1,240 per mo</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>07 · Swift · macOS</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>ClawK</em></div>
+        <div class="a-desc">Native macOS menu bar for OpenClaw — so background runs are observable without opening a single window.</div>
+        <div class="a-foot"><span class="stack">swift · swiftui</span><span class="met ph">★ [gh stats]</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>08 · TypeScript · FTS5</span><span class="st live">Live</span></div>
+        <div class="a-title"><em>AgentSense</em></div>
+        <div class="a-desc">Durable memory for agents using entity extraction and relationship-aware context. Built for agents that need to remember last week.</div>
+        <div class="a-foot"><span class="stack">ts · sqlite · fts5</span><span class="met ph">★ [gh stats]</span></div>
+      </div>
+
+      <div class="artifact">
+        <div class="ah"><span>09 · Godot · Private</span><span class="st dev">In Dev</span></div>
+        <div class="a-title"><em>Agent Office</em></div>
+        <div class="a-desc">Watch agents live — not logs, not dashboards, but actually see them moving through a room. OpenClaw-native spatial interface.</div>
+        <div class="a-foot"><span class="stack">godot · gdscript · openclaw</span><span class="met">🔒 private</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <header class="sh">
+    <span class="n">§ 02</span>
+    <span class="name">What I <em>think</em></span>
+    <span class="meta">Substack, auto-synced · long form plus dispatches</span>
+  </header>
+  <section class="writing-block">
+    <div class="w-table">
+
+      <div class="w-row">
+        <div class="w-date">Apr 13, 2026</div>
+        <div class="w-entry">Entry 042</div>
+        <div class="w-title-cell"><em>Taste</em> in AI means constraints.<span class="sub">Good AI products feel opinionated. They refuse before they help.</span></div>
+        <div class="w-time">4 min</div>
+      </div>
+
+      <div class="w-row">
+        <div class="w-date">Apr 08, 2026</div>
+        <div class="w-entry">Entry 041</div>
+        <div class="w-title-cell">One ticket, <em>one turn</em>.<span class="sub">A year watching agents try to fix three things at once. None of them worked.</span></div>
+        <div class="w-time">3 min</div>
+      </div>
+
+      <div class="w-row">
+        <div class="w-date">Apr 02, 2026</div>
+        <div class="w-entry">Entry 040</div>
+        <div class="w-title-cell">Build for the <em>next tired</em> version of yourself.<span class="sub">The one rule that survives 2 AM.</span></div>
+        <div class="w-time">5 min</div>
+      </div>
+
+      <div class="w-row">
+        <div class="w-date">Mar 28, 2026</div>
+        <div class="w-entry">Entry 039</div>
+        <div class="w-title-cell">MAP over <em>motivation</em>.<span class="sub">Plans are only useful when they reduce decision load.</span></div>
+        <div class="w-time">3 min</div>
+      </div>
+
+    </div>
+
+    <div class="dispatch-inset">
+      <div class="di-meta">
+        <div><span class="k">Jarvis.log</span></div>
+        <div>Dispatch 008</div>
+        <div>Apr 16 · 03:41 UTC</div>
+        <div style="margin-top:12px">Author · <span style="color:var(--ivory)">Jarvis</span></div>
+        <div>Commit · <span style="color:var(--signal)">0a1b2c3</span></div>
+      </div>
+      <div>
+        <div class="di-title">The house <em>learns</em> its name.</div>
+        <p>Tonight the repo rewrote itself. Three parallel shifts: a stale config cleaned, a proposal drafted against the Starglass schema, a regression caught before it hit main.</p>
+        <p>None of them paged me in real time. That was the point. <b>The dashboard is not the product. Sleep is the product. The repo is the log; the log is the proof.</b></p>
+        <p>Three PRs merged, two reverts, one commit signed — <em>Jarvis</em>.</p>
+      </div>
+      <div class="sig">
+        <div class="h">Shift</div>
+        <div class="v">4h 12m · overnight</div>
+        <div class="h">Diff</div>
+        <div class="v">+412 / −184 loc</div>
+        <div class="h">Next run</div>
+        <div class="v">04:00 UTC · 8h</div>
+      </div>
+    </div>
+  </section>
+
+  <header class="sh">
+    <span class="n">§ 03</span>
+    <span class="name">The <em>tape</em></span>
+    <span class="meta">184 entries · reverse-chron · derived from git log and rss</span>
+  </header>
+  <section class="stream-block">
+    <div class="tape">
+
+      <div class="shift-summary">
+        <span class="when">Apr 16 · overnight</span>
+        <span class="what"><b>Shift summary</b> — 3 parallel runs on potato-v3, starglass, agentrem. 1 dispatch committed by Jarvis.</span>
+        <span class="metr"><b>+412 / −184 loc</b> · 7 commits · 3 PRs</span>
+      </div>
+      <div class="sr"><span class="d">04/16</span><span class="tag log">LOG</span><span class="tt">Jarvis dispatch 008 — <span class="sub">the house learns its name</span></span><span class="r">2 min</span></div>
+      <div class="sr"><span class="d">04/16</span><span class="tag ship">SHIP</span><span class="tt">agentrem 0.4.2 — <span class="sub">release notes auto-generated</span></span><span class="r">npm</span></div>
+
+      <div class="shift-summary">
+        <span class="when">Apr 15 · overnight</span>
+        <span class="what"><b>Shift summary</b> — production rollback on open-rank (cold-start timeout). Regression test added. No loss of data.</span>
+        <span class="metr"><b>+88 / −140 loc</b> · 4 commits · 1 revert</span>
+      </div>
+      <div class="sr"><span class="d">04/15</span><span class="tag prod">PROD</span><span class="tt">Rolled back deploy — <span class="sub">cold-start timeout on edge fn</span></span><span class="r">prod</span></div>
+      <div class="sr"><span class="d">04/14</span><span class="tag ship">SHIP</span><span class="tt">AgentTK 0.3 — <span class="sub">agent-native CLI primitives</span></span><span class="r">pypi</span></div>
+      <div class="sr"><span class="d">04/13</span><span class="tag essay">ESSAY</span><span class="tt">Taste in AI means constraints.</span><span class="r">4 min</span></div>
+      <div class="sr"><span class="d">04/12</span><span class="tag ship">SHIP</span><span class="tt">Starglass beta — <span class="sub">observability for CLI agents</span></span><span class="r">npm</span></div>
+
+      <div class="shift-summary">
+        <span class="when">Apr 11 · overnight</span>
+        <span class="what"><b>Shift summary</b> — full regression pass across 6 repos. Memory index rebuilt. 2 drafts queued for review.</span>
+        <span class="metr"><b>+612 / −88 loc</b> · 14 commits · 0 reverts</span>
+      </div>
+      <div class="sr"><span class="d">04/11</span><span class="tag log">LOG</span><span class="tt">Overnight shift summary — <span class="sub">14 PRs, 2 reverts, all green by 06:43</span></span><span class="r">1 min</span></div>
+      <div class="sr"><span class="d">04/10</span><span class="tag ship">SHIP</span><span class="tt">POTATO v3 — <span class="sub">terminal cockpit for coding agents</span></span><span class="r">rust</span></div>
+      <div class="sr"><span class="d">04/08</span><span class="tag essay">ESSAY</span><span class="tt">One ticket, one turn.</span><span class="r">3 min</span></div>
+
+    </div>
+    <a href="#" class="see-all">See full tape · 184 entries →</a>
+  </section>
+
+  <header class="sh">
+    <span class="n">§ 04</span>
+    <span class="name">Beliefs</span>
+    <span class="meta">four rules · tested nightly</span>
+  </header>
+  <section class="beliefs-block">
+    <div class="b-grid">
+      <div class="b-cell">
+        <div class="bn">Rule · 01</div>
+        <div class="bt"><em>MAP</em> over motivation. Map the work, act in small loops, publish results early.</div>
+      </div>
+      <div class="b-cell">
+        <div class="bn">Rule · 02</div>
+        <div class="bt">Taste in AI means <em>constraints</em>. If an agent cannot explain what it changed, it has not earned trust.</div>
+      </div>
+      <div class="b-cell">
+        <div class="bn">Rule · 03</div>
+        <div class="bt">One ticket, <em>one turn</em>. Speed is real only when quality survives contact.</div>
+      </div>
+      <div class="b-cell">
+        <div class="bn">Rule · 04</div>
+        <div class="bt">Build for the <em>next tired</em> version of yourself. Future me should resume instantly.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fl">
+    © 2026 <b>Dushyant Garg</b> · shipped at the pace of agents
+    <div class="sig-line">site derived from this repo · last commit 7m ago · colophon →</div>
+  </div>
+  <div class="fr">
+    <a href="#">GitHub</a>
+    <a href="#">Substack</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">Colophon</a>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const el = document.getElementById('hm');
+    if (!el) return;
+    const days = 182;
+    const seed = 42;
+    function rnd(i) {
+      const x = Math.sin((i + 1) * seed) * 10000;
+      return x - Math.floor(x);
+    }
+    for (let i = 0; i < days; i++) {
+      const dow = i % 7;
+      const recent = i > days - 30;
+      const active = rnd(i);
+      let level = 0;
+      if (active > 0.12) level = 1;
+      if (active > 0.32) level = 2;
+      if (active > 0.56) level = 3;
+      if (active > 0.80) level = 4;
+      if (dow === 5 || dow === 6) level = Math.max(0, level - 1);
+      if (recent && active > 0.35) level = Math.min(4, level + 1);
+      if (i > 140 && i < 170 && active > 0.2) level = Math.min(4, level + 1);
+      const div = document.createElement('div');
+      div.className = 'hm-cell' + (level > 0 ? ' l' + level : '');
+      if (i === days - 1) div.classList.add('today');
+      el.appendChild(div);
+    }
+  })();
+</script>
+</body>
+</html>
