@@ -271,12 +271,12 @@ Existing removals:
 | Fraunces at body weight may be harder for dyslexia even at smaller display sizes | Fraunces is restricted to >= 1.25rem by rule; Atkinson handles everything below |
 | Placeholders visible for weeks if fetchers land slowly | This is the correct honesty posture; ship the UI with placeholders rather than delay the redesign |
 
-**Open questions (resolve before implementation):**
+**Open questions (resolved):**
 
-- [ ] Confirm `GITHUB_TOKEN` scope and storage on Vercel
-- [ ] Decide whether to keep `src/pages/projects.astro` as a redirect to `/artifacts` or delete
-- [ ] Agree on the shift-summary 4h-gap heuristic or alternative
-- [ ] Confirm that `/jarvis` log keeps its current path (yes by default)
+- [x] `GITHUB_TOKEN` — stored as a Vercel environment variable (scope: `read:user`, `public_repo`). Integration can land in a follow-up; launch uses snapshots until the token is wired.
+- [x] `/projects` kept as-is for now (redirects or content migration deferred).
+- [x] Shift-summary heuristic: **cluster commits within 4h gaps**, confirmed.
+- [x] `/jarvis` keeps its current path.
 
 ## 12. Out of scope
 
