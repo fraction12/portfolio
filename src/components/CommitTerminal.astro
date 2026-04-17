@@ -9,11 +9,16 @@ const shown = commits.slice(0, limit);
 
 function shortSha(sha: string): string { return sha.slice(0, 7); }
 
-function shortAuthor(commit: CommitRecord): string {
-  // If agent-authored, display the "Jarvis <jarvis@dushyant.ops>" persona regardless of real author
-  if (commit.isAgentAuthored) return 'Jarvis <jarvis@dushyant.ops>';
-  const email = commit.authorEmail ? ` <${commit.authorEmail}>` : '';
-  return `${commit.author}${email}`;
+// Detect which specific agent typed this commit. Every commit in this stack is
+// agent-typed — Dushyant directs, reviews, ships. If a trailer or author field
+// names a known agent, we show it specifically; otherwise we show "Agent."
+const ROSTER = ['Jarvis', 'Friday', 'Codex', 'Claude'];
+function detectAgent(commit: CommitRecord): string {
+  const haystack = [commit.author, commit.authorEmail, ...commit.coAuthors].join(' ').toLowerCase();
+  for (const name of ROSTER) {
+    if (haystack.includes(name.toLowerCase())) return name;
+  }
+  return 'Agent';
 }
 
 // Extract `scope(x):` prefix from subject for color separation
@@ -24,21 +29,29 @@ function splitScope(subject: string): { scope: string; rest: string } {
 }
 ---
 
-<div class="term" aria-label="Live git log for this repo — agent-authored commits highlighted">
+<div class="term" aria-label="Live git log — agents type, Dushyant directs">
   <div class="term-head">
     <span class="path">~/dushyant-garg $ git log --last-{limit}</span>
     <span class="live"><span class="pulse"></span>LIVE</span>
   </div>
+  <div class="term-subhead">
+    typed by <b>Jarvis</b> · <b>Friday</b> · <b>Codex</b> · <b>Claude</b><span class="sep">·</span>directed by <b class="director">Dushyant</b>
+  </div>
   <div class="term-body">
     {shown.map((c, i) => {
       const { scope, rest } = splitScope(c.subject);
+      const agent = detectAgent(c);
       return (
         <div class={`commit${i === 0 ? ' latest' : ''}`}>
           <div class="side">
             <span class="sha">{shortSha(c.sha)}</span><span class="age">{formatRelativeTime(c.timestamp)}</span>
           </div>
           <div class="body">
-            <div class={`author${c.isAgentAuthored ? ' agent' : ''}`}>{shortAuthor(c)}</div>
+            <div class="author">
+              <span class="agent">◉ {agent}</span>
+              <span class="sep">·</span>
+              <span class="director">directed · Dushyant</span>
+            </div>
             <div class="subject">{scope && <span class="scope">{scope}</span>} {rest}</div>
           </div>
         </div>
@@ -78,6 +91,18 @@ function splitScope(subject: string): { scope: string; rest: string } {
   }
   @keyframes term-pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.35 } }
 
+  .term-subhead {
+    padding: 7px 16px;
+    background: rgba(125,226,163,0.025);
+    border-bottom: 1px solid var(--line);
+    font-size: 10.5px; letter-spacing: 0.02em;
+    color: var(--dim);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .term-subhead b { color: var(--agent); font-weight: 500; }
+  .term-subhead b.director { color: var(--link); }
+  .term-subhead .sep { color: var(--dim-2); margin: 0 4px; }
+
   .term-body {
     padding: 14px 18px 12px;
     max-height: 400px;
@@ -97,9 +122,10 @@ function splitScope(subject: string): { scope: string; rest: string } {
   .commit .sha { color: var(--link); }
   .commit .age { color: var(--dim); margin-left: 4px; }
   .commit .body { display: flex; flex-direction: column; gap: 2px; }
-  .commit .author { color: var(--ivory-2); font-size: 11.5px; }
-  .commit .author.agent { color: var(--agent); font-weight: 500; }
-  .commit .author.agent::before { content: '◉ '; font-size: 10px; }
+  .commit .author { font-size: 11px; display: inline-flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .commit .author .agent { color: var(--agent); font-weight: 500; }
+  .commit .author .director { color: var(--link); }
+  .commit .author .sep { color: var(--dim-2); }
   .commit .subject { color: var(--ivory); font-size: 12.5px; }
   .commit .subject .scope { color: var(--link); }
 
@@ -126,5 +152,6 @@ function splitScope(subject: string): { scope: string; rest: string } {
   @media (max-width: 640px) {
     .commit { grid-template-columns: 1fr; gap: 4px; }
     .commit .side { font-size: 10.5px; }
+    .term-subhead { font-size: 10px; }
   }
 </style>
