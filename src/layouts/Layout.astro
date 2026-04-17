@@ -1,5 +1,7 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/base.css';
@@ -54,6 +56,8 @@ const ogTitle = title.includes('Dushyant Garg') ? title : `${title} — Dushyant
   </main>
 
   <Footer />
+  <Analytics />
+  <SpeedInsights />
 
   <script>
     import '../scripts/scroll-reveal.js';
