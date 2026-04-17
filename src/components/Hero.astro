@@ -1,24 +1,71 @@
 ---
-const socials = [
-  { label: 'GitHub', href: 'https://github.com/fraction12' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/dushyantgarg' },
-  { label: 'Substack', href: 'https://dushyantg.substack.com' },
-  { label: 'npm', href: 'https://www.npmjs.com/~fraction12' }
+import CommitHeatmap from './CommitHeatmap.astro';
+import Numerals from './Numerals.astro';
+import { loadSignalData } from '../lib/data';
+
+const data = await loadSignalData();
+
+const numeralCells = [
+  { label: 'Commits · 30d',
+    value: data.github.commits30d !== null ? data.github.commits30d : 0,
+    placeholder: data.github.commits30d === null,
+    tone: 'signal' as const,
+    sub: data.github.commits30d !== null ? 'real-time from github' : '[github api pending]',
+    subTone: data.github.commits30d !== null ? 'up' as const : 'neutral' as const },
+  { label: 'Packages · 30d', value: 11, sub: '6 live · 5 in dev', subTone: 'neutral' as const },
+  { label: 'Stars across repos',
+    value: data.github.totalStars ?? 0,
+    placeholder: data.github.totalStars === null,
+    sub: data.github.totalStars !== null ? 'github aggregate' : '[github api pending]',
+    subTone: 'neutral' as const },
+  { label: 'Downloads · 30d',
+    value: data.totalDownloadsLastMonth > 0 ? data.totalDownloadsLastMonth.toLocaleString() : 0,
+    placeholder: data.totalDownloadsLastMonth === 0,
+    sub: data.totalDownloadsLastMonth > 0 ? 'npm + pypi' : '[registry data pending]',
+    subTone: data.totalDownloadsLastMonth > 0 ? 'up' as const : 'neutral' as const }
 ];
 ---
 
-<section id="hero" class="hero">
-  <div class="hero-inner">
-    <p class="hero-kicker">Dushyant Garg</p>
-    <h1 class="hero-name">Full-stack builder.</h1>
-    <p class="hero-title">I ship products end-to-end, from strategy docs to working code.</p>
+<section class="hero">
+  <div class="hero-l">
+    <div class="hero-kick"><span class="blink"></span>Product builder · Applied AI research</div>
+    <h1 class="hero-line">I ship at the <em>pace</em> of agents.</h1>
+    <p class="hero-sub">
+      Applied AI research, shipped weekly. The graph on the right is <b>six months</b> of real commits —
+      <b>most happened while I was asleep</b>. I run a one-person lab where agents do a lot of the typing
+      and I do the thinking, the taste, and the cut.
+      <span class="hint">Everything on this page is grounded in <code>git log</code>.</span>
+    </p>
+    <div class="hero-links">
+      <a href="#artifacts" class="primary">See what I ship →</a>
+      <a href="https://github.com/fraction12" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://dushyantg.substack.com" target="_blank" rel="noopener">Substack ↗</a>
+      <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://www.npmjs.com/~fraction12" target="_blank" rel="noopener">npm ↗</a>
+    </div>
+  </div>
 
-    <nav class="hero-links" aria-label="Social links">
-      {socials.map((social) => (
-        <a class="hero-link" href={social.href} target="_blank" rel="noopener noreferrer">
-          {social.label}
-        </a>
-      ))}
-    </nav>
+  <div class="hero-r">
+    <CommitHeatmap cells={data.github.heatmap} />
+    <Numerals cells={numeralCells} />
   </div>
 </section>
+
+<style>
+  .hero { padding: 72px 0 64px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: end; border-bottom: 1px solid var(--line-2); }
+  .hero-kick { color: var(--signal); font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  .hero-kick .blink { width: 6px; height: 6px; background: var(--signal); animation: blink 1.1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0 } }
+  .hero-line { font-family: var(--display); font-weight: 400; font-size: var(--fs-h1); line-height: 0.98; letter-spacing: -0.03em; margin-bottom: 30px; font-variation-settings: "opsz" 144; }
+  .hero-line em { font-style: italic; font-weight: 300; color: var(--signal); }
+  .hero-sub { font-family: var(--body); font-size: 17px; line-height: 1.65; color: var(--ivory-2); max-width: 54ch; }
+  .hero-sub b { color: var(--ivory); font-weight: 700; }
+  .hero-sub .hint { color: var(--signal); font-weight: 400; }
+  .hero-sub code { font-family: var(--mono); font-size: 0.92em; }
+  .hero-links { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-links a { font-size: 13px; font-weight: 700; padding: 10px 16px; border: 1px solid var(--line-2); color: var(--ivory); transition: all .2s; text-decoration: none; border-radius: 2px; }
+  .hero-links a:hover { border-color: var(--signal); color: var(--signal); }
+  .hero-links a.primary { background: var(--signal); color: var(--ink); border-color: var(--signal); }
+  .hero-links a.primary:hover { background: transparent; color: var(--signal); }
+  @media (max-width: 1080px) { .hero { grid-template-columns: 1fr; gap: 48px; padding: 56px 0 48px; } }
+</style>
