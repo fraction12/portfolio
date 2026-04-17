@@ -45,7 +45,12 @@ for (const a of artifacts) byCategory[a.category].push(a);
 for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.order);
 ---
 
-<Layout current="home" title="Dushyant Garg" description="I build 0 to 1 fast, then scale 1 to 100 on customer data. Open-source tools for AI agents.">
+<Layout
+  current="home"
+  title="Dushyant Garg"
+  description="Dushyant Garg — PM building AI agents, open-source tools, and shipping from zero to one. The official portfolio, writing, and live activity log."
+  includeIdentitySchema
+>
   <main class="sd-main">
 
     <Hero />

@@ -12,17 +12,59 @@ interface Props {
   description?: string;
   current?: 'home' | 'projects' | 'writing' | 'jarvis' | 'beliefs';
   ogImage?: string;
+  /** When true, adds Person + WebSite JSON-LD for the canonical portfolio. Use on the home page only. */
+  includeIdentitySchema?: boolean;
 }
 
 const {
   title = 'Dushyant Garg',
   description = 'Dushyant Garg — PM building AI tools, open-source products, and writing dispatches from real execution.',
   current = 'home',
-  ogImage = '/og-default.svg'
+  ogImage = '/og-default.svg',
+  includeIdentitySchema = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
+const siteOrigin = (Astro.site ?? new URL('https://dushyantgarg.com')).origin;
+const canonical = new URL(Astro.url.pathname, siteOrigin).toString();
 const ogTitle = title.includes('Dushyant Garg') ? title : `${title} — Dushyant Garg`;
+
+// Verification tokens are read from build-time env. Import.meta.env.PUBLIC_*
+// is inlined into the client bundle — safe because verification tokens are
+// already public-facing meta tags, not secrets.
+const googleVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION as string | undefined;
+const bingVerification = import.meta.env.PUBLIC_BING_SITE_VERIFICATION as string | undefined;
+
+const personSchema = includeIdentitySchema
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Dushyant Garg',
+      url: siteOrigin + '/',
+      description:
+        'PM building AI tools, open-source products, and writing dispatches from real execution.',
+      sameAs: [
+        'https://github.com/fraction12',
+        'https://linkedin.com/in/dushyantgarg',
+        'https://dushyantg.substack.com',
+      ],
+    }
+  : null;
+
+const websiteSchema = includeIdentitySchema
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Dushyant Garg',
+      url: siteOrigin + '/',
+      description:
+        'Canonical portfolio of Dushyant Garg — AI tools, products, and writing.',
+      author: {
+        '@type': 'Person',
+        name: 'Dushyant Garg',
+        url: siteOrigin + '/',
+      },
+    }
+  : null;
 ---
 
 <!DOCTYPE html>
@@ -42,10 +84,18 @@ const ogTitle = title.includes('Dushyant Garg') ? title : `${title} — Dushyant
   <meta name="twitter:title" content={ogTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={new URL(ogImage, canonical).toString()} />
+  {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
+  {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  {personSchema && (
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
+  )}
+  {websiteSchema && (
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema).replace(/</g, '\\u003c')} />
+  )}
   <ViewTransitions fallback="animate" />
 </head>
 <body>
