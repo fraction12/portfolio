@@ -1,0 +1,72 @@
+---
+import ShiftSummary from './ShiftSummary.astro';
+import StreamEntry from './StreamEntry.astro';
+import type { Shift, Essay } from '../lib/data';
+import type { StreamTag } from '../config/stream-sources';
+import { getCollection } from 'astro:content';
+import { TAPE_HOME_LIMIT } from '../config/stream-sources';
+
+interface Props { shifts: Shift[]; essays: Essay[]; limit?: number }
+const { shifts, essays, limit = TAPE_HOME_LIMIT } = Astro.props;
+
+type Entry = { date: Date; tag: StreamTag; title: string; sub?: string; meta?: string; href?: string };
+
+const jarvisEntries = await getCollection('jarvis');
+
+const entries: Entry[] = [
+  ...essays.map(e => ({ date: e.publishedAt, tag: 'ESSAY' as StreamTag, title: e.title, meta: `${e.readTimeMinutes} min`, href: e.link })),
+  ...jarvisEntries.map(j => ({
+    date: j.data.date as Date,
+    tag: 'LOG' as StreamTag,
+    title: `Jarvis dispatch ${typeof j.data.dispatchNumber === 'number' ? String(j.data.dispatchNumber).padStart(3, '0') : ''}`,
+    sub: j.data.title,
+    meta: 'read →',
+    href: `/jarvis#${j.slug}`
+  }))
+];
+
+entries.sort((a, b) => b.date.getTime() - a.date.getTime());
+const capped = entries.slice(0, limit);
+
+function formatMD(d: Date) {
+  return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function shiftLabel(shift: Shift) {
+  const d = shift.start;
+  const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const h = d.getUTCHours();
+  const bucket = h < 6 ? 'overnight' : h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening';
+  return `${label} · ${bucket}`;
+}
+
+function shiftMetrics(shift: Shift) {
+  return `**+${shift.additions.toLocaleString()} / −${shift.deletions.toLocaleString()} loc** · ${shift.commitCount} commits`;
+}
+
+function shiftNarrative(shift: Shift) {
+  const prefixes = shift.commits.map(c => c.subject.split(':')[0]).filter(Boolean);
+  const unique = Array.from(new Set(prefixes)).slice(0, 3).join(', ');
+  return `**Shift summary** — ${shift.commitCount} commits${unique ? ` across ${unique}` : ''}.`;
+}
+
+const recentShifts = [...shifts].sort((a, b) => b.start.getTime() - a.start.getTime()).slice(0, 2);
+---
+
+<div class="tape">
+  {recentShifts.map(shift => (
+    <ShiftSummary whenLabel={shiftLabel(shift)} narrative={shiftNarrative(shift)} metrics={shiftMetrics(shift)} />
+  ))}
+
+  {capped.map(entry => (
+    <StreamEntry date={formatMD(entry.date)} tag={entry.tag} title={entry.title} sub={entry.sub} meta={entry.meta} href={entry.href} />
+  ))}
+
+  <a class="see-all" href="/jarvis">See full tape →</a>
+</div>
+
+<style>
+  .tape { border-top: 1px solid var(--line-2); }
+  .see-all { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px; font-family: var(--body); font-weight: 700; font-size: 13px; color: var(--signal); border: 1px solid var(--line-2); padding: 12px 18px; text-decoration: none; letter-spacing: 0.02em; }
+  .see-all:hover { border-color: var(--signal); }
+</style>
