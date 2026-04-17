@@ -1,41 +1,19 @@
 ---
-import StatusStrip from './StatusStrip.astro';
-import { loadSignalData } from '../lib/data';
-import { totalNpmDownloads } from '../lib/data/npm';
-import { totalPypiDownloads } from '../lib/data/pypi';
-import { artifacts } from '../config/packages';
-
-interface Props { current?: 'home' | 'artifacts' | 'writing' | 'stream' | 'beliefs' | 'jarvis' | 'projects' }
+interface Props { current?: 'home' | 'tools' | 'writing' | 'log' | 'beliefs' | 'jarvis' | 'colophon' | 'projects' | 'stream' | 'artifacts' }
 const { current = 'home' } = Astro.props;
 
-const data = await loadSignalData();
-const commits7d = data.github.commits7d ?? '—';
-const downloads30d = totalNpmDownloads(data.npm) + totalPypiDownloads(data.pypi);
-
-const items = [
-  { label: 'Repo', value: `live · last commit ${data.lastCommitRelative}`, tone: 'live' as const },
-  { label: 'Shipped 30d', value: String(artifacts.length) },
-  { label: 'Commits 7d', value: String(commits7d), tone: 'hot' as const },
-  { label: 'Downloads 30d', value: downloads30d > 0 ? downloads30d.toLocaleString() : '—' }
-];
-
 const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
-  { href: '/', label: 'Index', key: 'home' },
-  { href: '/projects', label: 'Artifacts', key: 'projects' },
-  { href: '/writing', label: 'Writing', key: 'writing' },
-  { href: '/jarvis', label: 'Stream', key: 'jarvis' },
-  { href: '/beliefs', label: 'Beliefs', key: 'beliefs' }
+  { href: '/#tools', label: 'Tools', key: 'tools' },
+  { href: '/#writing', label: 'Writing', key: 'writing' },
+  { href: '/#log', label: 'Log', key: 'log' },
+  { href: '/colophon', label: 'Colophon', key: 'colophon' }
 ];
 ---
 
 <nav class="topbar">
-  <div class="topbar-inner">
-    <a href="/" class="mark" aria-label="Home">
-      <span class="pulse" aria-hidden="true"></span>
-      Dushyant Garg
-    </a>
-    <StatusStrip items={items} />
-    <div class="nav-links">
+  <div class="inner">
+    <a href="/" class="mark" aria-label="Home">Dushyant Garg</a>
+    <div class="links">
       {navLinks.map(link => (
         <a href={link.href} class={current === link.key ? 'active' : ''}>{link.label}</a>
       ))}
@@ -44,14 +22,23 @@ const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = 
 </nav>
 
 <style>
-  .topbar { position: sticky; top: 0; z-index: 100; background: rgba(7,9,15,0.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--line-2); }
-  .topbar-inner { max-width: var(--max-w); margin: 0 auto; padding: 14px 32px; display: grid; grid-template-columns: auto 1fr auto; gap: 32px; align-items: center; }
-  .mark { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 500; font-size: 19px; letter-spacing: -0.01em; color: var(--ivory); text-decoration: none; }
-  .mark .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--pulse); box-shadow: 0 0 10px rgba(125,226,163,0.7); animation: pulse 1.8s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1) } 50% { opacity: 0.45; transform: scale(0.85) } }
-  .nav-links { display: flex; gap: 26px; }
-  .nav-links a { color: var(--ivory-2); font-weight: 700; font-size: 13px; padding: 4px 2px; text-decoration: none; border-bottom: 1px solid transparent; }
-  .nav-links a:hover, .nav-links a.active { border-color: var(--signal); color: var(--ivory); }
-  @media (max-width: 1080px) { .topbar-inner { grid-template-columns: auto 1fr; } .nav-links { display: none; } }
-  @media (max-width: 640px) { .topbar-inner { grid-template-columns: 1fr; gap: 10px; padding: 12px 22px; } }
+  .topbar { border-bottom: 1px solid var(--line); background: var(--ink); }
+  .inner {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 18px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px;
+  }
+  .mark { color: var(--ivory); font-weight: 700; text-decoration: none; }
+  .links { display: flex; gap: 20px; }
+  .links a {
+    color: var(--ivory-2); font-weight: 400; text-decoration: none;
+    transition: color .2s;
+  }
+  .links a:hover, .links a.active { color: var(--link); }
+
+  @media (max-width: 640px) {
+    .inner { flex-direction: column; gap: 12px; padding: 14px 22px; align-items: flex-start; }
+    .links { gap: 14px; flex-wrap: wrap; }
+  }
 </style>
