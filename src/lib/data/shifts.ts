@@ -2,7 +2,11 @@ export type CommitRecord = {
   sha: string;
   timestamp: Date;
   author: string;
+  authorEmail: string;
   subject: string;
+  body: string;
+  coAuthors: string[];
+  isAgentAuthored: boolean;
   filesChanged: number;
   additions: number;
   deletions: number;

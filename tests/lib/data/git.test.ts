@@ -60,6 +60,63 @@ describe('parseGitLogOutput', () => {
     expect(commits[0].deletions).toBe(12);
     expect(commits[0].filesChanged).toBe(3);
   });
+
+  it('extracts Co-Authored-By trailers from commit body', () => {
+    const raw = [
+      '---COMMIT---',
+      'sha:zzz',
+      'ts:1713312000',
+      'author:Dushyant Garg',
+      'email:dushyant@example.com',
+      'subject:feat: something',
+      '---BODY---',
+      'Longer description here.',
+      '',
+      'Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>',
+      '---ENDBODY---',
+      ' 1 file changed, 10 insertions(+)'
+    ].join('\n');
+    const commits = parseGitLogOutput(raw);
+    expect(commits).toHaveLength(1);
+    expect(commits[0].coAuthors).toEqual(['Claude Opus 4.7 <noreply@anthropic.com>']);
+    expect(commits[0].isAgentAuthored).toBe(true);
+    expect(commits[0].additions).toBe(10);
+  });
+
+  it('marks commit as agent-authored when primary author matches pattern', () => {
+    const raw = [
+      '---COMMIT---',
+      'sha:yyy',
+      'ts:1713312000',
+      'author:Jarvis',
+      'email:jarvis@dushyant.ops',
+      'subject:fix: nightly',
+      '---BODY---',
+      '',
+      '---ENDBODY---',
+      ' 2 files changed, 8 insertions(+), 1 deletion(-)'
+    ].join('\n');
+    const commits = parseGitLogOutput(raw);
+    expect(commits[0].isAgentAuthored).toBe(true);
+  });
+
+  it('does not flag human commits without Co-Authored-By', () => {
+    const raw = [
+      '---COMMIT---',
+      'sha:xxx',
+      'ts:1713312000',
+      'author:Dushyant Garg',
+      'email:dushyant@example.com',
+      'subject:refactor: trim',
+      '---BODY---',
+      'Just a pure human commit.',
+      '---ENDBODY---',
+      ' 1 file changed, 3 insertions(+)'
+    ].join('\n');
+    const commits = parseGitLogOutput(raw);
+    expect(commits[0].coAuthors).toEqual([]);
+    expect(commits[0].isAgentAuthored).toBe(false);
+  });
 });
 
 describe('getLastCommit', () => {
