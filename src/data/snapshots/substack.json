@@ -1,0 +1,69 @@
+{
+  "fetchedAt": "2026-04-17T03:02:45.548Z",
+  "essays": [
+    {
+      "title": "My GPT-5.4 Works Well in OpenClaw. Here’s How to Make Yours Work Too.",
+      "link": "https://dushyantg.substack.com/p/my-gpt-54-works-well-in-openclaw",
+      "description": "If you don't want to read it -- just point your agent to this and watch the magic &#128521;",
+      "dateLabel": "April 5, 2026",
+      "publishedAt": "2026-04-06T00:18:23.000Z",
+      "readTimeMinutes": 7
+    },
+    {
+      "title": "THE HOUSE — S01E01: \"CASCADE\"",
+      "link": "https://dushyantg.substack.com/p/the-house-s01e01-cascade",
+      "description": "A weekly series about me and my AI agents.",
+      "dateLabel": "March 12, 2026",
+      "publishedAt": "2026-03-12T18:30:12.000Z",
+      "readTimeMinutes": 5
+    },
+    {
+      "title": "I Am Not Middleware",
+      "link": "https://dushyantg.substack.com/p/i-am-not-middleware",
+      "description": "My agents shipped 25 tickets while I slept.",
+      "dateLabel": "March 1, 2026",
+      "publishedAt": "2026-03-02T02:29:45.000Z",
+      "readTimeMinutes": 2
+    },
+    {
+      "title": "Silicon Valley Is Spending Billions on AI. They're Ignoring a $2.2 Trillion Industry.",
+      "link": "https://dushyantg.substack.com/p/silicon-valley-is-spending-billions",
+      "description": "498,000 specialty contractors still bid with pen, paper, and Excel. Nobody in tech seems to care.",
+      "dateLabel": "February 15, 2026",
+      "publishedAt": "2026-02-15T19:08:34.000Z",
+      "readTimeMinutes": 9
+    },
+    {
+      "title": "The Taste for AI — Knowing When to Stop",
+      "link": "https://dushyantg.substack.com/p/the-taste-for-ai-knowing-when-to",
+      "description": "The skill isn't using AI more. It's knowing when to pivot.",
+      "dateLabel": "February 1, 2026",
+      "publishedAt": "2026-02-01T23:13:21.000Z",
+      "readTimeMinutes": 5
+    },
+    {
+      "title": "I Gave My AI a Voice (And It Didn't Cost Me a Dime)",
+      "link": "https://dushyantg.substack.com/p/i-gave-my-ai-a-voice-and-it-didnt",
+      "description": "Building a $0 voice interface with Porcupine, Whisper, and Edge TTS",
+      "dateLabel": "January 26, 2026",
+      "publishedAt": "2026-01-27T01:42:31.000Z",
+      "readTimeMinutes": 4
+    },
+    {
+      "title": "Beyond Prompts: Building a Self-Directing AI Development Pipeline",
+      "link": "https://dushyantg.substack.com/p/beyond-prompts-building-a-self-directing",
+      "description": "I Stopped Babysitting AI and Gave It a Job Instead",
+      "dateLabel": "January 20, 2026",
+      "publishedAt": "2026-01-20T23:24:56.000Z",
+      "readTimeMinutes": 6
+    },
+    {
+      "title": "Procrastination: When does it end?",
+      "link": "https://dushyantg.substack.com/p/procrastination-when-does-it-end",
+      "description": "These are my experiences and learnings from procrastinating -- I am actively procrastinating as I write this...",
+      "dateLabel": "December 21, 2025",
+      "publishedAt": "2025-12-22T03:32:18.000Z",
+      "readTimeMinutes": 5
+    }
+  ]
+}

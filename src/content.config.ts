@@ -5,6 +5,10 @@ const jarvis = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    dispatchNumber: z.number().optional(),
+    shiftDuration: z.string().optional(),
+    diff: z.string().optional(),
+    nextRun: z.string().optional(),
   }),
 });
 

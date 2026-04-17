@@ -6,10 +6,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
-    "astro": "^5.17.3",
-    "@astrojs/vercel": "^9.0.4"
+    "@astrojs/vercel": "^9.0.4",
+    "astro": "^5.17.3"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.4"
   }
 }

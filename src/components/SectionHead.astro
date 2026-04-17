@@ -1,0 +1,15 @@
+---
+interface Props {
+  num: string;   // "§ 01"
+  name: string;  // use *word* for italic-amber emphasis
+  meta: string;
+}
+const { num, name, meta } = Astro.props;
+const html = name.replace(/\*(.+?)\*/g, '<em>$1</em>');
+---
+
+<header class="section-head">
+  <span class="sh-num">{num}</span>
+  <span class="sh-name" set:html={html}></span>
+  <span class="sh-meta">{meta}</span>
+</header>

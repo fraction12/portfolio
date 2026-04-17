@@ -1,35 +1,127 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import Writing from '../components/Writing.astro';
-import Projects from '../components/Projects.astro';
-import NewsletterSignup from '../components/NewsletterSignup.astro';
-import JarvisSpotlight from '../components/JarvisSpotlight.astro';
-import Section from '../components/Section.astro';
+import ToolCard from '../components/ToolCard.astro';
+import WritingBlock from '../components/WritingBlock.astro';
+import LogList from '../components/LogList.astro';
+import {
+  artifacts,
+  CATEGORY_ORDER,
+  CATEGORY_LABELS,
+  CATEGORY_BLURBS,
+  type Artifact,
+  type ArtifactCategory
+} from '../config/packages';
+import { loadSignalData } from '../lib/data';
+
+const data = await loadSignalData();
+
+function metricFor(a: Artifact): { metric: string | null; placeholder: string } {
+  if (a.metricOverride) return { metric: a.metricOverride, placeholder: '' };
+  if (a.npmName) {
+    const d = data.npm.packages[a.npmName]?.downloadsLastMonth;
+    if (typeof d === 'number') return { metric: `↓ ${d.toLocaleString()} / mo`, placeholder: '' };
+    return { metric: null, placeholder: '[npm stats pending]' };
+  }
+  if (a.pypiName) {
+    const d = data.pypi.packages[a.pypiName]?.downloadsLastMonth;
+    if (typeof d === 'number') return { metric: `↓ ${d.toLocaleString()} / mo`, placeholder: '' };
+    return { metric: null, placeholder: '[pypi stats pending]' };
+  }
+  return { metric: null, placeholder: '' };
+}
+
+// Build byCategory dynamically so adding a category in config propagates here.
+const byCategory = Object.fromEntries(
+  CATEGORY_ORDER.map(k => [k, [] as Artifact[]])
+) as Record<ArtifactCategory, Artifact[]>;
+for (const a of artifacts) byCategory[a.category].push(a);
+for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.order);
 ---
 
-<Layout current="home" title="Dushyant Garg" description="PM who builds AI tools. Open-source projects, writing, and live dispatches from Jarvis.">
-  <div class="container">
+<Layout current="home" title="Dushyant Garg" description="I build 0 to 1 fast, then scale 1 to 100 on customer data. Open-source tools for AI agents.">
+  <main class="sd-main">
+
     <Hero />
 
-    <Section title="Featured Writing" id="featured-writing-title">
-      <Writing limit={3} />
-    </Section>
+    <section id="tools">
+      <h2>Tools</h2>
+      {CATEGORY_ORDER.map(cat => (
+        byCategory[cat].length > 0 && (
+          <div class="tool-group" id={`tools-${cat}`}>
+            <div class="tool-group-head">
+              <h3>{CATEGORY_LABELS[cat]}</h3>
+              <p class="tool-group-blurb">{CATEGORY_BLURBS[cat]}</p>
+            </div>
+            {byCategory[cat].map(a => {
+              const { metric, placeholder } = metricFor(a);
+              return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+            })}
+          </div>
+        )
+      ))}
+    </section>
 
-    <Section title="Projects" id="projects-title">
-      <Projects />
-    </Section>
+    <section id="writing">
+      <h2>Writing</h2>
+      <WritingBlock essays={data.essays} limit={6} />
+    </section>
 
-    <Section>
-      <JarvisSpotlight />
-    </Section>
+    <section id="log">
+      <h2>Log</h2>
+      <p class="log-caption">Field notes from agents running overnight on this repo. Committed by the agents themselves.</p>
+      <LogList limit={5} />
+      <a href="/jarvis" class="more-link">All dispatches →</a>
+    </section>
 
-    <Section>
-      <NewsletterSignup className="reveal" />
-    </Section>
-  </div>
-
-  <script>
-    import '../scripts/connect.js';
-  </script>
+  </main>
 </Layout>
+
+<style>
+  .sd-main {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 0 24px;
+    position: relative; z-index: 2;
+  }
+  section {
+    padding: 36px 0;
+    border-top: 1px solid var(--line);
+  }
+  section > h2 {
+    font-size: 13px; color: var(--dim); font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+  .tool-group { margin-bottom: 8px; }
+  .tool-group + .tool-group { margin-top: 36px; }
+  .tool-group-head {
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .tool-group-head h3 {
+    font-family: var(--body);
+    font-size: 16px; font-weight: 700;
+    color: var(--ivory);
+    margin: 0 0 4px;
+    letter-spacing: -0.005em;
+    text-transform: none;
+  }
+  .tool-group-blurb {
+    font-size: 13.5px; color: var(--dim);
+    margin: 0; max-width: 62ch;
+    line-height: 1.5;
+  }
+  .log-caption {
+    color: var(--dim); font-size: 14px; margin-bottom: 16px; max-width: 62ch;
+  }
+  .more-link {
+    display: inline-block; margin-top: 14px;
+    font-family: var(--mono); font-size: 13px; color: var(--link);
+    text-decoration: none;
+  }
+  .more-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 640px) {
+    .sd-main { padding: 0 22px; }
+  }
+</style>

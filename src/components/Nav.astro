@@ -1,37 +1,44 @@
 ---
-import NavLink from './NavLink.astro';
-interface NavItem {
-  key: 'home' | 'projects' | 'writing' | 'jarvis' | 'beliefs';
-  href: string;
-  label: string;
-}
-interface Props { current?: NavItem['key']; }
+interface Props { current?: 'home' | 'tools' | 'writing' | 'log' | 'beliefs' | 'jarvis' | 'colophon' | 'projects' | 'stream' | 'artifacts' }
 const { current = 'home' } = Astro.props;
-const items: NavItem[] = [
-  { key: 'home', href: '/', label: 'Home' },
-  { key: 'projects', href: '/projects', label: 'Projects' },
-  { key: 'writing', href: '/writing', label: 'Writing' },
-  { key: 'jarvis', href: '/jarvis', label: 'Jarvis' },
-  { key: 'beliefs', href: '/beliefs', label: 'Beliefs' }
+
+const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
+  { href: '/#tools', label: 'Tools', key: 'tools' },
+  { href: '/#writing', label: 'Writing', key: 'writing' },
+  { href: '/#log', label: 'Log', key: 'log' },
+  { href: '/colophon', label: 'Colophon', key: 'colophon' }
 ];
 ---
-<nav class="top-nav" aria-label="Primary navigation">
-  <div class="top-nav-inner">
-    <button class="top-nav-toggle" type="button" aria-controls="top-nav-links" aria-expanded="false">Menu</button>
-    <ul id="top-nav-links" class="top-nav-links">
-      {items.map((item) => (
-        <li><NavLink href={item.href} active={current === item.key}>{item.label}</NavLink></li>
+
+<nav class="topbar">
+  <div class="inner">
+    <a href="/" class="mark" aria-label="Home">Dushyant Garg</a>
+    <div class="links">
+      {navLinks.map(link => (
+        <a href={link.href} class={current === link.key ? 'active' : ''}>{link.label}</a>
       ))}
-    </ul>
+    </div>
   </div>
 </nav>
-<script>
-  const toggle = document.querySelector('.top-nav-toggle');
-  const links = document.getElementById('top-nav-links');
-  if (toggle && links) {
-    toggle.addEventListener('click', () => {
-      const isOpen = links.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', String(isOpen));
-    });
+
+<style>
+  .topbar { border-bottom: 1px solid var(--line); background: var(--ink); }
+  .inner {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 18px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px;
   }
-</script>
+  .mark { color: var(--ivory); font-weight: 700; text-decoration: none; }
+  .links { display: flex; gap: 20px; }
+  .links a {
+    color: var(--ivory-2); font-weight: 400; text-decoration: none;
+    transition: color .2s;
+  }
+  .links a:hover, .links a.active { color: var(--link); }
+
+  @media (max-width: 640px) {
+    .inner { flex-direction: column; gap: 12px; padding: 14px 22px; align-items: flex-start; }
+    .links { gap: 14px; flex-wrap: wrap; }
+  }
+</style>

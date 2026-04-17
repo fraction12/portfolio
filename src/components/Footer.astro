@@ -1,18 +1,36 @@
 ---
 const year = new Date().getFullYear();
-const links = [
-  { label: 'GitHub', href: 'https://github.com/fraction12' },
-  { label: 'Substack', href: 'https://dushyantg.substack.com' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/dushyantgarg' },
-  { label: 'npm', href: 'https://www.npmjs.com/~fraction12' }
-];
 ---
+
 <footer class="site-footer">
-  <p class="site-footer-name">Dushyant Garg</p>
-  <p class="site-footer-meta">© {year}</p>
-  <nav class="site-footer-links" aria-label="Footer links">
-    {links.map((link) => (
-      <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
-    ))}
-  </nav>
+  <div class="inner">
+    <div class="left">© {year} Dushyant Garg · agents commit to this repo while I sleep</div>
+    <div class="right">
+      <a href="https://github.com/fraction12" target="_blank" rel="noopener">github</a>
+      <a href="https://dushyantg.substack.com" target="_blank" rel="noopener">substack</a>
+      <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">linkedin</a>
+      <a href="/colophon">colophon</a>
+    </div>
+  </div>
 </footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line-2);
+    margin-top: 40px;
+  }
+  .inner {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 24px; font-size: 13px; color: var(--dim);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    position: relative; z-index: 2;
+  }
+  .inner a { color: var(--dim); text-decoration: none; }
+  .inner a:hover { color: var(--link); }
+  .right a { margin-left: 14px; }
+
+  @media (max-width: 640px) {
+    .inner { flex-direction: column; padding: 20px 22px; gap: 8px; }
+    .right a { margin-left: 0; margin-right: 14px; }
+  }
+</style>

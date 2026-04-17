@@ -1,24 +1,58 @@
 ---
-const socials = [
-  { label: 'GitHub', href: 'https://github.com/fraction12' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/dushyantgarg' },
-  { label: 'Substack', href: 'https://dushyantg.substack.com' },
-  { label: 'npm', href: 'https://www.npmjs.com/~fraction12' }
-];
+import CommitTerminal from './CommitTerminal.astro';
+import { loadSignalData } from '../lib/data';
+
+const data = await loadSignalData();
 ---
 
-<section id="hero" class="hero">
-  <div class="hero-inner">
-    <p class="hero-kicker">Dushyant Garg</p>
-    <h1 class="hero-name">Full-stack builder.</h1>
-    <p class="hero-title">I ship products end-to-end, from strategy docs to working code.</p>
-
-    <nav class="hero-links" aria-label="Social links">
-      {socials.map((social) => (
-        <a class="hero-link" href={social.href} target="_blank" rel="noopener noreferrer">
-          {social.label}
-        </a>
-      ))}
-    </nav>
+<header class="intro">
+  <div class="hero-l">
+    <div class="name">Dushyant Garg</div>
+    <p class="bio">
+      I build <span class="strong">0 → 1</span> fast, then scale <span class="strong">1 → 100</span> on customer data.
+      <span class="sub">Open-source tools for AI agents. Writing at <a href="https://dushyantg.substack.com">dushyantg.substack.com</a>.</span>
+    </p>
+    <div class="contact">
+      <a href="https://github.com/fraction12" target="_blank" rel="noopener">github</a>
+      <span class="dot">·</span>
+      <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">linkedin</a>
+      <span class="dot">·</span>
+      <a href="https://www.npmjs.com/~fraction12" target="_blank" rel="noopener">npm</a>
+      <span class="dot">·</span>
+      <a href="mailto:">email</a>
+    </div>
   </div>
-</section>
+
+  <div class="hero-r">
+    <CommitTerminal commits={data.commits} limit={6} />
+  </div>
+</header>
+
+<style>
+  .intro {
+    padding: 64px 0 48px;
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.2fr);
+    gap: 56px;
+    align-items: start;
+  }
+  .hero-l { padding-top: 4px; }
+  .hero-l .name { font-size: 28px; font-weight: 700; color: var(--ivory); margin-bottom: 14px; letter-spacing: -0.01em; }
+  .hero-l .bio { font-size: 17px; color: var(--ivory-2); line-height: 1.6; max-width: 48ch; }
+  .hero-l .bio .strong { color: var(--ivory); font-weight: 700; }
+  .hero-l .bio .sub { display: block; margin-top: 8px; font-size: 15px; color: var(--dim); }
+  .hero-l .bio a { color: var(--link); text-decoration: none; }
+  .hero-l .bio a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .hero-l .contact { margin-top: 20px; font-size: 14px; color: var(--dim); display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-l .contact a { color: var(--ivory-2); font-weight: 400; text-decoration: none; }
+  .hero-l .contact a:hover { color: var(--link); }
+  .hero-l .contact .dot { color: var(--dim-2); }
+
+  @media (max-width: 920px) {
+    .intro { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 36px; }
+  }
+  @media (max-width: 640px) {
+    .hero-l .name { font-size: 24px; }
+    .hero-l .bio { font-size: 16px; }
+  }
+</style>

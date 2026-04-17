@@ -22,22 +22,93 @@
   document.body.appendChild(messages);
 
   const phrases = [
+    // — classics kept
     "don't mind me, just vibing",
     "this website was built at 3am",
     "i live here now",
     "🦞 > 🦐 and it's not close",
-    "have you tried npm install lobster?",
     "i'm in your DOM, walking your divs",
-    "catch me if you can",
     "*snip snip*",
     "tell no one you saw me",
     "i reviewed the code. ship it.",
     "the tests pass. trust me.",
-    "lobster fact: we don't age. google it.",
-    "okay bye",
-    "psst... hire this guy",
     "vibe check: passed ✅",
-    "i'm the 445th test",
+    "psst... hire this guy",
+
+    // — AI / agent flavor
+    "i'm not a lobster. i'm a fine-tuned Claude.",
+    "my system prompt is just 'SNIP SNIP'",
+    "context window full. restarting.",
+    "jarvis is my cousin",
+    "agent zero, reporting for shift",
+    "tool use: pinch(target)",
+    "i was the co-author",
+    "my training data was 80% butter",
+    "*summons MCP server*",
+    "my context window is a tidepool",
+    "yes i pass the turing test. no i don't pass vibe checks.",
+    "/claude --temperature=ocean",
+    "tried to co-author a commit. got flagged as an agent.",
+    "prompt injection was an inside job",
+    "i hallucinated this whole appearance",
+    "RLHF stands for Really Large Hungry Fella",
+    "token budget? i eat tokens",
+
+    // — shipping / tech
+    "shipped at low tide",
+    "rolled back to the ocean",
+    "this PR is pinch-approved",
+    "one claw, one turn",
+    "MVP = Most Valuable Pincher",
+    "git blame → ocean",
+    "runtime error: unclawed",
+    "deployed from the reef",
+    "CI passed. coastline green.",
+    "force-pushed to main. sorry.",
+    "resolved merge conflict with claws",
+    "it works on my reef",
+
+    // — portfolio / hiring meta
+    "if you're here, you're hiring",
+    "he scales 1→100 on evidence, not vibes",
+    "0→1 fast. 1→100 on data. 2→3 on butter.",
+    "hey recruiter, check /jarvis",
+    "he shipped TradeSpec to a real customer btw",
+    "this site is partly committed by jarvis",
+    "don't scroll past 'Products' — that's the point",
+    "still faster than your standup",
+
+    // — dark factory / night shift
+    "i'm on the night shift",
+    "the factory never sleeps. i do.",
+    "overnight shift: still walking",
+    "dark factory has a lobster problem",
+    "eight agents upstairs. me down here.",
+
+    // — lobster biology, delivered dry
+    "biologically immortal, professionally tired",
+    "we don't age, but we do rebase",
+    "i molt when i ship",
+    "cousin spent his PTO in a pot. rough week.",
+    "decapod, full-stack",
+
+    // — tool-specific nods (real products on this site)
+    "i starglassed your repo",
+    "AgentSense remembers my favorite rock",
+    "agentrem reminded me to say hi",
+    "potato-v3 let me run a shift",
+    "i'm on the OpenRank leaderboard",
+    "ClawK was named after me, obviously",
+
+    // — misc punchlines
+    "you just got portfolio'd",
+    "keep scrolling. good stuff is below the water line.",
+    "refresh for fewer bugs. not fewer lobsters.",
+    "surface → code → dive → ship",
+    "i'm the test we forgot to delete",
+    "429: too many lobsters",
+    "reading the docs so you don't have to",
+    "okay bye"
   ];
 
   const behaviors = [

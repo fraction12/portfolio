@@ -1,0 +1,94 @@
+---
+import type { Artifact } from '../config/packages';
+
+interface Props {
+  artifact: Artifact;
+  metric: string | null;
+  metricPlaceholder?: string;
+}
+const { artifact, metric, metricPlaceholder } = Astro.props;
+
+const githubUrl = artifact.repo ? `https://github.com/${artifact.repo}` : null;
+const install = artifact.installCommand ?? '';
+// Detect the "# comment-style" install placeholder — display the command but mute it
+const isComment = install.trim().startsWith('#');
+const isDev = artifact.status === 'dev';
+---
+
+<article class={`tool${isDev ? ' dev' : ''}`}>
+  <div class="tool-head">
+    <span class="tool-name">{artifact.name}</span>
+    <span class="tool-meta">{artifact.stack}</span>
+  </div>
+  <p class="tool-desc">{artifact.description}</p>
+
+  {install && (
+    <div class="tool-install">
+      <span class="prompt">$</span>{isComment
+        ? <span class="cmt">{install}</span>
+        : install}
+    </div>
+  )}
+
+  <div class="tool-foot">
+    {githubUrl && <a href={githubUrl} target="_blank" rel="noopener">github ↗</a>}
+    {artifact.url && (
+      <>
+        {githubUrl && <span class="sep">·</span>}
+        <a href={artifact.url} target="_blank" rel="noopener">{artifact.url.replace(/^https?:\/\//, '')} ↗</a>
+      </>
+    )}
+    {metric
+      ? <>{(githubUrl || artifact.url) && <span class="sep">·</span>}<span class="metric">{metric}</span></>
+      : metricPlaceholder
+        ? <>{(githubUrl || artifact.url) && <span class="sep">·</span>}<span class="metric ph">{metricPlaceholder}</span></>
+        : null}
+  </div>
+</article>
+
+<style>
+  .tool {
+    padding: 18px 0 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tool:last-child { border-bottom: 0; }
+  .tool-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .tool-name { font-size: 17px; font-weight: 700; color: var(--ivory); }
+  .tool-meta { font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
+  .tool-desc {
+    color: var(--ivory-2);
+    font-size: 15px; line-height: 1.6;
+    max-width: 62ch;
+    margin: 0 0 12px;
+  }
+  .tool-install {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    background: var(--ink-1);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    color: var(--ivory);
+    margin-bottom: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .tool-install .cmt { color: var(--dim); font-style: italic; }
+  .tool-install .prompt { color: var(--link); margin-right: 6px; user-select: none; }
+  .tool.dev .tool-install { border-style: dashed; }
+  .tool-foot {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 12.5px; color: var(--dim);
+  }
+  .tool-foot a { color: var(--link); text-decoration: none; }
+  .tool-foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .tool-foot .sep { color: var(--dim-2); }
+  .tool-foot .metric { color: var(--link); }
+  .tool-foot .metric.ph { color: var(--dim-2); font-style: italic; }
+
+  @media (max-width: 640px) {
+    .tool-head { flex-direction: column; gap: 2px; align-items: flex-start; }
+  }
+</style>
