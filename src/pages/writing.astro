@@ -11,7 +11,11 @@ import Section from '../components/Section.astro';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 ---
-<Layout current="writing" title="Writing" description="Essays and practical notes on AI agents, product building, and shipping fast.">
+<Layout
+  current="writing"
+  title="Writing — Dushyant Garg"
+  description="Essays by Dushyant Garg on AI agents, product building, and shipping fast — published weekly on Substack, mirrored here within minutes."
+>
   <div class="container">
     <Section className="page-intro section-tight">
       <h1 class="page-title reveal">Writing<span class="dot">.</span></h1>
