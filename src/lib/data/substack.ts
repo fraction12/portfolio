@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 export type Essay = {
   title: string;
   link: string;
@@ -7,7 +10,27 @@ export type Essay = {
   readTimeMinutes: number;
 };
 
+export type SubstackSnapshot = {
+  fetchedAt: string | null;
+  essays: Essay[];
+};
+
 const FEED_URL = 'https://dushyantg.substack.com/feed';
+const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/substack.json');
+
+function readSnapshot(): Essay[] {
+  try {
+    const raw = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8')) as { fetchedAt: string | null; essays: Array<Omit<Essay, 'publishedAt'> & { publishedAt: string }> };
+    return raw.essays.map(e => ({ ...e, publishedAt: new Date(e.publishedAt) }));
+  } catch { return []; }
+}
+
+function writeSnapshot(essays: Essay[]) {
+  try {
+    const data = { fetchedAt: new Date().toISOString(), essays: essays.map(e => ({ ...e, publishedAt: e.publishedAt.toISOString() })) };
+    fs.writeFileSync(SNAPSHOT_PATH, JSON.stringify(data, null, 2));
+  } catch {}
+}
 
 export function decodeXml(input = ''): string {
   return input
@@ -69,9 +92,11 @@ export async function fetchEssays(): Promise<Essay[]> {
   try {
     const res = await fetch(FEED_URL);
     if (!res.ok) throw new Error(`substack feed ${res.status}`);
-    return parseFeed(await res.text());
+    const essays = parseFeed(await res.text());
+    writeSnapshot(essays);
+    return essays;
   } catch (err) {
-    console.warn('[substack] fetch failed, returning empty:', err);
-    return [];
+    console.warn('[substack] fetch failed, falling back to snapshot:', err);
+    return readSnapshot();
   }
 }
