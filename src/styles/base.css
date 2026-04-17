@@ -907,4 +907,31 @@ h2 .dot { color: var(--accent); }
   .hero-links .hero-link { width: fit-content; }
 }
 
+/* ============================================================
+   SIGNAL DESK UTILITIES
+   ============================================================ */
+.mono { font-family: var(--mono); }
+.eyebrow { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+.label { font-family: var(--mono); font-weight: 500; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
 
+.container-wide { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+
+.section-head {
+  padding: 56px 0 22px;
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 28px;
+  align-items: baseline;
+  border-top: 1px solid var(--line-2);
+}
+.section-head .sh-num { color: var(--signal); font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.14em; }
+.section-head .sh-name { font-family: var(--display); font-weight: 500; font-size: var(--fs-h2); letter-spacing: -0.025em; font-variation-settings: "opsz" 144; }
+.section-head .sh-name em { font-style: italic; font-weight: 300; color: var(--signal); }
+.section-head .sh-meta { color: var(--dim); font-size: 13px; max-width: 40ch; text-align: right; }
+
+@media (max-width: 640px) {
+  .section-head { grid-template-columns: 1fr; gap: 8px; }
+  .section-head .sh-meta { text-align: left; }
+}
+
+::selection { background: var(--signal); color: var(--ink); }
