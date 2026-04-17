@@ -2,6 +2,7 @@
 import CommitHeatmap from './CommitHeatmap.astro';
 import Numerals from './Numerals.astro';
 import { loadSignalData } from '../lib/data';
+import { artifacts } from '../config/packages';
 
 const data = await loadSignalData();
 
@@ -12,7 +13,10 @@ const numeralCells = [
     tone: 'signal' as const,
     sub: data.github.commits30d !== null ? 'real-time from github' : '[github api pending]',
     subTone: data.github.commits30d !== null ? 'up' as const : 'neutral' as const },
-  { label: 'Packages · 30d', value: 11, sub: '6 live · 5 in dev', subTone: 'neutral' as const },
+  { label: 'Packages · 30d',
+    value: artifacts.length,
+    sub: `${artifacts.filter(a => a.status === 'live').length} live · ${artifacts.filter(a => a.status === 'dev').length} in dev`,
+    subTone: 'neutral' as const },
   { label: 'Stars across repos',
     value: data.github.totalStars ?? 0,
     placeholder: data.github.totalStars === null,

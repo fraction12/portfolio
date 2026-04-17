@@ -3,6 +3,7 @@ import StatusStrip from './StatusStrip.astro';
 import { loadSignalData } from '../lib/data';
 import { totalNpmDownloads } from '../lib/data/npm';
 import { totalPypiDownloads } from '../lib/data/pypi';
+import { artifacts } from '../config/packages';
 
 interface Props { current?: 'home' | 'artifacts' | 'writing' | 'stream' | 'beliefs' | 'jarvis' | 'projects' }
 const { current = 'home' } = Astro.props;
@@ -13,7 +14,7 @@ const downloads30d = totalNpmDownloads(data.npm) + totalPypiDownloads(data.pypi)
 
 const items = [
   { label: 'Repo', value: `live · last commit ${data.lastCommitRelative}`, tone: 'live' as const },
-  { label: 'Shipped 30d', value: '11' },
+  { label: 'Shipped 30d', value: String(artifacts.length) },
   { label: 'Commits 7d', value: String(commits7d), tone: 'hot' as const },
   { label: 'Downloads 30d', value: downloads30d > 0 ? downloads30d.toLocaleString() : '—' }
 ];
