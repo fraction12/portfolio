@@ -1,56 +1,85 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import SectionHead from '../components/SectionHead.astro';
-import ArtifactGrid from '../components/ArtifactGrid.astro';
+import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
-import DispatchInset from '../components/DispatchInset.astro';
-import Tape from '../components/Tape.astro';
-import BeliefsGrid from '../components/BeliefsGrid.astro';
+import LogList from '../components/LogList.astro';
+import { artifacts, type Artifact } from '../config/packages';
 import { loadSignalData } from '../lib/data';
-import { artifacts } from '../config/packages';
 
 const data = await loadSignalData();
-const liveCount = artifacts.filter(a => a.status === 'live').length;
-const devCount = artifacts.filter(a => a.status === 'dev').length;
-const privateCount = artifacts.filter(a => a.status === 'private').length;
-const artifactMeta = [
-  `${liveCount} live`,
-  devCount > 0 ? `${devCount} in dev` : null,
-  privateCount > 0 ? `${privateCount} private` : null,
-  'updated continuously'
-].filter(Boolean).join(' · ');
+
+function metricFor(a: Artifact): { metric: string | null; placeholder: string } {
+  if (a.metricOverride) return { metric: a.metricOverride, placeholder: '' };
+  if (a.npmName) {
+    const d = data.npm.packages[a.npmName]?.downloadsLastMonth;
+    if (typeof d === 'number') return { metric: `↓ ${d.toLocaleString()} / mo`, placeholder: '' };
+    return { metric: null, placeholder: '[npm stats pending]' };
+  }
+  if (a.pypiName) {
+    const d = data.pypi.packages[a.pypiName]?.downloadsLastMonth;
+    if (typeof d === 'number') return { metric: `↓ ${d.toLocaleString()} / mo`, placeholder: '' };
+    return { metric: null, placeholder: '[pypi stats pending]' };
+  }
+  return { metric: null, placeholder: '' };
+}
+
+const sorted = [...artifacts].sort((a, b) => a.order - b.order);
 ---
 
-<Layout current="home" title="Dushyant Garg" description="Product builder and applied AI researcher shipping at the pace of agents. Grounded in git log.">
+<Layout current="home" title="Dushyant Garg" description="I build 0 to 1 fast, then scale 1 to 100 on customer data. Open-source tools for AI agents.">
   <main class="sd-main">
+
     <Hero />
 
-    <section id="artifacts">
-      <SectionHead num="§ 01" name="What I *ship*" meta={artifactMeta} />
-      <ArtifactGrid />
+    <section id="tools">
+      <h2>Tools</h2>
+      {sorted.map(a => {
+        const { metric, placeholder } = metricFor(a);
+        return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+      })}
     </section>
 
     <section id="writing">
-      <SectionHead num="§ 02" name="What I *think*" meta="Substack, auto-synced · long form plus dispatches" />
-      <WritingBlock essays={data.essays} limit={4} />
-      <DispatchInset />
+      <h2>Writing</h2>
+      <WritingBlock essays={data.essays} limit={6} />
     </section>
 
-    <section id="tape">
-      <SectionHead num="§ 03" name="The *tape*" meta={`${data.essays.length + data.commits.length} entries · reverse-chron · derived from git log and rss`} />
-      <Tape shifts={data.shifts} essays={data.essays} limit={12} />
+    <section id="log">
+      <h2>Log</h2>
+      <p class="log-caption">Field notes from agents running overnight on this repo. Committed by the agents themselves.</p>
+      <LogList limit={5} />
+      <a href="/jarvis" class="more-link">All dispatches →</a>
     </section>
 
-    <section id="beliefs">
-      <SectionHead num="§ 04" name="Beliefs" meta="four rules · tested nightly" />
-      <BeliefsGrid />
-    </section>
   </main>
 </Layout>
 
 <style>
-  .sd-main { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
-  .sd-main > section { padding: 0 0 64px; }
-  @media (max-width: 640px) { .sd-main { padding: 0 22px; } }
+  .sd-main {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 0 24px;
+    position: relative; z-index: 2;
+  }
+  section {
+    padding: 36px 0;
+    border-top: 1px solid var(--line);
+  }
+  section > h2 {
+    font-size: 13px; color: var(--dim); font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+  .log-caption {
+    color: var(--dim); font-size: 14px; margin-bottom: 16px; max-width: 62ch;
+  }
+  .more-link {
+    display: inline-block; margin-top: 14px;
+    font-family: var(--mono); font-size: 13px; color: var(--link);
+    text-decoration: none;
+  }
+  .more-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 640px) {
+    .sd-main { padding: 0 22px; }
+  }
 </style>
