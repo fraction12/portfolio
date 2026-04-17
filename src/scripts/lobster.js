@@ -112,21 +112,38 @@
   ];
 
   const behaviors = [
-    // Walk across bottom
+    // Walk across bottom (with a pause mid-walk to say something)
     (cb) => {
       const y = window.innerHeight - 60;
       const startX = -50;
       const endX = window.innerWidth + 50;
+      const pauseX = window.innerWidth / 2 - 20;
       lobster.style.top = y + 'px';
       lobster.style.left = startX + 'px';
       lobster.style.opacity = '1';
       lobster.style.transform = 'scaleX(1)';
       let x = startX;
+      let hasPaused = false;
       const walk = () => {
-        x += 2;
+        x += 1.3; // slower stride
         lobster.style.left = x + 'px';
-        // Wobble
         lobster.style.transform = `scaleX(1) rotate(${Math.sin(x * 0.05) * 5}deg)`;
+
+        // Pause mid-walk to show a message
+        if (!hasPaused && x >= pauseX) {
+          hasPaused = true;
+          const msg = phrases[Math.floor(Math.random() * phrases.length)];
+          messages.textContent = msg;
+          messages.style.top = (y - 36) + 'px';
+          messages.style.left = (x - 30) + 'px';
+          messages.style.opacity = '1';
+          setTimeout(() => {
+            messages.style.opacity = '0';
+            requestAnimationFrame(walk); // resume
+          }, 5500);
+          return;
+        }
+
         if (x < endX) requestAnimationFrame(walk);
         else { lobster.style.opacity = '0'; cb(); }
       };
@@ -164,7 +181,7 @@
               else { lobster.style.opacity = '0'; cb(); }
             };
             retreat();
-          }, 2500);
+          }, 5500);
         }
       };
       peek();
@@ -199,7 +216,7 @@
               messages.style.opacity = '0';
               lobster.style.opacity = '0';
               cb();
-            }, 2500);
+            }, 5500);
             return;
           }
         }
@@ -237,7 +254,7 @@
               else { lobster.style.opacity = '0'; cb(); }
             };
             slide();
-          }, 2500);
+          }, 5500);
         }
       };
       climb();
