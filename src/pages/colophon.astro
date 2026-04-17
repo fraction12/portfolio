@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { loadSignalData } from '../lib/data';
+const data = await loadSignalData();
+
+const rows = [
+  { label: 'Last commit', value: `${data.lastCommit.sha.slice(0, 7)} · ${data.lastCommitRelative}`, source: 'local git log' },
+  { label: 'Commits (7d)', value: data.github.commits7d ?? '—', source: 'github graphql · contributionsCollection' },
+  { label: 'Commits (30d)', value: data.github.commits30d ?? '—', source: 'github graphql · contributionsCollection' },
+  { label: 'Stars (all repos)', value: data.github.totalStars ?? '—', source: 'github rest · /users/{user}/repos' },
+  { label: 'npm downloads (30d)', value: Object.keys(data.npm.packages).length === 0 ? '—' : Object.values(data.npm.packages).reduce((t, p) => t + p.downloadsLastMonth, 0).toLocaleString(), source: 'api.npmjs.org/downloads/point/last-month' },
+  { label: 'pypi downloads (30d)', value: Object.keys(data.pypi.packages).length === 0 ? '—' : Object.values(data.pypi.packages).reduce((t, p) => t + p.downloadsLastMonth, 0).toLocaleString(), source: 'pypistats.org/api/packages/{pkg}/recent' },
+  { label: 'Essays', value: data.essays.length, source: 'dushyantg.substack.com/feed (rss)' },
+  { label: 'Shift summaries', value: data.shifts.length, source: 'local git log + 4-hour gap clustering' }
+];
+---
+
+<Layout current="home" title="Colophon — Dushyant Garg" description="Every metric on this site, with its source.">
+  <main class="col-main">
+    <SectionHead num="§" name="Colophon" meta="every metric · every source" />
+    <p class="intro">
+      This site is derived from a public repository and a handful of public APIs. Every number on the home page
+      maps to one of the sources below. If a source is unwired, you'll see an italic placeholder — not a made-up figure.
+    </p>
+    <table>
+      <thead><tr><th>Metric</th><th>Current value</th><th>Source</th></tr></thead>
+      <tbody>
+        {rows.map(r => (
+          <tr>
+            <td>{r.label}</td>
+            <td class="v">{r.value}</td>
+            <td class="s">{r.source}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </main>
+</Layout>
+
+<style>
+  .col-main { max-width: 880px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
+  .intro { color: var(--ivory-2); margin: 24px 0 32px; font-size: 16px; line-height: 1.7; max-width: 62ch; }
+  table { width: 100%; border-collapse: collapse; border: 1px solid var(--line-2); }
+  th, td { padding: 12px 16px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { color: var(--signal); font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
+  td { font-family: var(--body); font-size: 14.5px; color: var(--ivory-2); }
+  td.v { font-family: var(--mono); color: var(--ivory); font-weight: 500; }
+  td.s { font-family: var(--mono); color: var(--dim); font-size: 12.5px; }
+  @media (max-width: 640px) { .col-main { padding: 0 22px; } table { font-size: 13px; } th, td { padding: 10px 12px; } }
+</style>

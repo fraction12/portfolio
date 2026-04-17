@@ -1,35 +1,46 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import Writing from '../components/Writing.astro';
-import Projects from '../components/Projects.astro';
-import NewsletterSignup from '../components/NewsletterSignup.astro';
-import JarvisSpotlight from '../components/JarvisSpotlight.astro';
-import Section from '../components/Section.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ArtifactGrid from '../components/ArtifactGrid.astro';
+import WritingBlock from '../components/WritingBlock.astro';
+import DispatchInset from '../components/DispatchInset.astro';
+import Tape from '../components/Tape.astro';
+import BeliefsGrid from '../components/BeliefsGrid.astro';
+import { loadSignalData } from '../lib/data';
+
+const data = await loadSignalData();
 ---
 
-<Layout current="home" title="Dushyant Garg" description="PM who builds AI tools. Open-source projects, writing, and live dispatches from Jarvis.">
-  <div class="container">
+<Layout current="home" title="Dushyant Garg" description="Product builder and applied AI researcher shipping at the pace of agents. Grounded in git log.">
+  <main class="sd-main">
     <Hero />
 
-    <Section title="Featured Writing" id="featured-writing-title">
-      <Writing limit={3} />
-    </Section>
+    <section id="artifacts">
+      <SectionHead num="§ 01" name="What I *ship*" meta="9 live · 2 private · updated continuously" />
+      <ArtifactGrid />
+    </section>
 
-    <Section title="Projects" id="projects-title">
-      <Projects />
-    </Section>
+    <section id="writing">
+      <SectionHead num="§ 02" name="What I *think*" meta="Substack, auto-synced · long form plus dispatches" />
+      <WritingBlock essays={data.essays} limit={4} />
+      <DispatchInset />
+    </section>
 
-    <Section>
-      <JarvisSpotlight />
-    </Section>
+    <section id="tape">
+      <SectionHead num="§ 03" name="The *tape*" meta={`${data.essays.length + data.commits.length} entries · reverse-chron · derived from git log and rss`} />
+      <Tape shifts={data.shifts} essays={data.essays} limit={12} />
+    </section>
 
-    <Section>
-      <NewsletterSignup className="reveal" />
-    </Section>
-  </div>
-
-  <script>
-    import '../scripts/connect.js';
-  </script>
+    <section id="beliefs">
+      <SectionHead num="§ 04" name="Beliefs" meta="four rules · tested nightly" />
+      <BeliefsGrid />
+    </section>
+  </main>
 </Layout>
+
+<style>
+  .sd-main { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
+  .sd-main > section { padding: 0 0 64px; }
+  @media (max-width: 640px) { .sd-main { padding: 0 22px; } }
+</style>
