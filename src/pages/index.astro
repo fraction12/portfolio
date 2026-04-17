@@ -4,7 +4,7 @@ import Hero from '../components/Hero.astro';
 import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import LogList from '../components/LogList.astro';
-import { artifacts, type Artifact } from '../config/packages';
+import { artifacts, CATEGORY_ORDER, CATEGORY_LABELS, type Artifact, type ArtifactCategory } from '../config/packages';
 import { loadSignalData } from '../lib/data';
 
 const data = await loadSignalData();
@@ -24,7 +24,14 @@ function metricFor(a: Artifact): { metric: string | null; placeholder: string } 
   return { metric: null, placeholder: '' };
 }
 
-const sorted = [...artifacts].sort((a, b) => a.order - b.order);
+const byCategory: Record<ArtifactCategory, Artifact[]> = {
+  'memory': [],
+  'libraries': [],
+  'orchestration': [],
+  'human-tools': []
+};
+for (const a of artifacts) byCategory[a.category].push(a);
+for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.order);
 ---
 
 <Layout current="home" title="Dushyant Garg" description="I build 0 to 1 fast, then scale 1 to 100 on customer data. Open-source tools for AI agents.">
@@ -34,10 +41,15 @@ const sorted = [...artifacts].sort((a, b) => a.order - b.order);
 
     <section id="tools">
       <h2>Tools</h2>
-      {sorted.map(a => {
-        const { metric, placeholder } = metricFor(a);
-        return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-      })}
+      {CATEGORY_ORDER.map(cat => (
+        <div class="tool-group" id={`tools-${cat}`}>
+          <h3 class="tool-group-head">{CATEGORY_LABELS[cat]}</h3>
+          {byCategory[cat].map(a => {
+            const { metric, placeholder } = metricFor(a);
+            return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+          })}
+        </div>
+      ))}
     </section>
 
     <section id="writing">
@@ -69,6 +81,18 @@ const sorted = [...artifacts].sort((a, b) => a.order - b.order);
     font-size: 13px; color: var(--dim); font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase;
     margin: 0 0 24px;
+  }
+  .tool-group { margin-bottom: 8px; }
+  .tool-group + .tool-group { margin-top: 32px; }
+  .tool-group-head {
+    font-family: var(--body);
+    font-size: 15px; font-weight: 700;
+    color: var(--ivory);
+    margin: 0 0 12px;
+    letter-spacing: -0.005em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line-2);
+    text-transform: none;
   }
   .log-caption {
     color: var(--dim); font-size: 14px; margin-bottom: 16px; max-width: 62ch;
