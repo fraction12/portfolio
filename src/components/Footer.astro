@@ -1,29 +1,36 @@
 ---
-import { loadSignalData } from '../lib/data';
-const data = await loadSignalData();
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="fl">
-    © {year} <b>Dushyant Garg</b> · shipped at the pace of agents
-    <div class="sig-line">site derived from this repo · last commit {data.lastCommitRelative} · <a href="/colophon">colophon →</a></div>
-  </div>
-  <div class="fr">
-    <a href="https://github.com/fraction12" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://dushyantg.substack.com" target="_blank" rel="noopener">Substack</a>
-    <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="/colophon">Colophon</a>
+  <div class="inner">
+    <div class="left">© {year} Dushyant Garg · agents commit to this repo while I sleep</div>
+    <div class="right">
+      <a href="https://github.com/fraction12" target="_blank" rel="noopener">github</a>
+      <a href="https://dushyantg.substack.com" target="_blank" rel="noopener">substack</a>
+      <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">linkedin</a>
+      <a href="/colophon">colophon</a>
+    </div>
   </div>
 </footer>
 
 <style>
-  .site-footer { border-top: 1px solid var(--line-2); padding: 32px 32px 48px; max-width: var(--max-w); margin: 0 auto; font-family: var(--body); font-size: 13px; color: var(--dim); display: grid; grid-template-columns: 1fr auto; gap: 24px; position: relative; z-index: 2; }
-  .fl b { color: var(--ivory); font-weight: 700; }
-  .fl .sig-line { color: var(--signal); margin-top: 6px; font-family: var(--mono); font-size: 12px; }
-  .fl .sig-line a { color: var(--signal); text-decoration: none; }
-  .fl .sig-line a:hover { text-decoration: underline; }
-  .fr a { margin-left: 26px; color: var(--dim); font-weight: 700; text-decoration: none; }
-  .fr a:hover { color: var(--ivory); }
-  @media (max-width: 640px) { .site-footer { grid-template-columns: 1fr; padding: 32px 22px 40px; } .fr a { margin-left: 0; margin-right: 18px; } }
+  .site-footer {
+    border-top: 1px solid var(--line-2);
+    margin-top: 40px;
+  }
+  .inner {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 24px; font-size: 13px; color: var(--dim);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    position: relative; z-index: 2;
+  }
+  .inner a { color: var(--dim); text-decoration: none; }
+  .inner a:hover { color: var(--link); }
+  .right a { margin-left: 14px; }
+
+  @media (max-width: 640px) {
+    .inner { flex-direction: column; padding: 20px 22px; gap: 8px; }
+    .right a { margin-left: 0; margin-right: 14px; }
+  }
 </style>
