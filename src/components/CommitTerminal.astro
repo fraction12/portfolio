@@ -1,0 +1,130 @@
+---
+import type { CommitRecord } from '../lib/data';
+import { formatRelativeTime } from '../lib/data';
+
+interface Props { commits: CommitRecord[]; limit?: number }
+const { commits, limit = 6 } = Astro.props;
+
+const shown = commits.slice(0, limit);
+
+function shortSha(sha: string): string { return sha.slice(0, 7); }
+
+function shortAuthor(commit: CommitRecord): string {
+  // If agent-authored, display the "Jarvis <jarvis@dushyant.ops>" persona regardless of real author
+  if (commit.isAgentAuthored) return 'Jarvis <jarvis@dushyant.ops>';
+  const email = commit.authorEmail ? ` <${commit.authorEmail}>` : '';
+  return `${commit.author}${email}`;
+}
+
+// Extract `scope(x):` prefix from subject for color separation
+function splitScope(subject: string): { scope: string; rest: string } {
+  const m = /^([a-z]+(?:\([^)]+\))?:)\s*(.*)$/i.exec(subject);
+  if (m) return { scope: m[1], rest: m[2] };
+  return { scope: '', rest: subject };
+}
+---
+
+<div class="term" aria-label="Live git log for this repo — agent-authored commits highlighted">
+  <div class="term-head">
+    <span class="path">~/dushyant-garg $ git log --last-{limit}</span>
+    <span class="live"><span class="pulse"></span>LIVE</span>
+  </div>
+  <div class="term-body">
+    {shown.map((c, i) => {
+      const { scope, rest } = splitScope(c.subject);
+      return (
+        <div class={`commit${i === 0 ? ' latest' : ''}`}>
+          <div class="side">
+            <span class="sha">{shortSha(c.sha)}</span><span class="age">{formatRelativeTime(c.timestamp)}</span>
+          </div>
+          <div class="body">
+            <div class={`author${c.isAgentAuthored ? ' agent' : ''}`}>{shortAuthor(c)}</div>
+            <div class="subject">{scope && <span class="scope">{scope}</span>} {rest}</div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+  <div class="term-foot">
+    <span class="cursor-line"><span class="prompt">$</span><span class="cursor"></span></span>
+    <span class="more"><a href="#log">see all →</a></span>
+  </div>
+</div>
+
+<style>
+  .term {
+    background: var(--ink-1);
+    border: 1px solid var(--line-2);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    overflow: hidden;
+  }
+  .term-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    background: var(--ink-2);
+    border-bottom: 1px solid var(--line-2);
+    font-size: 11px; letter-spacing: 0.04em;
+    color: var(--dim);
+  }
+  .term-head .path { color: var(--ivory-2); font-weight: 500; }
+  .term-head .live { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); letter-spacing: 0.08em; }
+  .term-head .live .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--agent);
+    box-shadow: 0 0 8px rgba(125,226,163,0.6);
+    animation: term-pulse 1.9s ease-in-out infinite;
+  }
+  @keyframes term-pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.35 } }
+
+  .term-body {
+    padding: 14px 18px 12px;
+    max-height: 400px;
+    overflow: hidden;
+  }
+  .commit {
+    padding: 4px 0;
+    display: grid; grid-template-columns: auto 1fr; gap: 18px;
+  }
+  .commit + .commit { border-top: 1px dashed var(--line); margin-top: 4px; padding-top: 8px; }
+  .commit .side {
+    color: var(--dim-2);
+    font-size: 11px;
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+  .commit .sha { color: var(--link); }
+  .commit .age { color: var(--dim); margin-left: 4px; }
+  .commit .body { display: flex; flex-direction: column; gap: 2px; }
+  .commit .author { color: var(--ivory-2); font-size: 11.5px; }
+  .commit .author.agent { color: var(--agent); font-weight: 500; }
+  .commit .author.agent::before { content: '◉ '; font-size: 10px; }
+  .commit .subject { color: var(--ivory); font-size: 12.5px; }
+  .commit .subject .scope { color: var(--link); }
+
+  .term-foot {
+    padding: 10px 18px 14px;
+    font-size: 11px;
+    color: var(--dim);
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .term-foot .cursor-line { display: inline-flex; align-items: center; }
+  .term-foot .prompt { color: var(--link); margin-right: 6px; }
+  .term-foot .cursor {
+    display: inline-block;
+    width: 7px; height: 12px;
+    background: var(--agent);
+    margin-left: 2px;
+    animation: term-blink 1.05s step-end infinite;
+    vertical-align: middle;
+  }
+  @keyframes term-blink { 50% { opacity: 0 } }
+  .term-foot .more a { color: var(--link); }
+
+  @media (max-width: 640px) {
+    .commit { grid-template-columns: 1fr; gap: 4px; }
+    .commit .side { font-size: 10.5px; }
+  }
+</style>
