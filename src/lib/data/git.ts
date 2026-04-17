@@ -13,8 +13,10 @@ export function parseGitLogOutput(raw: string): CommitRecord[] {
     let stat: string | null = null;
 
     for (const line of lines) {
-      if (line.startsWith('stat:')) {
-        stat = line.slice(5).trim();
+      // Strip optional 'stat:' prefix, then check if it's a files-changed stat line
+      const stripped = line.replace(/^stat:\s*/, '');
+      if (/(\d+)\s+files?\s+changed/.test(stripped)) {
+        stat = stripped;
         continue;
       }
       const colon = line.indexOf(':');

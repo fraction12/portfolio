@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getLastCommit, parseGitLogOutput } from '../../../src/lib/data/git';
+import { getLastCommit, getCommitHistory, parseGitLogOutput } from '../../../src/lib/data/git';
 
 describe('parseGitLogOutput', () => {
   it('parses a single commit with stat line', () => {
@@ -43,6 +43,23 @@ describe('parseGitLogOutput', () => {
     ].join('\n');
     expect(parseGitLogOutput(raw)[0].deletions).toBe(0);
   });
+
+  it('parses --shortstat real output (no stat: prefix)', () => {
+    // This is the exact format git log --shortstat emits
+    const raw = [
+      '---COMMIT---',
+      'sha:real123',
+      'ts:1713312000',
+      'author:Dushyant Garg',
+      'subject:feat: real commit',
+      ' 3 files changed, 55 insertions(+), 12 deletions(-)'
+    ].join('\n');
+    const commits = parseGitLogOutput(raw);
+    expect(commits).toHaveLength(1);
+    expect(commits[0].additions).toBe(55);
+    expect(commits[0].deletions).toBe(12);
+    expect(commits[0].filesChanged).toBe(3);
+  });
 });
 
 describe('getLastCommit', () => {
@@ -51,5 +68,13 @@ describe('getLastCommit', () => {
     expect(last.sha).toMatch(/^[0-9a-f]{7,40}$/);
     expect(last.timestamp).toBeInstanceOf(Date);
     expect(typeof last.subject).toBe('string');
+  });
+
+  it('parses non-zero additions from a real commit with changes', () => {
+    // This commit (0.2: "add vitest") should have non-zero diff stats
+    const commits = getCommitHistory(30);
+    const withChanges = commits.find((c: any) => c.additions > 0 || c.deletions > 0);
+    expect(withChanges).toBeDefined();
+    expect((withChanges.additions + withChanges.deletions) > 0).toBe(true);
   });
 });
