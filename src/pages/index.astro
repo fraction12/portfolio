@@ -8,8 +8,18 @@ import DispatchInset from '../components/DispatchInset.astro';
 import Tape from '../components/Tape.astro';
 import BeliefsGrid from '../components/BeliefsGrid.astro';
 import { loadSignalData } from '../lib/data';
+import { artifacts } from '../config/packages';
 
 const data = await loadSignalData();
+const liveCount = artifacts.filter(a => a.status === 'live').length;
+const devCount = artifacts.filter(a => a.status === 'dev').length;
+const privateCount = artifacts.filter(a => a.status === 'private').length;
+const artifactMeta = [
+  `${liveCount} live`,
+  devCount > 0 ? `${devCount} in dev` : null,
+  privateCount > 0 ? `${privateCount} private` : null,
+  'updated continuously'
+].filter(Boolean).join(' · ');
 ---
 
 <Layout current="home" title="Dushyant Garg" description="Product builder and applied AI researcher shipping at the pace of agents. Grounded in git log.">
@@ -17,7 +27,7 @@ const data = await loadSignalData();
     <Hero />
 
     <section id="artifacts">
-      <SectionHead num="§ 01" name="What I *ship*" meta="9 live · 2 private · updated continuously" />
+      <SectionHead num="§ 01" name="What I *ship*" meta={artifactMeta} />
       <ArtifactGrid />
     </section>
 
