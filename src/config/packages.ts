@@ -155,3 +155,4 @@ export const artifacts: Artifact[] = [
 export const npmPackages: string[] = artifacts.filter(a => a.npmName).map(a => a.npmName as string);
 export const pypiPackages: string[] = artifacts.filter(a => a.pypiName).map(a => a.pypiName as string);
 export const GITHUB_USER = 'fraction12';
+export const GITHUB_REPO = 'portfolio';

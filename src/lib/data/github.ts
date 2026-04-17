@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { GITHUB_USER } from '../../config/packages';
+import { GITHUB_USER, GITHUB_REPO } from '../../config/packages';
+import { isAgentAuthor } from '../../config/agents';
+import type { CommitRecord } from './shifts';
 
 const TOKEN = process.env.GITHUB_TOKEN || '';
 const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/github.json');
@@ -92,4 +94,67 @@ function withinDays(iso: string, days: number): boolean {
   const d = new Date(iso);
   const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
   return diff <= days && diff >= 0;
+}
+
+/**
+ * Fetch recent commits from GitHub as a fallback when local `git log` is
+ * unavailable (Vercel strips `.git` after checkout). Returns empty on any
+ * failure. Stats (additions/deletions/filesChanged) are set to 0 — the
+ * /commits endpoint doesn't include them. The home-page CommitTerminal
+ * doesn't display stats, so this is fine for that surface.
+ */
+export async function fetchGithubCommits(sinceDays = 180, perPage = 100): Promise<CommitRecord[]> {
+  if (!TOKEN) {
+    console.warn('[github-commits] GITHUB_TOKEN unset; returning empty');
+    return [];
+  }
+  try {
+    const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
+    const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?per_page=${perPage}&since=${encodeURIComponent(since)}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' }
+    });
+    if (!res.ok) throw new Error(`github commits ${res.status}`);
+    const data = await res.json() as Array<{
+      sha: string;
+      commit: {
+        author: { name: string; email: string; date: string };
+        message: string;
+      };
+    }>;
+
+    return data.map(c => {
+      const msg = c.commit.message ?? '';
+      const firstNL = msg.indexOf('\n');
+      const subject = firstNL === -1 ? msg : msg.slice(0, firstNL);
+      const body = firstNL === -1 ? '' : msg.slice(firstNL + 1).trim();
+
+      const coAuthors: string[] = [];
+      const trailerRe = /^\s*Co-?Authored-?By\s*:\s*(.+?)\s*$/gim;
+      let m: RegExpExecArray | null;
+      while ((m = trailerRe.exec(body)) !== null) coAuthors.push(m[1].trim());
+
+      const author = c.commit.author.name ?? '';
+      const authorEmail = c.commit.author.email ?? '';
+      const primaryKey = `${author} <${authorEmail}>`;
+      const isAgent = isAgentAuthor(primaryKey) || coAuthors.some(x => isAgentAuthor(x));
+
+      return {
+        sha: c.sha,
+        timestamp: new Date(c.commit.author.date),
+        author,
+        authorEmail,
+        subject,
+        body,
+        coAuthors,
+        isAgentAuthored: isAgent,
+        filesChanged: 0,
+        additions: 0,
+        deletions: 0
+      };
+    });
+  } catch (err) {
+    console.warn('[github-commits] fetch failed:', err instanceof Error ? err.message : err);
+    return [];
+  }
 }
