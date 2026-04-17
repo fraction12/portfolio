@@ -17,3 +17,6 @@ node_modules/
 
 # Worktrees (isolated feature workspaces)
 .worktrees/
+
+# brainstorm visual companion workspace
+.superpowers/
