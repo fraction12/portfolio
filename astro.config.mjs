@@ -16,8 +16,9 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [
-    // @astrojs/sitemap only auto-discovers prerendered routes under SSR,
-    // so SSR pages (/, /writing, /colophon) are listed via customPages.
+    // @astrojs/sitemap only auto-discovers prerendered routes under SSR.
+    // Any new SSR page (prerender = false) MUST be added to customPages —
+    // prerendered pages (prerender = true) are discovered automatically.
     sitemap({
       customPages: [
         'https://dushyantgarg.com/',
