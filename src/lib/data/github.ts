@@ -97,11 +97,26 @@ function withinDays(iso: string, days: number): boolean {
 }
 
 /**
- * Fetch recent commits from GitHub as a fallback when local `git log` is
- * unavailable (Vercel strips `.git` after checkout). Returns empty on any
- * failure. Stats (additions/deletions/filesChanged) are set to 0 — the
- * /commits endpoint doesn't include them. The home-page CommitTerminal
- * doesn't display stats, so this is fine for that surface.
+ * Parse a raw commit message into subject + body + extracted Co-Authored-By trailers.
+ */
+function parseCommitMessage(msg: string) {
+  const firstNL = msg.indexOf('\n');
+  const subject = firstNL === -1 ? msg : msg.slice(0, firstNL);
+  const body = firstNL === -1 ? '' : msg.slice(firstNL + 1).trim();
+
+  const coAuthors: string[] = [];
+  const trailerRe = /^\s*Co-?Authored-?By\s*:\s*(.+?)\s*$/gim;
+  let m: RegExpExecArray | null;
+  while ((m = trailerRe.exec(body)) !== null) coAuthors.push(m[1].trim());
+
+  return { subject, body, coAuthors };
+}
+
+/**
+ * Fetch recent commits from a single repo. Used as a fallback when we don't
+ * have repo-scope access (can only see public repos).
+ *
+ * Stats are 0 — the /commits endpoint doesn't include them.
  */
 export async function fetchGithubCommits(sinceDays = 180, perPage = 100): Promise<CommitRecord[]> {
   if (!TOKEN) {
@@ -124,16 +139,7 @@ export async function fetchGithubCommits(sinceDays = 180, perPage = 100): Promis
     }>;
 
     return data.map(c => {
-      const msg = c.commit.message ?? '';
-      const firstNL = msg.indexOf('\n');
-      const subject = firstNL === -1 ? msg : msg.slice(0, firstNL);
-      const body = firstNL === -1 ? '' : msg.slice(firstNL + 1).trim();
-
-      const coAuthors: string[] = [];
-      const trailerRe = /^\s*Co-?Authored-?By\s*:\s*(.+?)\s*$/gim;
-      let m: RegExpExecArray | null;
-      while ((m = trailerRe.exec(body)) !== null) coAuthors.push(m[1].trim());
-
+      const { subject, body, coAuthors } = parseCommitMessage(c.commit.message ?? '');
       const author = c.commit.author.name ?? '';
       const authorEmail = c.commit.author.email ?? '';
       const primaryKey = `${author} <${authorEmail}>`;
@@ -155,6 +161,95 @@ export async function fetchGithubCommits(sinceDays = 180, perPage = 100): Promis
     });
   } catch (err) {
     console.warn('[github-commits] fetch failed:', err instanceof Error ? err.message : err);
+    return [];
+  }
+}
+
+/**
+ * Fetch recent commits across ALL repos the token can see (public + private
+ * if scope is `repo`, public-only if scope is `public_repo`).
+ *
+ * Uses a single GraphQL query: viewer.repositories(...).defaultBranchRef.history.
+ * Merges the per-repo histories, sorts by committedDate, returns top `limit`.
+ */
+export async function fetchAllRepoCommits(limit = 12): Promise<CommitRecord[]> {
+  if (!TOKEN) {
+    console.warn('[github-commits-all] GITHUB_TOKEN unset; returning empty');
+    return [];
+  }
+
+  const query = `
+    query {
+      viewer {
+        repositories(first: 20, orderBy: {field: PUSHED_AT, direction: DESC}, affiliations: [OWNER], isFork: false) {
+          nodes {
+            nameWithOwner
+            isPrivate
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  history(first: 10) {
+                    nodes {
+                      oid
+                      committedDate
+                      message
+                      author { name email }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({ query })
+    });
+    if (!res.ok) throw new Error(`github graphql ${res.status}`);
+    const json = await res.json() as any;
+    const repos = json?.data?.viewer?.repositories?.nodes ?? [];
+
+    const all: CommitRecord[] = [];
+    for (const r of repos) {
+      const history = r?.defaultBranchRef?.target?.history?.nodes ?? [];
+      for (const c of history) {
+        const { subject, body, coAuthors } = parseCommitMessage(c.message ?? '');
+        const author = c.author?.name ?? '';
+        const authorEmail = c.author?.email ?? '';
+        const primaryKey = `${author} <${authorEmail}>`;
+        const isAgent = isAgentAuthor(primaryKey) || coAuthors.some(x => isAgentAuthor(x));
+
+        all.push({
+          sha: c.oid,
+          timestamp: new Date(c.committedDate),
+          author,
+          authorEmail,
+          subject,
+          body,
+          coAuthors,
+          isAgentAuthored: isAgent,
+          filesChanged: 0,
+          additions: 0,
+          deletions: 0
+        });
+      }
+    }
+
+    // Sort newest first and cap
+    all.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return all.slice(0, limit);
+  } catch (err) {
+    console.warn('[github-commits-all] fetch failed:', err instanceof Error ? err.message : err);
     return [];
   }
 }

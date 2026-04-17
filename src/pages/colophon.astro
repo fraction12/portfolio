@@ -1,11 +1,16 @@
 ---
+// SSR so the metrics table stays accurate without rebuilds.
+export const prerender = false;
+
 import Layout from '../layouts/Layout.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { loadSignalData } from '../lib/data';
 const data = await loadSignalData();
 
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
+
 const rows = [
-  { label: 'Last commit', value: `${data.lastCommit.sha.slice(0, 7)} · ${data.lastCommitRelative}`, source: 'local git log' },
+  { label: 'Last commit', value: `${data.lastCommit.sha.slice(0, 7)} · ${data.lastCommitRelative}`, source: 'github graphql · viewer.repositories.history' },
   { label: 'Commits (7d)', value: data.github.commits7d ?? '—', source: 'github graphql · contributionsCollection' },
   { label: 'Commits (30d)', value: data.github.commits30d ?? '—', source: 'github graphql · contributionsCollection' },
   { label: 'Stars (all repos)', value: data.github.totalStars ?? '—', source: 'github rest · /users/{user}/repos' },

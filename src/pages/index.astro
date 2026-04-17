@@ -1,4 +1,8 @@
 ---
+// SSR: render on request, edge-cached 5 min fresh + 30 min stale-while-revalidate.
+// This keeps the hero terminal + tool-card metrics up to date without a rebuild.
+export const prerender = false;
+
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import ToolCard from '../components/ToolCard.astro';
@@ -13,6 +17,8 @@ import {
   type ArtifactCategory
 } from '../config/packages';
 import { loadSignalData } from '../lib/data';
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 
 const data = await loadSignalData();
 
