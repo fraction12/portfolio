@@ -1,0 +1,36 @@
+---
+import type { Essay } from '../lib/data';
+
+interface Props { essay: Essay; entryNumber: string }
+const { essay, entryNumber } = Astro.props;
+
+function escapeHtml(s: string) {
+  return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+}
+const titleHtml = essay.title.includes('*')
+  ? escapeHtml(essay.title).replace(/\*(.+?)\*/g, '<em>$1</em>')
+  : escapeHtml(essay.title);
+---
+
+<a class="w-row" href={essay.link} target="_blank" rel="noopener">
+  <div class="w-date">{essay.dateLabel}</div>
+  <div class="w-entry">{entryNumber}</div>
+  <div class="w-title-cell">
+    <span class="t" set:html={titleHtml}></span>
+    <span class="sub">{essay.description}</span>
+  </div>
+  <div class="w-time">{essay.readTimeMinutes} min</div>
+</a>
+
+<style>
+  .w-row { display: grid; grid-template-columns: 110px 90px 1fr 90px; gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--line); align-items: baseline; text-decoration: none; color: inherit; transition: padding-left .25s, background .25s; }
+  .w-row:hover { padding-left: 10px; background: rgba(255,138,76,0.025); }
+  .w-row:hover .t { color: var(--signal); }
+  .w-date { font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+  .w-entry { font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--signal); letter-spacing: 0.1em; text-transform: uppercase; }
+  .w-title-cell .t { font-family: var(--display); font-weight: 500; font-size: 1.45rem; letter-spacing: -0.015em; color: var(--ivory); font-variation-settings: "opsz" 144; transition: color .25s; line-height: 1.25; display: block; }
+  .w-title-cell .t :global(em) { font-style: italic; font-weight: 300; color: var(--signal); }
+  .w-title-cell .sub { display: block; font-family: var(--body); font-weight: 400; color: var(--dim); font-size: 14px; margin-top: 6px; }
+  .w-time { font-family: var(--mono); font-size: 11.5px; color: var(--dim); text-align: right; }
+  @media (max-width: 640px) { .w-row { grid-template-columns: 1fr; gap: 4px; } .w-time { text-align: left; } }
+</style>
