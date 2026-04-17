@@ -1,10 +1,15 @@
 ---
-export const prerender = true;
+// SSR: Substack essays update independently of deploys, so this page
+// re-fetches the RSS feed on each stale-cache request. 5 min edge cache
+// keeps things fast; new Substack posts appear within ~5 min of publishing.
+export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Writing from '../components/Writing.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import Section from '../components/Section.astro';
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 ---
 <Layout current="writing" title="Writing" description="Essays and practical notes on AI agents, product building, and shipping fast.">
   <div class="container">
