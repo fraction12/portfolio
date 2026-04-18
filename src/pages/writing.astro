@@ -20,19 +20,12 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 >
   <main class="page-main-split">
 
-    <div class="page-split">
+    <div class="page-split page-split--solo">
       <PageHeader
         kicker="Essays · weekly"
         title="Writing *// from the stack*"
         lede="Practical notes on building with AI agents — what's working, what broke, what I'd undo. Published on Substack; mirrored here within minutes."
       />
-      <aside class="page-aside">
-        <div class="status-pill">
-          <span class="pulse" aria-hidden="true"></span>
-          <span>subscribe · weekly</span>
-        </div>
-        <div class="page-aside__stat"><b>Open</b><span class="label">to anyone · no paywall</span></div>
-      </aside>
     </div>
 
     <section class="section-split">
@@ -67,29 +60,8 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
     position: relative;
     z-index: var(--z-content);
   }
-  .status-pill {
-    display: inline-flex;
-    align-self: flex-end;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 14px;
-    border: 1px solid var(--line-2);
-    border-radius: var(--radius-pill);
-    background: var(--signal-dim);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: var(--signal);
-  }
-  .status-pill .pulse {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--signal);
-    box-shadow: 0 0 8px var(--signal-glow);
-    animation: statusPulse 2s ease-in-out infinite;
-  }
-  @media (max-width: 960px) {
-    .status-pill { align-self: flex-start; }
+  .page-split--solo {
+    grid-template-columns: 1fr;
   }
   @media (max-width: 640px) {
     .page-main-split { padding: 0 22px; }
