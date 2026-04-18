@@ -10,10 +10,14 @@
   --ink-terminal: rgba(10,10,10,0.8);
 
   /* ---- Color: text ---- */
+  /* Contrast against --ink (#0c1018):
+     ivory 15.3:1 · ivory-2 9.2:1 · dim 6.1:1 · dim-2 3.4:1
+     All meet WCAG AA normal-text (4.5:1) except dim-2, which is
+     reserved for decorative separators and meets non-text 3:1. */
   --ivory:   #e9e5da;
   --ivory-2: #b8b4a8;
-  --dim:     #7a7e8a;
-  --dim-2:   #474c59;
+  --dim:     #8e93a2;
+  --dim-2:   #5e6472;
 
   /* ---- Color: signal (the ONE accent) ---- */
   --signal:      #e5a679;
@@ -29,9 +33,11 @@
   --status-warn:  #febc2e;
 
   /* ---- Color: line (dividers low → high emphasis) ---- */
+  /* --line-3 is used for button borders / emphasis lines and meets
+     the 3:1 non-text contrast requirement against --ink. */
   --line:   rgba(233,229,218,0.07);
   --line-2: rgba(233,229,218,0.14);
-  --line-3: rgba(233,229,218,0.22);
+  --line-3: rgba(233,229,218,0.38);
 
   /* ---- Font families ---- */
   --font-display: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;

@@ -20,6 +20,10 @@
   border-color: var(--signal);
   box-shadow: 0 0 0 2px var(--signal-glow);
 }
+.field::placeholder {
+  color: var(--dim);
+  opacity: 1;
+}
 .field[aria-invalid="true"] {
   border-color: var(--status-hot);
   box-shadow: 0 0 0 2px rgba(255,91,91,0.15);

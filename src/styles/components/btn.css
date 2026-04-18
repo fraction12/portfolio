@@ -7,13 +7,15 @@
   align-items: center;
   gap: 0.45rem;
   background: var(--signal);
-  color: #fff;
+  /* Dark text on apricot — WCAG AA normal text (9.2:1). White on
+     apricot would be ~2.1:1 and fail AA. */
+  color: var(--ink);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   padding: 0.62rem 0.95rem;
   font-family: var(--font-display);
   font-size: var(--type-small-size);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
   text-decoration: none;
@@ -32,7 +34,7 @@
 
 .btn--primary {
   background: var(--signal);
-  color: #fff;
+  color: var(--ink);
   border-color: transparent;
 }
 
