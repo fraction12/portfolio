@@ -1,9 +1,179 @@
 // ── LOBSTER EASTER EGG 🦞 ──────────────────────────────────────────────
 (() => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  // Rarity is the delight. Only fire on ~1 in 3 loads so the lobster feels
-  // like a discovery instead of a feature. Skip entirely otherwise.
-  if (Math.random() > 0.33) return;
+
+  // Once-per-tab gate. Astro's view-transitions re-run bundled scripts on
+  // every navigation; without this flag we'd respawn lobsters on each click.
+  if (window.__lobsterInit) return;
+  window.__lobsterInit = true;
+
+  // ── Visit tracking. localStorage persists across tabs; we only bump on
+  //    initial script run, so internal view-transitions don't inflate.
+  const VISIT_KEY = 'lobster-visits';
+  const visits = (() => {
+    try { return Number(localStorage.getItem(VISIT_KEY) || 0); } catch { return 0; }
+  })();
+  try { localStorage.setItem(VISIT_KEY, String(visits + 1)); } catch {}
+
+  // ── Source classification. Prefer explicit UTM (?utm_source=), else
+  //    sniff the document referrer. Falls through to 'direct' when the
+  //    browser scrubs referrer (Safari private mode etc).
+  const source = (() => {
+    const url = new URL(location.href);
+    const utm = (url.searchParams.get('utm_source') || '').toLowerCase();
+    const map = [
+      ['linkedin',    /linkedin/],
+      ['github',      /github/],
+      ['substack',    /substack/],
+      ['twitter',     /^(x|twitter|t\.co)$/],
+      ['hackernews',  /(news\.ycombinator|hn)/],
+      ['reddit',      /reddit/],
+      ['producthunt', /(producthunt|ph)/],
+      ['search',      /^(google|bing|duckduckgo|ddg|baidu|search)/],
+      ['meta',        /(facebook|instagram|threads|fb)/],
+      ['youtube',     /(youtube|yt)/],
+    ];
+    if (utm) {
+      for (const [name, re] of map) if (re.test(utm)) return name;
+      return 'other';
+    }
+    const ref = document.referrer;
+    if (!ref) return 'direct';
+    try {
+      const host = new URL(ref).hostname.replace(/^www\./, '').toLowerCase();
+      if (host === location.hostname) return 'internal';
+      const domain = host.replace(/\.[a-z]{2,6}$/, '');
+      for (const [name, re] of map) if (re.test(domain) || re.test(host)) return name;
+      return 'other';
+    } catch {
+      return 'other';
+    }
+  })();
+
+  // ── Per-source opener lines. Each bucket is hand-written; voice is
+  //    the same terminal-inflected, lowercase-ish dry humor as the rest
+  //    of the site. First appearance of the session pulls from here.
+  const contextualPhrases = {
+    linkedin: [
+      "recruiters have long memories. might as well email him.",
+      "one connection away from a lobster. imagine the endorsements.",
+      "linkedin sent you. your algorithm has taste.",
+      "open-to-work meets open-to-lobsters.",
+      "if you're here via linkedin, you're hiring. don't hide it.",
+      "premium was never necessary. just email him."
+    ],
+    github: [
+      "followed a commit trail. good taste.",
+      "came from github? you already read the source.",
+      "star the repo while you're in here. he'll notice.",
+      "engineers ship. recruiters scroll. pick one.",
+      "git blame → portfolio. makes sense.",
+      "public repos. public pricing: email him."
+    ],
+    substack: [
+      "an essay reader. rare breed.",
+      "came from substack? you already know too much.",
+      "subscribed? if not, the lobster is judging.",
+      "one essay away from a commit.",
+      "fridays are essay days. circle back."
+    ],
+    twitter: [
+      "rotated tabs from x? refresh a couple times.",
+      "from x to portfolio. elon is sweating.",
+      "twitter to reef. natural bird → sea pipeline.",
+      "came from a dm? whoever sent it, they like you.",
+      "the algorithm sent a real one."
+    ],
+    hackernews: [
+      "hn brought you? don't read the comments.",
+      "front page is temporary. a lobster is forever.",
+      "opinions loaded. approved.",
+      "from hn to reef. natural progression.",
+      "someone on hn said 'nice site.' that was probably me."
+    ],
+    reddit: [
+      "came from reddit? say hi in the thread.",
+      "reddit sent you. the mods don't know about this.",
+      "upvote the lobster. he earned it.",
+      "which subreddit, asking for a lobster.",
+      "r/didyouknow: there's a lobster on this website."
+    ],
+    producthunt: [
+      "ph reader. early adopter energy. approved.",
+      "upvote the lobster. he's a maker too.",
+      "maker-to-maker. good to see you.",
+      "you hunt products. today the product hunts you."
+    ],
+    search: [
+      "the algo works.",
+      "googled your way here? sit a minute.",
+      "seo-optimized for vibes. works on you.",
+      "you searched for something. you got a lobster.",
+      "search brought you. we didn't pay for ads."
+    ],
+    meta: [
+      "facebook in 2026? bold.",
+      "instagram to reef. somehow makes sense.",
+      "threads brought you. niche.",
+      "from the feed to the floor."
+    ],
+    youtube: [
+      "came from youtube. which video?",
+      "someone linked the portfolio mid-video.",
+      "skip to 4:32, the lobster said.",
+      "youtube comments sent you here. rare."
+    ],
+    direct: [
+      "typed it in by hand. bold.",
+      "no referrer. you know your way around.",
+      "bookmarked? already in the inner circle.",
+      "direct traffic is suspicious. nice to meet you.",
+      "you came straight here. friend or recruiter, welcome either way."
+    ],
+    internal: [
+      "another click. you're exploring.",
+      "poking around. the lobster approves.",
+      "deep reader. i see you.",
+      "three pages in. worth an email?"
+    ],
+    other: [
+      "who sent you? i need to thank them.",
+      "you came from somewhere. let's not worry about it.",
+      "the internet is wild. welcome.",
+      "a wandering stranger. my favorite."
+    ]
+  };
+
+  // ── Second-visit+ greetings. Mixed into the first-appearance pool.
+  const returnPhrases = [
+    "you again? we should talk.",
+    "second visit. i remember you.",
+    "welcome back. the reef missed you.",
+    "returning reader. you count as a regular now.",
+    "you bookmarked this, didn't you?"
+  ];
+
+  let appearance = 0;
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // The one phrase-selection function. Called once per lobster appearance.
+  //   1st appearance:
+  //     - 40% return-greeting if visits ≥ 2
+  //     - else contextual (if source has a pool)
+  //     - else ambient
+  //   2nd+ appearance:
+  //     - 30% contextual, 70% ambient
+  function nextPhrase() {
+    appearance++;
+    const ctx = contextualPhrases[source];
+    if (appearance === 1) {
+      if (visits >= 2 && Math.random() < 0.4) return pick(returnPhrases);
+      if (ctx && ctx.length) return pick(ctx);
+      return pick(phrases);
+    }
+    if (ctx && ctx.length && Math.random() < 0.3) return pick(ctx);
+    return pick(phrases);
+  }
 
   const lobster = document.createElement('div');
   lobster.id = 'lobster';
@@ -135,7 +305,7 @@
         // Pause mid-walk to show a message
         if (!hasPaused && x >= pauseX) {
           hasPaused = true;
-          const msg = phrases[Math.floor(Math.random() * phrases.length)];
+          const msg = nextPhrase();
           messages.textContent = msg;
           messages.style.top = (y - 36) + 'px';
           messages.style.left = (x - 30) + 'px';
@@ -168,7 +338,7 @@
         if (t < 44) requestAnimationFrame(peek);
         else {
           // Show message
-          const msg = phrases[Math.floor(Math.random() * phrases.length)];
+          const msg = nextPhrase();
           messages.textContent = msg;
           messages.style.top = (y - 30) + 'px';
           messages.style.left = (window.innerWidth - 60 - msg.length * 6) + 'px';
@@ -210,7 +380,7 @@
           vy = -vy * 0.5;
           bounces++;
           if (bounces >= 3) {
-            const msg = phrases[Math.floor(Math.random() * phrases.length)];
+            const msg = nextPhrase();
             messages.textContent = msg;
             messages.style.top = (y - 35) + 'px';
             messages.style.left = (x - 20) + 'px';
@@ -241,7 +411,7 @@
         lobster.style.transform = `rotate(90deg) translateX(${Math.sin(y * 0.03) * 3}px)`;
         if (y > targetY) requestAnimationFrame(climb);
         else {
-          const msg = phrases[Math.floor(Math.random() * phrases.length)];
+          const msg = nextPhrase();
           messages.textContent = msg;
           messages.style.top = (y - 10) + 'px';
           messages.style.left = '50px';
@@ -264,8 +434,12 @@
     },
   ];
 
+  // Cap total appearances per tab session. First is the contextual
+  // greeting; three follow-ups keep the reef feeling without nagging.
+  const MAX_APPEARANCES = 4;
   function scheduleNext() {
-    const delay = 15000 + Math.random() * 30000; // 15-45 seconds
+    if (appearance >= MAX_APPEARANCES) return;
+    const delay = 75_000 + Math.random() * 45_000; // 75-120s between ambient appearances
     setTimeout(() => {
       const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
       behavior(() => scheduleNext());
