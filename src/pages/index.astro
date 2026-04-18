@@ -4,7 +4,7 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import Spotlight from '../components/Spotlight.astro';
+import ColophonTerminal from '../components/ColophonTerminal.astro';
 import CommitStrip from '../components/CommitStrip.astro';
 import BeliefsExcerpt from '../components/BeliefsExcerpt.astro';
 import ToolCard from '../components/ToolCard.astro';
@@ -33,8 +33,6 @@ function metricFor(a: Artifact): { metric: string | null; placeholder: string } 
   return { metric: null, placeholder: '' };
 }
 
-const featured = artifacts.find(a => a.slug === 'potato') ?? artifacts[0];
-
 const homeFeaturedSlugs = ['tradespec', 'clawk', 'potato'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
@@ -55,7 +53,7 @@ const latestCommit = data.commits[0];
 
     <div class="hero-split">
       <Hero />
-      <Spotlight artifact={featured} kicker="Featured" />
+      <ColophonTerminal />
     </div>
 
     {latestCommit && (

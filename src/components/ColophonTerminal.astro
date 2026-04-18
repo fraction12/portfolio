@@ -1,0 +1,110 @@
+---
+import { loadSignalData } from '../lib/data';
+
+const data = await loadSignalData();
+
+const npmTotal = Object.values(data.npm.packages).reduce((t, p) => t + p.downloadsLastMonth, 0);
+const pypiTotal = Object.values(data.pypi.packages).reduce((t, p) => t + p.downloadsLastMonth, 0);
+
+const rows: Array<{ key: string; value: string | number; source: string }> = [
+  { key: 'last-commit',   value: `${data.lastCommit.sha.slice(0, 7)} · ${data.lastCommitRelative}`, source: 'github graphql' },
+  { key: 'commits.7d',    value: data.github.commits7d ?? '—', source: 'github graphql' },
+  { key: 'commits.30d',   value: data.github.commits30d ?? '—', source: 'github graphql' },
+  { key: 'stars',         value: data.github.totalStars ?? '—', source: 'github rest' },
+  { key: 'npm.30d',       value: Object.keys(data.npm.packages).length === 0 ? '—' : npmTotal.toLocaleString(), source: 'api.npmjs.org' },
+  { key: 'pypi.30d',      value: Object.keys(data.pypi.packages).length === 0 ? '—' : pypiTotal.toLocaleString(), source: 'pypistats.org' },
+  { key: 'essays',        value: data.essays.length, source: 'substack rss' },
+  { key: 'shifts',        value: data.shifts.length, source: 'local git log' }
+];
+
+const now = new Date();
+const updatedAt = `${now.toISOString().slice(11, 16)}Z`;
+---
+
+<aside class="terminal terminal--colophon" aria-label="Live portfolio metrics">
+  <div class="terminal__header">
+    <span class="terminal__dot terminal__dot--r" aria-hidden="true"></span>
+    <span class="terminal__dot terminal__dot--y" aria-hidden="true"></span>
+    <span class="terminal__dot terminal__dot--g" aria-hidden="true"></span>
+    <span>jarvis — metrics --live</span>
+    <span class="status"><span class="pulse" aria-hidden="true"></span>LIVE</span>
+  </div>
+  <div class="terminal__body">
+    <div class="terminal__line">
+      <span class="terminal__prompt">$</span>
+      <span class="terminal__cmd">metrics</span>
+      <span class="terminal__flag">--colophon --live</span>
+    </div>
+    <div class="terminal__line terminal__line--spacer"></div>
+
+    <dl class="metrics">
+      {rows.map(r => (
+        <>
+          <dt>{r.key}</dt>
+          <dd>{r.value}</dd>
+        </>
+      ))}
+    </dl>
+
+    <div class="terminal__line terminal__line--spacer"></div>
+    <div class="terminal__line">
+      <span class="terminal__comment"># every number public · github · npm · pypi · substack</span>
+    </div>
+    <div class="terminal__line">
+      <span class="terminal__comment"># as of {updatedAt}</span>
+    </div>
+    <div class="terminal__line">
+      <span class="terminal__prompt">$</span>
+      <span class="terminal__cursor"></span>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .terminal--colophon {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .terminal__header .status {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    color: var(--status-agent);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .terminal__header .status .pulse {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--status-agent);
+    box-shadow: 0 0 6px rgba(125,226,163,0.6);
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: minmax(120px, auto) 1fr;
+    gap: 4px 18px;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .metrics dt {
+    color: var(--dim);
+    letter-spacing: 0.01em;
+  }
+  .metrics dt::before {
+    content: '  ';
+    white-space: pre;
+    color: var(--dim-2);
+  }
+  .metrics dd {
+    margin: 0;
+    color: var(--ivory);
+    font-weight: 500;
+  }
+  .metrics dd:nth-of-type(1) { color: var(--signal); }
+</style>
