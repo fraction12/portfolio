@@ -1,58 +1,99 @@
 ---
-import CommitTerminal from './CommitTerminal.astro';
-import { loadSignalData } from '../lib/data';
-
-const data = await loadSignalData();
+interface Props {
+  primary?: { label: string; href: string };
+  secondary?: { label: string; href: string };
+}
+const {
+  primary = { label: 'See the tools', href: '/tools' },
+  secondary = { label: 'Read the writing', href: '/writing' },
+} = Astro.props;
 ---
 
 <header class="intro">
-  <div class="hero-l">
-    <div class="name">Dushyant Garg</div>
-    <p class="bio">
-      I build <span class="strong">0 → 1</span> fast, then scale <span class="strong">1 → 100</span> on customer data.
-      <span class="sub">Open-source tools for AI agents. Writing at <a href="https://dushyantg.substack.com">dushyantg.substack.com</a>.</span>
-    </p>
-    <div class="contact">
-      <a href="https://github.com/fraction12" target="_blank" rel="noopener">github</a>
-      <span class="dot">·</span>
-      <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">linkedin</a>
-      <span class="dot">·</span>
-      <a href="https://www.npmjs.com/~fraction12" target="_blank" rel="noopener">npm</a>
-      <span class="dot">·</span>
-      <a href="mailto:">email</a>
-    </div>
+  <p class="kicker">Portfolio · 2026</p>
+  <h1 class="name">Dushyant Garg</h1>
+  <p class="mission">
+    I build tools that make AI agents <em>usable</em> — memory that sticks,
+    orchestration that doesn't deadlock, observability that doesn't lie.
+    Open-source by default, shipped to real customers.
+  </p>
+
+  <div class="ctas">
+    <a class="btn btn--primary" href={primary.href}>{primary.label} →</a>
+    <a class="btn btn--ghost" href={secondary.href}>{secondary.label} ↗</a>
   </div>
 
-  <div class="hero-r">
-    <CommitTerminal commits={data.commits} limit={6} />
+  <div class="socials">
+    <a href="https://github.com/fraction12" target="_blank" rel="noopener">github</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">linkedin</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="https://dushyantg.substack.com" target="_blank" rel="noopener">substack</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="mailto:hi@dushyantgarg.com">email</a>
   </div>
 </header>
 
 <style>
   .intro {
-    padding: 64px 0 48px;
-    display: grid;
-    grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.2fr);
-    gap: 56px;
-    align-items: start;
+    padding: 72px 0 40px;
+    max-width: 72ch;
   }
-  .hero-l { padding-top: 4px; }
-  .hero-l .name { font-size: 28px; font-weight: 700; color: var(--ivory); margin-bottom: 14px; letter-spacing: -0.01em; }
-  .hero-l .bio { font-size: 17px; color: var(--ivory-2); line-height: 1.6; max-width: 48ch; }
-  .hero-l .bio .strong { color: var(--ivory); font-weight: 700; }
-  .hero-l .bio .sub { display: block; margin-top: 8px; font-size: 15px; color: var(--dim); }
-  .hero-l .bio a { color: var(--signal); text-decoration: none; }
-  .hero-l .bio a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .hero-l .contact { margin-top: 20px; font-size: 14px; color: var(--dim); display: flex; gap: 14px; flex-wrap: wrap; }
-  .hero-l .contact a { color: var(--ivory-2); font-weight: 400; text-decoration: none; }
-  .hero-l .contact a:hover { color: var(--signal); }
-  .hero-l .contact .dot { color: var(--dim-2); }
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono-sm-size);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 20px;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-size: var(--type-hero-name-size);
+    font-weight: 750;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--ivory);
+    margin-bottom: 24px;
+  }
+  .mission {
+    font-family: var(--font-display);
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--ivory-2);
+    max-width: 54ch;
+    margin-bottom: 32px;
+  }
+  .mission em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--signal);
+  }
+  .ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .socials {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--dim);
+    flex-wrap: wrap;
+  }
+  .socials a {
+    color: var(--dim);
+    text-decoration: none;
+    transition: color var(--motion-fast) ease;
+  }
+  .socials a:hover { color: var(--signal); }
+  .socials .dot { color: var(--dim-2); }
 
-  @media (max-width: 920px) {
-    .intro { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 36px; }
-  }
   @media (max-width: 640px) {
-    .hero-l .name { font-size: 24px; }
-    .hero-l .bio { font-size: 16px; }
+    .intro { padding: 48px 0 28px; }
+    .mission { font-size: 17px; }
   }
 </style>

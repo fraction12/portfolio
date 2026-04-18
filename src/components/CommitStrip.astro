@@ -1,0 +1,75 @@
+---
+import type { CommitRecord } from '../lib/data';
+import { formatRelativeTime } from '../lib/data';
+
+interface Props { commit: CommitRecord }
+const { commit } = Astro.props;
+
+const sha = commit.sha.slice(0, 7);
+const subjectCap = commit.subject.length > 80 ? commit.subject.slice(0, 77) + '…' : commit.subject;
+const ghUrl = `https://github.com/fraction12/portfolio/commit/${commit.sha}`;
+---
+
+<a class="commit-strip" href={ghUrl} target="_blank" rel="noopener" aria-label={`View commit ${sha} on GitHub`}>
+  <span class="pulse" aria-hidden="true"></span>
+  <span class="label">last shipped</span>
+  <span class="sep" aria-hidden="true">·</span>
+  <span class="age">{formatRelativeTime(commit.timestamp)}</span>
+  <span class="sep" aria-hidden="true">·</span>
+  <code class="sha">{sha}</code>
+  <span class="subject">{subjectCap}</span>
+</a>
+
+<style>
+  .commit-strip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--ink-1);
+    color: var(--dim);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    text-decoration: none;
+    transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease;
+    overflow: hidden;
+  }
+  .commit-strip:hover {
+    border-color: var(--signal-glow);
+    color: var(--ivory-2);
+  }
+
+  .pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--status-agent);
+    box-shadow: 0 0 8px rgba(125,226,163,0.5);
+    animation: statusPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .label,
+  .age,
+  .sha,
+  .sep { white-space: nowrap; flex-shrink: 0; }
+  .label { letter-spacing: 0.04em; }
+  .sep { color: var(--dim-2); }
+  .age { color: var(--dim); }
+  .sha { color: var(--signal); }
+  .subject {
+    color: var(--ivory-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  @media (max-width: 640px) {
+    .commit-strip { font-size: 11.5px; gap: 6px; padding: 7px 10px; }
+    .label { display: none; }
+    .subject { max-width: 22ch; }
+  }
+</style>

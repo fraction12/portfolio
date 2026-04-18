@@ -5,6 +5,8 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import Spotlight from '../components/Spotlight.astro';
+import CommitStrip from '../components/CommitStrip.astro';
 import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import LogList from '../components/LogList.astro';
@@ -44,6 +46,13 @@ const byCategory = Object.fromEntries(
 ) as Record<ArtifactCategory, Artifact[]>;
 for (const a of artifacts) byCategory[a.category].push(a);
 for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.order);
+
+// Spotlight: hand-pick the artifact that leads the page. Potato v3 is the
+// most distinctive positioning (terminal cockpit for coding agents).
+const featured = artifacts.find(a => a.slug === 'potato') ?? artifacts[0];
+
+// Latest commit for the compact "last shipped" strip below the hero.
+const latestCommit = data.commits[0];
 ---
 
 <Layout
@@ -55,6 +64,16 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
   <main class="sd-main">
 
     <Hero />
+
+    {latestCommit && (
+      <div class="sd-commit-strip">
+        <CommitStrip commit={latestCommit} />
+      </div>
+    )}
+
+    <section id="spotlight" class="sd-spotlight">
+      <Spotlight artifact={featured} kicker="Featured" />
+    </section>
 
     <section id="tools">
       <SectionHead num="01" name="Tools *// open-source*" meta="Agent tooling, CLIs, and infrastructure I ship and maintain." />
@@ -115,6 +134,14 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
   }
   section {
     padding: 36px 0;
+  }
+
+  .sd-commit-strip {
+    padding: 0 0 8px;
+  }
+  .sd-spotlight {
+    padding-top: 20px;
+    padding-bottom: 12px;
   }
   .tool-group { margin-bottom: 8px; }
   .tool-group + .tool-group { margin-top: 12px; }
