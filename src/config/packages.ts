@@ -128,6 +128,14 @@ export const artifacts: Artifact[] = [
     stack: 'godot · gdscript · openclaw', kind: 'godot · spatial UI · private', status: 'dev',
     metricOverride: '🔒 private · in dev', installCommand: '# private preview — reach out if interested' },
 
+  { slug: 'hunt', order: 6, category: 'human-tools',
+    name: 'Hunt', emphasisWord: 'Hunt',
+    description: 'Personal job hunt CRM for me and my agents — applications, companies, roles, notes. Agents file new leads, I triage the shortlist.',
+    stack: 'typescript · sqlite', kind: 'typescript · personal CRM', status: 'dev',
+    repo: 'fraction12/Hunt',
+    metricOverride: '🔨 building in the open',
+    installCommand: '# dev preview — clone and run' },
+
 
   // ────────────── PRODUCTS ──────────────
   { slug: 'tradespec', order: 1, category: 'products',
