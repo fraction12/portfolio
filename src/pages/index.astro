@@ -63,22 +63,14 @@ const latestCommit = data.commits[0];
     )}
 
     <section id="why" class="section-split">
-      <SectionHead
-        num="01"
-        name="Why *// two rules*"
-        meta="Operating principles I test nightly — every agent in the stack reads them first."
-      />
+      <SectionHead num="01" name="Why *// two rules*" />
       <div class="section-split__content">
         <BeliefsExcerpt />
       </div>
     </section>
 
     <section id="tools" class="section-split">
-      <SectionHead
-        num="02"
-        name="Tools *// three I'm proud of*"
-        meta="A slice from the toolkit — full browser on /tools."
-      />
+      <SectionHead num="02" name="Tools *// three I'm proud of*" />
       <div class="section-split__content">
         <div class="home-tools-list">
           {homeFeatured.map(a => {
@@ -91,22 +83,14 @@ const latestCommit = data.commits[0];
     </section>
 
     <section id="writing" class="section-split">
-      <SectionHead
-        num="03"
-        name="Writing *// dispatches*"
-        meta="Weekly notes on building with AI agents, shipping fast, learning in public."
-      />
+      <SectionHead num="03" name="Writing *// dispatches*" />
       <div class="section-split__content">
         <WritingBlock essays={data.essays} limit={3} />
       </div>
     </section>
 
     <section id="contact" class="section-split">
-      <SectionHead
-        num="04"
-        name="Contact *// reach out*"
-        meta="Subscribe to the writing, or DM. I read everything."
-      />
+      <SectionHead num="04" name="Contact *// reach out*" />
       <div class="section-split__content">
         <Contact />
       </div>

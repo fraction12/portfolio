@@ -2,7 +2,7 @@
 interface Props {
   num: string;   // "01" or "§ 01"
   name: string;  // use *word* for italic-signal emphasis
-  meta: string;
+  meta?: string;
 }
 const { num, name, meta } = Astro.props;
 const html = name.replace(/\*(.+?)\*/g, '<em>$1</em>');
@@ -11,5 +11,5 @@ const html = name.replace(/\*(.+?)\*/g, '<em>$1</em>');
 <header class="section-head">
   <span class="section-head__num">{num}</span>
   <h2 class="section-head__name" set:html={html}></h2>
-  <p class="section-head__meta">{meta}</p>
+  {meta && <p class="section-head__meta">{meta}</p>}
 </header>
