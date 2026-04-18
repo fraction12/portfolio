@@ -1,7 +1,9 @@
 ---
+import Button from './Button.astro';
+
 // Centered overlay with a blurred backdrop. Appears 15s after page
 // load. Dismissal (× button, ESC, or click-outside) persists for
-// 14 days via localStorage.
+// 6 hours via localStorage.
 ---
 
 <div
@@ -15,30 +17,30 @@
   <div class="invite-card" data-invite-card>
     <header class="invite-card__head">
       <span class="invite-card__dot" aria-hidden="true"></span>
-      <h2 id="invite-title" class="invite-card__title">Still reading?</h2>
+      <h2 id="invite-title" class="type-h3">Still reading?</h2>
       <button type="button" class="invite-card__close" data-invite-close aria-label="Dismiss">×</button>
     </header>
 
-    <p class="invite-card__body">
+    <p class="type-body invite-card__body">
       New essays weekly — notes on what I'm building, what breaks,
       what I'd undo. Or browse the source; it's all open.
     </p>
 
     <div class="invite-card__actions">
-      <a
-        class="btn btn--primary"
+      <Button
         href="https://dushyantg.substack.com"
+        variant="primary"
         target="_blank"
         rel="noopener"
         data-invite-action="subscribe"
-      >Subscribe ↗</a>
-      <a
-        class="btn btn--ghost"
+      >Subscribe ↗</Button>
+      <Button
         href="https://github.com/fraction12"
+        variant="ghost"
         target="_blank"
         rel="noopener"
         data-invite-action="github"
-      >See the code ↗</a>
+      >See the code ↗</Button>
     </div>
   </div>
 </div>
@@ -67,7 +69,6 @@
       el.hidden = false;
       document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => el.classList.add('invite-overlay--visible'));
-      // Focus the close button so ESC/Enter works immediately.
       requestAnimationFrame(() => {
         el.querySelector<HTMLButtonElement>('[data-invite-close]')?.focus();
       });
@@ -95,13 +96,11 @@
     el.querySelector<HTMLButtonElement>('[data-invite-close]')
       ?.addEventListener('click', dismiss);
 
-    // Click on the backdrop (but not the card) dismisses.
     el.addEventListener('click', (e) => {
       const card = el.querySelector<HTMLElement>('[data-invite-card]');
       if (card && !card.contains(e.target as Node)) dismiss();
     });
 
-    // Clicking an action counts as dismissal so we don't re-prompt.
     el.querySelectorAll<HTMLAnchorElement>('[data-invite-action]').forEach(a => {
       a.addEventListener('click', remember);
     });
@@ -140,7 +139,6 @@
     border: 1px solid var(--line-3);
     border-radius: var(--radius-lg);
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--signal-glow);
-    font-family: var(--font-display);
     color: var(--ivory-2);
     transform: scale(0.96) translateY(6px);
     transition: transform var(--motion-card) ease;
@@ -163,14 +161,10 @@
     animation: statusPulse 2s ease-in-out infinite;
     flex-shrink: 0;
   }
-  .invite-card__title {
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ivory);
-    letter-spacing: -0.01em;
+  .invite-card__head .type-h3 {
     margin: 0;
     flex: 1;
+    color: var(--ivory);
   }
   .invite-card__close {
     width: 30px; height: 30px;
@@ -191,8 +185,6 @@
   }
 
   .invite-card__body {
-    font-size: 15px;
-    line-height: 1.55;
     color: var(--ivory-2);
     margin: 0 0 20px;
   }
@@ -210,6 +202,5 @@
 
   @media (max-width: 640px) {
     .invite-card { padding: 22px 20px 20px; }
-    .invite-card__title { font-size: 18px; }
   }
 </style>

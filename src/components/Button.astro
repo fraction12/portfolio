@@ -5,12 +5,15 @@ interface Props {
   type?: 'button' | 'submit';
   variant?: Variant;
   className?: string;
+  target?: string;
+  rel?: string;
+  [dataAttr: `data-${string}`]: string | undefined;
 }
-const { href, type = 'button', variant = 'primary', className = '' } = Astro.props;
+const { href, type = 'button', variant = 'primary', className = '', ...rest } = Astro.props;
 const classes = ['btn', `btn--${variant}`, className].filter(Boolean).join(' ');
 ---
 {href ? (
-  <a href={href} class={classes}><slot /></a>
+  <a href={href} class={classes} {...rest}><slot /></a>
 ) : (
-  <button type={type} class={classes}><slot /></button>
+  <button type={type} class={classes} {...rest}><slot /></button>
 )}
