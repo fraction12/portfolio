@@ -4,6 +4,12 @@ import Button from './Button.astro';
 // Centered overlay with a blurred backdrop. Appears 15s after page
 // load. Dismissal (× button, ESC, or click-outside) persists for
 // 6 hours via localStorage.
+//
+// The title / body / CTA labels are populated client-side based on
+// where the visitor came from — LinkedIn/GitHub recruiters are
+// nudged toward email about a role or contract; readers from
+// Substack/X/HN/etc. are nudged toward subscribing. Defaults stay
+// generic so the SSR-rendered fallback is sane.
 ---
 
 <div
@@ -17,11 +23,11 @@ import Button from './Button.astro';
   <div class="invite-card" data-invite-card>
     <header class="invite-card__head">
       <span class="invite-card__dot" aria-hidden="true"></span>
-      <h2 id="invite-title" class="type-h3">Still reading?</h2>
+      <h2 id="invite-title" class="type-h3" data-pitch-title>Still reading?</h2>
       <button type="button" class="invite-card__close" data-invite-close aria-label="Dismiss">×</button>
     </header>
 
-    <p class="type-body invite-card__body">
+    <p class="type-body invite-card__body" data-pitch-body>
       New essays weekly — notes on what I'm building, what breaks,
       what I'd undo. Or browse the source; it's all open.
     </p>
@@ -32,24 +38,152 @@ import Button from './Button.astro';
         variant="primary"
         target="_blank"
         rel="noopener"
-        data-invite-action="subscribe"
+        data-invite-action="primary"
+        data-pitch-primary
       >Subscribe ↗</Button>
       <Button
         href="https://github.com/fraction12"
         variant="ghost"
         target="_blank"
         rel="noopener"
-        data-invite-action="github"
+        data-invite-action="secondary"
+        data-pitch-secondary
       >See the code ↗</Button>
     </div>
   </div>
 </div>
 
 <script>
+  import { classifySource } from '../scripts/referrer.js';
+
   (() => {
     const STORAGE_KEY = 'invite-dismissed-until';
     const DISMISS_HOURS = 6;
     const SHOW_AFTER_MS = 15_000;
+
+    // Per-source pitches. LinkedIn/GitHub/internal lead with email
+    // because the reader is most likely evaluating for a role or
+    // contract. Reader-oriented sources lead with subscribe, email as
+    // secondary. Arrow convention: → for internal/mailto intent,
+    // ↗ for external.
+    type Pitch = {
+      title: string;
+      body: string;
+      primary:   { label: string; href: string; external?: boolean };
+      secondary: { label: string; href: string; external?: boolean };
+    };
+    const EMAIL = 'mailto:hi@dushyantgarg.com';
+    const SUBSCRIBE = 'https://dushyantg.substack.com';
+    const GITHUB = 'https://github.com/fraction12';
+
+    const pitches: Record<string, Pitch> = {
+      linkedin: {
+        title: 'Hiring?',
+        body: "I'm open to senior PM roles and contract work on AI agent products. 0 → 1 bias, shipped to real customers. Tell me what you're building.",
+        primary:   { label: 'Email me →', href: EMAIL + '?subject=Role%20at%20' },
+        secondary: { label: 'See the tools →', href: '/tools' }
+      },
+      github: {
+        title: 'Need this built?',
+        body: "Most of what you see here is open source. I take a handful of contract projects a quarter — agent tooling, orchestration, observability. If you're working on something hard, let's talk.",
+        primary:   { label: 'Email me →', href: EMAIL + '?subject=Contract%20work' },
+        secondary: { label: 'See the code ↗', href: GITHUB, external: true }
+      },
+      substack: {
+        title: 'Nice to see a reader',
+        body: "Already subscribed? Thanks. Otherwise new essays drop Fridays — practical notes on what I'm building, what breaks, what I'd undo.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'See the tools →', href: '/tools' }
+      },
+      hackernews: {
+        title: 'Enjoying this?',
+        body: "Weekly essays — same voice as the site. If you're building with agents or hiring someone who is, I'm around.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      reddit: {
+        title: 'Enjoying this?',
+        body: "Weekly essays on building with agents. If you're hiring for agent work or just want to compare notes, I'm open.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      producthunt: {
+        title: 'Maker to maker',
+        body: "I ship open-source agent tooling. Subscribe to stay in the loop, or email me if you're hiring a PM or need agent work done.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      twitter: {
+        title: 'Subscribe?',
+        body: "Weekly essays on building with AI agents — practical, dry, no hype. Hiring or building something hard? My inbox is open.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      search: {
+        title: 'Welcome',
+        body: "Weekly essays on agents, the tools I ship, what I'm learning. If search brought you here, you're probably working on something specific — let's compare notes.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      direct: {
+        title: 'Come back often?',
+        body: "The essays drop Fridays. If you're thinking about a role or a contract, my inbox is open.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      internal: {
+        title: 'Thorough reader',
+        body: "You've been clicking around. If you're evaluating me for a role or project, email is probably better than another page.",
+        primary:   { label: 'Email me →', href: EMAIL },
+        secondary: { label: 'Subscribe ↗', href: SUBSCRIBE, external: true }
+      },
+      meta: {
+        title: 'Still reading?',
+        body: "Weekly essays on agents and what I'm building. Open to senior PM roles and agent contract work.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      youtube: {
+        title: 'Still reading?',
+        body: "Weekly essays — same terminal-inflected voice as the site. Open to roles and contract work.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      },
+      other: {
+        title: 'Still reading?',
+        body: "Weekly essays on what I'm building with agents. Open to senior PM roles and contract work — email is best.",
+        primary:   { label: 'Subscribe ↗', href: SUBSCRIBE, external: true },
+        secondary: { label: 'Email me →', href: EMAIL }
+      }
+    };
+
+    function applyPitch() {
+      const src = classifySource();
+      const pitch = pitches[src] || pitches.other;
+      const set = (sel: string, text?: string, href?: string, external?: boolean) => {
+        const el = document.querySelector<HTMLElement>(sel);
+        if (!el) return;
+        if (text !== undefined) el.textContent = text;
+        if (href !== undefined && el instanceof HTMLAnchorElement) {
+          el.href = href;
+          if (external) {
+            el.target = '_blank';
+            el.rel = 'noopener';
+          } else {
+            el.removeAttribute('target');
+            el.removeAttribute('rel');
+          }
+        }
+      };
+      set('[data-pitch-title]', pitch.title);
+      set('[data-pitch-body]',  pitch.body);
+      set('[data-pitch-primary]',   pitch.primary.label,   pitch.primary.href,   pitch.primary.external);
+      set('[data-pitch-secondary]', pitch.secondary.label, pitch.secondary.href, pitch.secondary.external);
+    }
+
+    // Populate the modal immediately — before anyone sees it. The 15s
+    // timer below is what makes it visible.
+    applyPitch();
 
     const el = document.querySelector<HTMLElement>('[data-invite]');
     if (!el) return;
@@ -133,7 +267,7 @@ import Button from './Button.astro';
   }
 
   .invite-card {
-    width: min(460px, 100%);
+    width: min(480px, 100%);
     padding: 28px 28px 26px;
     background: var(--ink-1);
     border: 1px solid var(--line-3);

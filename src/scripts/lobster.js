@@ -1,4 +1,6 @@
 // ── LOBSTER EASTER EGG 🦞 ──────────────────────────────────────────────
+import { classifySource } from './referrer.js';
+
 (() => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -15,40 +17,9 @@
   })();
   try { localStorage.setItem(VISIT_KEY, String(visits + 1)); } catch {}
 
-  // ── Source classification. Prefer explicit UTM (?utm_source=), else
-  //    sniff the document referrer. Falls through to 'direct' when the
-  //    browser scrubs referrer (Safari private mode etc).
-  const source = (() => {
-    const url = new URL(location.href);
-    const utm = (url.searchParams.get('utm_source') || '').toLowerCase();
-    const map = [
-      ['linkedin',    /linkedin/],
-      ['github',      /github/],
-      ['substack',    /substack/],
-      ['twitter',     /^(x|twitter|t\.co)$/],
-      ['hackernews',  /(news\.ycombinator|hn)/],
-      ['reddit',      /reddit/],
-      ['producthunt', /(producthunt|ph)/],
-      ['search',      /^(google|bing|duckduckgo|ddg|baidu|search)/],
-      ['meta',        /(facebook|instagram|threads|fb)/],
-      ['youtube',     /(youtube|yt)/],
-    ];
-    if (utm) {
-      for (const [name, re] of map) if (re.test(utm)) return name;
-      return 'other';
-    }
-    const ref = document.referrer;
-    if (!ref) return 'direct';
-    try {
-      const host = new URL(ref).hostname.replace(/^www\./, '').toLowerCase();
-      if (host === location.hostname) return 'internal';
-      const domain = host.replace(/\.[a-z]{2,6}$/, '');
-      for (const [name, re] of map) if (re.test(domain) || re.test(host)) return name;
-      return 'other';
-    } catch {
-      return 'other';
-    }
-  })();
+  // Source classification lives in scripts/referrer.js — shared with
+  // InviteModal so both use the same bucket for this visitor.
+  const source = classifySource();
 
   // ── Per-source opener lines. Each bucket is hand-written; voice is
   //    the same terminal-inflected, lowercase-ish dry humor as the rest
