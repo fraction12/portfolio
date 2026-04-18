@@ -17,7 +17,7 @@
   align-items: center;
   gap: 6px;
   padding: 0.65rem 1rem;
-  background: rgba(255,255,255,0.03);
+  background: var(--surface-raised);
   border-bottom: 1px solid var(--line);
 }
 .terminal__header > span {
@@ -64,9 +64,9 @@
 
 .terminal__prompt  { color: var(--signal); }
 .terminal__cmd     { color: var(--signal); }
-.terminal__flag    { color: rgba(255,255,255,0.35); }
-.terminal__val     { color: #e2e8f0; }
-.terminal__comment { color: rgba(255,255,255,0.2); font-style: italic; }
+.terminal__flag    { color: var(--dim); }
+.terminal__val     { color: var(--ivory); }
+.terminal__comment { color: var(--dim-2); font-style: italic; }
 .terminal__status  { color: var(--status-live); }
 
 .terminal__cursor {

@@ -22,7 +22,7 @@
 }
 
 .pill--dim {
-  background: rgba(255,255,255,0.04);
+  background: var(--surface-raised);
   color: var(--ivory-2);
   border-color: var(--line-2);
 }

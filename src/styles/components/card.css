@@ -4,7 +4,7 @@
    ============================================================ */
 .card {
   position: relative;
-  background: rgba(255,255,255,0.025);
+  background: var(--surface-card);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: var(--space-6);
@@ -127,7 +127,7 @@
 .card--belief {
   border-radius: var(--radius-md);
   padding: 1.2rem 1.3rem;
-  background: rgba(255,255,255,0.02);
+  background: var(--surface-card);
 }
 .card--belief h4 {
   font-family: var(--font-mono);
@@ -146,7 +146,7 @@
 .card--spotlight {
   border-radius: var(--radius-xl);
   border-color: var(--signal-glow);
-  background: linear-gradient(145deg, var(--signal-dim), rgba(255,255,255,0.02));
+  background: linear-gradient(145deg, var(--signal-dim), var(--surface-card));
   padding: 1.4rem;
 }
 .card--spotlight .kicker {

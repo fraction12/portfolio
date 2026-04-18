@@ -1,8 +1,16 @@
 /* ============================================================
    SIGNAL DESK — CANONICAL TOKENS (v1.0, 2026-04-18)
    Single source of truth. No aliases. See tokens.json / spec.md.
+
+   Theme model:
+     :root → dark tokens (default)
+     [data-theme="light"] → light-mode overrides
+   Theme is applied by an inline head script in Layout.astro based
+   on localStorage('theme') | system preference. No FOUC.
    ============================================================ */
 :root {
+  color-scheme: dark;
+
   /* ---- Color: ink (surfaces) ---- */
   --ink:          #0c1018;
   --ink-1:        #11161f;
@@ -91,6 +99,10 @@
   --shadow-card-hover:    0 0 0 1px rgba(229,166,121,0.15), 0 14px 30px rgba(229,166,121,0.08);
   --shadow-connect-hover: 0 0 20px rgba(229,166,121,0.15), 0 4px 16px rgba(0,0,0,0.3);
 
+  /* ---- Surface: semi-transparent card/overlay fills ---- */
+  --surface-card:   rgba(255,255,255,0.025);
+  --surface-raised: rgba(255,255,255,0.03);
+
   /* ---- Motion ---- */
   --motion-fast: 0.2s;
   --motion-card: 0.28s;
@@ -109,6 +121,47 @@
     --gutter: 1.25rem;
     --layout-nav-h: 56px;
   }
+}
+
+/* ============================================================
+   LIGHT MODE
+   Contrast against light --ink (#f5f2e8):
+     ivory 15.3:1 · ivory-2 8.6:1 · dim 5.1:1 · dim-2 3.4:1
+     signal 4.6:1 (WCAG AA normal text)
+   ============================================================ */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --ink:          #f5f2e8;
+  --ink-1:        #ebe8dc;
+  --ink-2:        #dfddd0;
+  --ink-terminal: rgba(12,16,24,0.04);
+
+  --ivory:        #1a1f2b;
+  --ivory-2:      #434957;
+  --dim:          #6b7080;
+  --dim-2:        #a3a6b0;
+
+  --signal:       #a25a25;
+  --signal-hov:   #8b4718;
+  --signal-dim:   rgba(162,90,37,0.14);
+  --signal-glow:  rgba(162,90,37,0.32);
+
+  --status-live:  #1d9934;
+  --status-agent: #2e8f5c;
+  --status-hot:   #c02424;
+  --status-cold:  #2e5fd0;
+  --status-warn:  #b07605;
+
+  --line:   rgba(12,16,24,0.09);
+  --line-2: rgba(12,16,24,0.16);
+  --line-3: rgba(12,16,24,0.38);
+
+  --shadow-card-hover:    0 0 0 1px rgba(162,90,37,0.18), 0 12px 28px rgba(162,90,37,0.10);
+  --shadow-connect-hover: 0 0 18px rgba(162,90,37,0.18), 0 4px 14px rgba(12,16,24,0.12);
+
+  --surface-card:   rgba(12,16,24,0.03);
+  --surface-raised: rgba(12,16,24,0.04);
 }
 
 /* ============================================================

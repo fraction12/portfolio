@@ -321,7 +321,7 @@ section {
   padding: 1.25rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.02);
+  background: var(--surface-card);
 }
 .newsletter__value {
   color: var(--ivory-2);

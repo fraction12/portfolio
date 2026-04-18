@@ -1,0 +1,120 @@
+---
+// Cycles through: system → light → dark → system.
+// Current state comes from the [data-theme-pref] attr that the head
+// script sets on <html>. Button has no fixed server-rendered label
+// so it can't mismatch the applied theme — it reads pref on mount.
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  aria-label="Cycle theme"
+  data-theme-toggle
+>
+  <span class="theme-toggle__icon" aria-hidden="true" data-theme-icon>◐</span>
+  <span class="sr-only" data-theme-label>system theme</span>
+</button>
+
+<script>
+  (() => {
+    const STORAGE_KEY = 'theme';
+    const order = ['system', 'light', 'dark'] as const;
+    type Pref = typeof order[number];
+    const labels: Record<Pref, string> = {
+      system: 'system theme',
+      light:  'light theme',
+      dark:   'dark theme'
+    };
+    const icons: Record<Pref, string> = {
+      system: '◐',
+      light:  '☼',
+      dark:   '☾'
+    };
+    const metaColors: Record<'light' | 'dark', string> = {
+      light: '#f5f2e8',
+      dark:  '#0c1018'
+    };
+
+    const html = document.documentElement;
+
+    function readPref(): Pref {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
+      } catch { /* private mode */ }
+      return 'system';
+    }
+
+    function resolve(pref: Pref): 'light' | 'dark' {
+      if (pref === 'system') {
+        return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      return pref;
+    }
+
+    function apply(pref: Pref) {
+      const actual = resolve(pref);
+      html.setAttribute('data-theme', actual);
+      html.setAttribute('data-theme-pref', pref);
+      try { localStorage.setItem(STORAGE_KEY, pref); } catch { /* ignore */ }
+
+      const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      if (meta) meta.content = metaColors[actual];
+
+      document.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(el => {
+        el.textContent = icons[pref];
+      });
+      document.querySelectorAll<HTMLElement>('[data-theme-label]').forEach(el => {
+        el.textContent = labels[pref];
+      });
+      document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(el => {
+        el.setAttribute('title', `Theme: ${pref} (click to cycle)`);
+      });
+    }
+
+    // Paint the correct icon/label on mount (head script already set the
+    // data-theme + data-theme-pref attrs; this just syncs the button UI).
+    apply(readPref());
+
+    document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const current = (html.getAttribute('data-theme-pref') as Pref) || 'system';
+        const next = order[(order.indexOf(current) + 1) % order.length];
+        apply(next);
+      });
+    });
+
+    // When on "system" mode, follow OS preference changes live.
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      const pref = (html.getAttribute('data-theme-pref') as Pref) || 'system';
+      if (pref === 'system') apply('system');
+    });
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin-left: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--ivory-2);
+    cursor: pointer;
+    transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  }
+  .theme-toggle:hover {
+    color: var(--signal);
+    border-color: var(--line-3);
+  }
+  .theme-toggle__icon {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    line-height: 1;
+  }
+</style>

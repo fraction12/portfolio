@@ -72,6 +72,28 @@ const websiteSchema = includeIdentitySchema
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c1018" />
+  <script is:inline>
+    // Apply the saved theme preference before first paint to prevent a
+    // flash of the wrong theme. Mirrors the cycle logic in ThemeToggle.
+    (function () {
+      try {
+        var pref = localStorage.getItem('theme') || 'system';
+        if (pref !== 'light' && pref !== 'dark' && pref !== 'system') pref = 'system';
+        var actual = pref;
+        if (pref === 'system') {
+          actual = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', actual);
+        document.documentElement.setAttribute('data-theme-pref', pref);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', actual === 'light' ? '#f5f2e8' : '#0c1018');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme-pref', 'system');
+      }
+    })();
+  </script>
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
