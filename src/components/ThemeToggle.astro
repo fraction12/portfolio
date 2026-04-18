@@ -1,41 +1,19 @@
 ---
-// Cycles through: system → light → dark → system.
-// Current state comes from the [data-theme-pref] attr that the head
-// script sets on <html>. Button has no fixed server-rendered label
-// so it can't mismatch the applied theme — it reads pref on mount.
+// Segmented control: [☼ light] [◐ system] [☾ dark].
+// State is owned by the inline head script in Layout.astro; this
+// component just renders the UI and dispatches a `set` on click.
 ---
 
-<button
-  type="button"
-  class="theme-toggle"
-  aria-label="Cycle theme"
-  data-theme-toggle
->
-  <span class="theme-toggle__icon" aria-hidden="true" data-theme-icon>◐</span>
-  <span class="sr-only" data-theme-label>system theme</span>
-</button>
+<div class="theme-toggle" role="group" aria-label="Theme">
+  <button type="button" class="theme-toggle__btn" data-theme-set="light"  aria-label="Light mode">☼</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="system" aria-label="System theme">◐</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="dark"   aria-label="Dark mode">☾</button>
+</div>
 
 <script>
   (() => {
+    type Pref = 'light' | 'dark' | 'system';
     const STORAGE_KEY = 'theme';
-    const order = ['system', 'light', 'dark'] as const;
-    type Pref = typeof order[number];
-    const labels: Record<Pref, string> = {
-      system: 'system theme',
-      light:  'light theme',
-      dark:   'dark theme'
-    };
-    const icons: Record<Pref, string> = {
-      system: '◐',
-      light:  '☼',
-      dark:   '☾'
-    };
-    const metaColors: Record<'light' | 'dark', string> = {
-      light: '#f5f2e8',
-      dark:  '#0c1018'
-    };
-
-    const html = document.documentElement;
 
     function readPref(): Pref {
       try {
@@ -54,41 +32,37 @@
 
     function apply(pref: Pref) {
       const actual = resolve(pref);
-      html.setAttribute('data-theme', actual);
-      html.setAttribute('data-theme-pref', pref);
-      try { localStorage.setItem(STORAGE_KEY, pref); } catch { /* ignore */ }
+      document.documentElement.setAttribute('data-theme', actual);
+      document.documentElement.setAttribute('data-theme-pref', pref);
+      try { localStorage.setItem(STORAGE_KEY, pref); } catch {}
 
       const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-      if (meta) meta.content = metaColors[actual];
+      if (meta) meta.content = actual === 'light' ? '#f5f2e8' : '#0c1018';
 
-      document.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(el => {
-        el.textContent = icons[pref];
-      });
-      document.querySelectorAll<HTMLElement>('[data-theme-label]').forEach(el => {
-        el.textContent = labels[pref];
-      });
-      document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(el => {
-        el.setAttribute('title', `Theme: ${pref} (click to cycle)`);
+      syncUI(pref);
+    }
+
+    function syncUI(pref: Pref) {
+      document.querySelectorAll<HTMLButtonElement>('[data-theme-set]').forEach(btn => {
+        const active = btn.dataset.themeSet === pref;
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
     }
 
-    // Paint the correct icon/label on mount (head script already set the
-    // data-theme + data-theme-pref attrs; this just syncs the button UI).
-    apply(readPref());
-
-    document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const current = (html.getAttribute('data-theme-pref') as Pref) || 'system';
-        const next = order[(order.indexOf(current) + 1) % order.length];
-        apply(next);
+    function init() {
+      syncUI(readPref());
+      document.querySelectorAll<HTMLButtonElement>('[data-theme-set]').forEach(btn => {
+        if (btn.dataset.themeToggleInit === 'true') return;
+        btn.dataset.themeToggleInit = 'true';
+        btn.addEventListener('click', () => {
+          const next = btn.dataset.themeSet as Pref;
+          apply(next);
+        });
       });
-    });
+    }
 
-    // When on "system" mode, follow OS preference changes live.
-    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      const pref = (html.getAttribute('data-theme-pref') as Pref) || 'system';
-      if (pref === 'system') apply('system');
-    });
+    init();
+    document.addEventListener('astro:page-load', init);
   })();
 </script>
 
@@ -96,25 +70,31 @@
   .theme-toggle {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
+    margin-left: 12px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    background: var(--surface-raised);
+  }
+  .theme-toggle__btn {
+    width: 28px;
+    height: 26px;
     padding: 0;
-    margin-left: 8px;
     background: transparent;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    color: var(--ivory-2);
-    cursor: pointer;
-    transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
-  }
-  .theme-toggle:hover {
-    color: var(--signal);
-    border-color: var(--line-3);
-  }
-  .theme-toggle__icon {
+    border: 0;
+    color: var(--dim);
     font-family: var(--font-mono);
-    font-size: 16px;
+    font-size: 13px;
     line-height: 1;
+    cursor: pointer;
+    transition: color var(--motion-fast) ease, background var(--motion-fast) ease;
+  }
+  .theme-toggle__btn:hover { color: var(--ivory); }
+  .theme-toggle__btn[aria-pressed="true"] {
+    color: var(--signal);
+    background: var(--signal-dim);
+  }
+  .theme-toggle__btn + .theme-toggle__btn {
+    border-left: 1px solid var(--line-2);
   }
 </style>

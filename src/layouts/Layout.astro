@@ -74,24 +74,45 @@ const websiteSchema = includeIdentitySchema
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0c1018" />
   <script is:inline>
-    // Apply the saved theme preference before first paint to prevent a
-    // flash of the wrong theme. Mirrors the cycle logic in ThemeToggle.
+    // Single source of truth for theme. Runs inline to apply before
+    // first paint (no FOUC), and hooks astro:before-swap so
+    // ViewTransitions navigations paint in the correct theme instead
+    // of briefly rendering the server default.
     (function () {
-      try {
-        var pref = localStorage.getItem('theme') || 'system';
-        if (pref !== 'light' && pref !== 'dark' && pref !== 'system') pref = 'system';
-        var actual = pref;
-        if (pref === 'system') {
-          actual = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', actual);
-        document.documentElement.setAttribute('data-theme-pref', pref);
-        var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', actual === 'light' ? '#f5f2e8' : '#0c1018');
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.documentElement.setAttribute('data-theme-pref', 'system');
+      function readPref() {
+        try {
+          var raw = localStorage.getItem('theme');
+          if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
+        } catch (e) {}
+        return 'system';
       }
+      function resolve(pref) {
+        if (pref === 'system') {
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return pref;
+      }
+      function applyTo(doc, pref) {
+        var actual = resolve(pref);
+        doc.documentElement.setAttribute('data-theme', actual);
+        doc.documentElement.setAttribute('data-theme-pref', pref);
+        var meta = doc.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', actual === 'light' ? '#f5f2e8' : '#0c1018');
+      }
+      // Initial paint.
+      applyTo(document, readPref());
+
+      // Astro ViewTransitions: apply theme to the incoming document
+      // BEFORE it's swapped in, so the new page never paints with
+      // the server-rendered (themeless) HTML.
+      document.addEventListener('astro:before-swap', function (ev) {
+        applyTo(ev.newDocument, readPref());
+      });
+
+      // When on system mode, follow OS preference changes live.
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+        if (readPref() === 'system') applyTo(document, 'system');
+      });
     })();
   </script>
   <title>{title}</title>
