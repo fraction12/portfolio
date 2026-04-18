@@ -12,9 +12,7 @@ const rows: Array<{ key: string; value: string | number; source: string }> = [
   { key: 'commits.30d',   value: data.github.commits30d ?? '—', source: 'github graphql' },
   { key: 'stars',         value: data.github.totalStars ?? '—', source: 'github rest' },
   { key: 'npm.30d',       value: Object.keys(data.npm.packages).length === 0 ? '—' : npmTotal.toLocaleString(), source: 'api.npmjs.org' },
-  { key: 'pypi.30d',      value: Object.keys(data.pypi.packages).length === 0 ? '—' : pypiTotal.toLocaleString(), source: 'pypistats.org' },
-  { key: 'essays',        value: data.essays.length, source: 'substack rss' },
-  { key: 'shifts',        value: data.shifts.length, source: 'local git log' }
+  { key: 'pypi.30d',      value: Object.keys(data.pypi.packages).length === 0 ? '—' : pypiTotal.toLocaleString(), source: 'pypistats.org' }
 ];
 
 const now = new Date();
