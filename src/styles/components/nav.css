@@ -8,6 +8,7 @@
 }
 
 .top-nav__inner {
+  position: relative;
   max-width: var(--layout-max-w-narrow);
   margin: 0 auto;
   padding: 18px 24px;
@@ -16,6 +17,14 @@
   align-items: center;
   font-family: var(--font-display);
   font-size: var(--type-small-size);
+}
+
+.top-nav__inner > .theme-toggle {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
 }
 
 .top-nav__links {
@@ -42,6 +51,12 @@
 @media (max-width: 640px) {
   .top-nav__inner {
     padding: 14px 22px;
+    flex-direction: column;
+    gap: 10px;
   }
   .top-nav__links { gap: 16px; }
+  .top-nav__inner > .theme-toggle {
+    position: static;
+    transform: none;
+  }
 }

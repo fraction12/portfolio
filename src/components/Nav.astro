@@ -18,7 +18,7 @@ const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = 
       {navLinks.map(link => (
         <a href={link.href} class:list={['top-nav__link', { active: current === link.key }]}>{link.label}</a>
       ))}
-      <ThemeToggle />
     </div>
+    <ThemeToggle />
   </div>
 </nav>
