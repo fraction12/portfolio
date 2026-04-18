@@ -4,30 +4,8 @@ import NewsletterSignup from './NewsletterSignup.astro';
 
 <div class="contact">
   <NewsletterSignup />
-
-  <p class="direct">
-    Or reach out directly —
-    <a href="https://github.com/fraction12" target="_blank" rel="noopener">github</a>
-    <span class="dot" aria-hidden="true">·</span>
-    <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">linkedin</a>
-    <span class="dot" aria-hidden="true">·</span>
-    <a href="mailto:hi@dushyantgarg.com">email</a>.
-  </p>
 </div>
 
 <style>
   .contact { display: flex; flex-direction: column; gap: 16px; }
-  .direct {
-    font-family: var(--font-display);
-    color: var(--dim);
-    font-size: 14.5px;
-    line-height: 1.6;
-  }
-  .direct a {
-    color: var(--ivory-2);
-    text-decoration: none;
-    transition: color var(--motion-fast) ease;
-  }
-  .direct a:hover { color: var(--signal); }
-  .direct .dot { color: var(--dim-2); margin: 0 2px; }
 </style>
