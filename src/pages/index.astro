@@ -5,8 +5,6 @@ export const prerender = false;
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import ColophonTerminal from '../components/ColophonTerminal.astro';
-import CommitStrip from '../components/CommitStrip.astro';
-import BeliefsExcerpt from '../components/BeliefsExcerpt.astro';
 import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
@@ -39,8 +37,6 @@ const homeFeatured = homeFeaturedSlugs
   .filter((a): a is Artifact => Boolean(a));
 
 const totalTools = artifacts.length;
-
-const latestCommit = data.commits[0];
 ---
 
 <Layout
@@ -56,21 +52,8 @@ const latestCommit = data.commits[0];
       <ColophonTerminal />
     </div>
 
-    {latestCommit && (
-      <div class="sd-commit-strip">
-        <CommitStrip commit={latestCommit} />
-      </div>
-    )}
-
-    <section id="why" class="section-split">
-      <SectionHead num="01" name="Why *// two rules*" />
-      <div class="section-split__content">
-        <BeliefsExcerpt />
-      </div>
-    </section>
-
     <section id="tools" class="section-split">
-      <SectionHead num="02" name="Tools *// three I'm proud of*" />
+      <SectionHead num="01" name="Tools *// three I'm proud of*" />
       <div class="section-split__content">
         <div class="home-tools-list">
           {homeFeatured.map(a => {
@@ -83,14 +66,14 @@ const latestCommit = data.commits[0];
     </section>
 
     <section id="writing" class="section-split">
-      <SectionHead num="03" name="Writing *// dispatches*" />
+      <SectionHead num="02" name="Writing *// dispatches*" />
       <div class="section-split__content">
         <WritingBlock essays={data.essays} limit={3} />
       </div>
     </section>
 
     <section id="contact" class="section-split">
-      <SectionHead num="04" name="Contact *// reach out*" />
+      <SectionHead num="03" name="Contact *// reach out*" />
       <div class="section-split__content">
         <Contact />
       </div>
@@ -105,10 +88,6 @@ const latestCommit = data.commits[0];
     padding: 0 32px;
     position: relative;
     z-index: var(--z-content);
-  }
-
-  .sd-commit-strip {
-    padding: 8px 0 16px;
   }
 
   .home-tools-list {
