@@ -57,7 +57,7 @@ const catCount = CATEGORY_ORDER.filter(cat => byCategory[cat].length > 0).length
       <PageHeader
         kicker="Toolkit · open-source"
         title="Tools *// for agents*"
-        lede="Everything I ship for AI agents — memory, libraries, orchestration, the tools that let humans actually see what's running. Each group collapses; scroll down and they expand as you reach them."
+        lede="Everything I ship for AI agents — memory, libraries, orchestration, and the tools that let humans actually see what's running."
       />
       <aside class="page-aside">
         <div class="page-aside__stat"><b>{totalCount}</b><span class="label">artifacts</span></div>
@@ -68,42 +68,17 @@ const catCount = CATEGORY_ORDER.filter(cat => byCategory[cat].length > 0).length
 
     {CATEGORY_ORDER.map((cat, i) => (
       byCategory[cat].length > 0 && (
-        <section class="section-split">
+        <section class="section-split" id={`tools-${cat}`}>
           <SectionHead
             num={String(i + 1).padStart(2, '0')}
             name={`${CATEGORY_LABELS[cat]} *// ${byCategory[cat].length}*`}
             meta={CATEGORY_BLURBS[cat]}
           />
           <div class="section-split__content">
-            <div class="tool-group" id={`tools-${cat}`} data-tool-group>
-              <button
-                type="button"
-                class="tool-group__head"
-                aria-expanded="false"
-                aria-controls={`tool-group-body-${cat}`}
-                data-tool-group-toggle
-              >
-                <span class="tool-group__head-main">
-                  <span class="tool-group__chev" aria-hidden="true">›</span>
-                  <h3>{CATEGORY_LABELS[cat]}</h3>
-                  <span class="tool-group__count" aria-hidden="true">{byCategory[cat].length}</span>
-                </span>
-                <p class="tool-group__blurb">Tap to {byCategory[cat].length === 1 ? 'see' : 'see all ' + byCategory[cat].length}.</p>
-              </button>
-              <div
-                class="tool-group__body"
-                id={`tool-group-body-${cat}`}
-                role="region"
-                aria-labelledby={`tools-${cat}`}
-              >
-                <div class="tool-group__body-inner">
-                  {byCategory[cat].map(a => {
-                    const { metric, placeholder } = metricFor(a);
-                    return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-                  })}
-                </div>
-              </div>
-            </div>
+            {byCategory[cat].map(a => {
+              const { metric, placeholder } = metricFor(a);
+              return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+            })}
           </div>
         </section>
       )
@@ -117,89 +92,6 @@ const catCount = CATEGORY_ORDER.filter(cat => byCategory[cat].length > 0).length
     padding: 0 32px;
     position: relative;
     z-index: var(--z-content);
-  }
-
-  .tool-group { margin: 0; }
-
-  .tool-group__head {
-    display: block;
-    width: 100%;
-    text-align: left;
-    margin: 0;
-    padding: 14px 0 12px;
-    border: 0;
-    border-bottom: 1px solid var(--line-2);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-    transition: border-color var(--motion-fast) ease;
-  }
-  .tool-group__head:hover { border-bottom-color: var(--signal-glow); }
-  .tool-group__head:hover h3 { color: var(--signal); }
-
-  .tool-group__head-main {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .tool-group__chev {
-    font-family: var(--font-mono);
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--signal);
-    display: inline-block;
-    width: 14px;
-    transform: rotate(0deg);
-    transition: transform var(--motion-card) ease, color var(--motion-fast) ease;
-  }
-  .tool-group__head h3 {
-    font-family: var(--font-display);
-    font-size: 16px; font-weight: 700;
-    color: var(--ivory);
-    margin: 0;
-    letter-spacing: -0.005em;
-    text-transform: none;
-    transition: color var(--motion-fast) ease;
-  }
-  .tool-group__count {
-    font-family: var(--font-mono);
-    font-size: var(--type-mono-xs-size);
-    color: var(--dim);
-    margin-left: auto;
-    padding: 1px 7px;
-    border: 1px solid var(--line-2);
-    border-radius: var(--radius-pill);
-    line-height: 1.4;
-  }
-  .tool-group__blurb {
-    font-size: 13px; color: var(--dim);
-    margin: 4px 0 0 24px;
-  }
-
-  .tool-group__body {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height var(--motion-card) ease, opacity var(--motion-card) ease;
-  }
-  .tool-group[data-expanded="true"] .tool-group__body {
-    max-height: 2000px;
-    opacity: 1;
-  }
-  .tool-group[data-expanded="true"] .tool-group__chev {
-    transform: rotate(90deg);
-  }
-  .tool-group[data-expanded="true"] .tool-group__head {
-    border-bottom-color: var(--signal-glow);
-  }
-
-  .tool-group.tg-no-anim .tool-group__body,
-  .tool-group.tg-no-anim .tool-group__chev { transition: none; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tool-group__body,
-    .tool-group__chev { transition: none; }
   }
 
   @media (max-width: 640px) {
