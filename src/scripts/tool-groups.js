@@ -1,42 +1,55 @@
 /* ============================================================
    TOOL GROUPS — collapsible sections driven by scroll position
    • IntersectionObserver expands a group whenever any part of it
-     is in the viewport and collapses it once it scrolls fully
-     out of view (above or below). Scrolling back reopens it.
-   • Click toggles manually — useful for keyboard users or anyone
-     who wants to override the scroll behavior. Manual clicks hold
-     for ~800ms against the next IO event so a tap doesn't get
-     undone by an in-flight callback.
-   • Respects prefers-reduced-motion (state still toggles; CSS
-     suppresses the transitions).
+     is in the viewport and collapses it once it's fully above
+     or below. Scrolling back reopens it.
+   • Changes that happen ENTIRELY above the viewport are applied
+     without animation and compensate scrollY by the height delta,
+     so the user's visible content stays anchored.
+   • Click toggles manually. A manual click pins the state for
+     ~800ms so a concurrent IO callback doesn't undo the tap.
+   • Respects prefers-reduced-motion via CSS (transitions drop
+     to none while the dataset state still toggles).
    ============================================================ */
 
 function initToolGroups() {
   const groups = document.querySelectorAll('[data-tool-group]');
   if (!groups.length) return;
 
-  function expand(group) {
-    if (group.dataset.expanded === 'true') return;
-    group.dataset.expanded = 'true';
+  // Flip expanded state. If the group is entirely above the viewport,
+  // do it without animation and adjust scrollY so the visible content
+  // below doesn't jump.
+  function setExpanded(group, next) {
+    const current = group.dataset.expanded === 'true';
+    if (current === next) return;
+
+    const rect = group.getBoundingClientRect();
+    const entirelyAbove = rect.bottom < 0;
+
+    if (entirelyAbove) {
+      group.classList.add('tg-no-anim');
+      // Force layout to get an accurate "before" height after the
+      // class addition lands.
+      const before = group.offsetHeight;
+      group.dataset.expanded = next ? 'true' : 'false';
+      const after = group.offsetHeight;
+      const delta = after - before;
+      if (delta !== 0) window.scrollBy(0, delta);
+      requestAnimationFrame(() => group.classList.remove('tg-no-anim'));
+    } else {
+      group.dataset.expanded = next ? 'true' : 'false';
+    }
+
     const toggle = group.querySelector('[data-tool-group-toggle]');
-    toggle?.setAttribute('aria-expanded', 'true');
+    toggle?.setAttribute('aria-expanded', String(next));
   }
 
-  function collapse(group) {
-    if (group.dataset.expanded !== 'true') return;
-    group.dataset.expanded = 'false';
-    const toggle = group.querySelector('[data-tool-group-toggle]');
-    toggle?.setAttribute('aria-expanded', 'false');
-  }
-
-  // Manual clicks pin a group's state briefly so a concurrent IO
-  // event doesn't immediately flip it back.
+  // Manual clicks pin briefly so a concurrent IO event can't flip state.
   function pinForManualClick(group) {
     group.dataset.tgPinned = String(Date.now() + 800);
   }
   function isPinned(group) {
-    const until = Number(group.dataset.tgPinned || 0);
-    return Date.now() < until;
+    return Date.now() < Number(group.dataset.tgPinned || 0);
   }
 
   groups.forEach(group => {
@@ -46,26 +59,21 @@ function initToolGroups() {
     const toggle = group.querySelector('[data-tool-group-toggle]');
     toggle?.addEventListener('click', () => {
       pinForManualClick(group);
-      if (group.dataset.expanded === 'true') collapse(group);
-      else expand(group);
+      setExpanded(group, group.dataset.expanded !== 'true');
     });
   });
 
   if (!('IntersectionObserver' in window)) {
-    // Fallback: just expand everything so content is reachable.
-    groups.forEach(expand);
+    groups.forEach(g => setExpanded(g, true));
     return;
   }
 
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       if (isPinned(entry.target)) continue;
-      if (entry.isIntersecting) expand(entry.target);
-      else collapse(entry.target);
+      setExpanded(entry.target, entry.isIntersecting);
     }
   }, {
-    // Slight vertical inset so expand/collapse triggers shortly
-    // before/after the group fully leaves the visible area.
     rootMargin: '-5% 0px -5% 0px',
     threshold: 0
   });

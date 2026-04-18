@@ -196,6 +196,12 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
     border-bottom-color: var(--signal-glow);
   }
 
+  /* Suppress transitions when a group toggles state entirely above the
+     viewport — we measure-and-compensate scrollY instantly so animation
+     would only cause a visible post-compensation frame twitch. */
+  .tool-group.tg-no-anim .tool-group__body,
+  .tool-group.tg-no-anim .tool-group__chev { transition: none; }
+
   @media (prefers-reduced-motion: reduce) {
     .tool-group__body,
     .tool-group__chev { transition: none; }
