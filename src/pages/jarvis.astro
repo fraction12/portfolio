@@ -2,90 +2,117 @@
 export const prerender = true;
 
 import Layout from '../layouts/Layout.astro';
+import SectionHead from '../components/SectionHead.astro';
 import JarvisLog from '../components/JarvisLog.astro';
 ---
 
 <Layout
   current="jarvis"
   title="Jarvis — Dushyant Garg"
-  description="Jarvis is Dushyant Garg's always-on AI chief of operations — coordinating agents, running cron shifts, and keeping context alive across projects. Live activity log included."
+  description="Jarvis is my always-on AI chief of operations — coordinating specialist agents, running cron shifts, and keeping context alive across projects. Dispatches included."
 >
-  <div class="container">
-    <section class="page-intro">
-      <h1 class="page-title reveal">
-        Jarvis<span class="dot">.</span>
-        <span class="page-title-signal" aria-hidden="true"></span>
-      </h1>
-      <p class="jarvis-intro reveal" style="--reveal-delay: 0.04s;">
-        Jarvis is my personal AI Chief of Operations running full-time on my Mac Mini. It coordinates specialist agents,
-        keeps context alive across projects, and executes my day before I open my laptop. Think of it as an always-on
-        operating layer for work and life automation.
+  <main class="jarvis-main">
+    <header class="jarvis-intro">
+      <p class="kicker">Agent · always-on</p>
+      <h1>Jarvis</h1>
+      <p class="lede">
+        My personal AI <em>chief of operations</em>, running full-time on a Mac Mini.
+        It coordinates specialist agents, keeps context alive across projects, and
+        executes my day before I open the laptop.
       </p>
-    </section>
+    </header>
 
-    <section class="jarvis-capabilities reveal" style="--reveal-delay: 0.08s;" aria-labelledby="jarvis-capabilities-title">
-      <h2 id="jarvis-capabilities-title" class="jarvis-subtitle">What Jarvis does</h2>
-      <ul class="jarvis-feature-list">
-        <li>Generates morning briefings with priorities, blockers, and next actions.</li>
-        <li>Coordinates coding agents across repos and ships work in clean commit batches.</li>
-        <li>Runs scheduled cron shifts for maintenance, status checks, and reporting.</li>
-        <li>Manages reminders and follow-ups across personal and project workflows.</li>
-        <li>Executes smart home routines and device orchestration from the same command layer.</li>
-      </ul>
-    </section>
+    <SectionHead
+      num="01"
+      name="What Jarvis *// does*"
+      meta="Briefings, coordination, cron shifts, reminders, home."
+    />
+    <ul class="duties">
+      <li><span class="glyph" aria-hidden="true">→</span> Generates morning briefings with priorities, blockers, and next actions.</li>
+      <li><span class="glyph" aria-hidden="true">→</span> Coordinates coding agents across repos and ships work in clean commit batches.</li>
+      <li><span class="glyph" aria-hidden="true">→</span> Runs scheduled cron shifts for maintenance, status checks, and reporting.</li>
+      <li><span class="glyph" aria-hidden="true">→</span> Manages reminders and follow-ups across personal and project workflows.</li>
+      <li><span class="glyph" aria-hidden="true">→</span> Executes smart-home routines from the same command layer.</li>
+    </ul>
 
-    <section class="jarvis-log-section">
-      <h2 class="jarvis-subtitle reveal" style="--reveal-delay: 0.12s;">Recent Activity</h2>
-      <JarvisLog />
-    </section>
-  </div>
+    <SectionHead
+      num="02"
+      name="Dispatches *// recent*"
+      meta="Jarvis's own log — what it noticed, what it shipped."
+    />
+    <JarvisLog />
+  </main>
 </Layout>
 
 <style>
+  .jarvis-main {
+    max-width: var(--layout-max-w);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    position: relative;
+    z-index: var(--z-content);
+  }
+
   .jarvis-intro {
-    max-width: 72ch;
-    margin-top: 0.9rem;
-    color: #bcbcbc;
-    font-size: 0.94rem;
-    line-height: 1.75;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    padding: 72px 0 16px;
+    max-width: 64ch;
   }
-
-  .jarvis-capabilities {
-    min-height: auto;
-    margin-top: 1.4rem;
-    padding: 1.3rem;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: rgba(255,255,255,0.02);
-  }
-
-  .jarvis-subtitle {
-    margin-bottom: 0.85rem;
-    font-size: 0.86rem;
+  .jarvis-intro .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono-sm-size);
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: var(--dim);
-    font-weight: 600;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    margin-bottom: 20px;
+  }
+  .jarvis-intro h1 {
+    font-family: var(--font-display);
+    font-size: var(--type-page-title-size);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--ivory);
+    margin-bottom: 20px;
+  }
+  .jarvis-intro .lede {
+    font-family: var(--font-display);
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--ivory-2);
+  }
+  .jarvis-intro .lede em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--signal);
   }
 
-  .jarvis-feature-list {
+  .duties {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
     display: grid;
-    gap: 0.62rem;
-    padding-left: 1.2rem;
-    color: #d3d3d3;
-    font-size: 0.88rem;
+    gap: 10px;
+    max-width: 62ch;
+  }
+  .duties li {
+    font-family: var(--font-display);
+    font-size: 15.5px;
     line-height: 1.55;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    color: var(--ivory-2);
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .duties .glyph {
+    font-family: var(--font-mono);
+    color: var(--signal);
+    line-height: 1;
   }
 
-  .jarvis-log-section {
-    min-height: auto;
-    padding-top: 1.8rem;
-  }
-
-  .jarvis-log-section .jarvis-subtitle {
-    margin-bottom: 0.8rem;
+  @media (max-width: 640px) {
+    .jarvis-intro { padding: 48px 0 8px; }
+    .jarvis-intro .lede { font-size: 17px; }
   }
 </style>

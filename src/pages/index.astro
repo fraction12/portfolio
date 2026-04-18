@@ -9,7 +9,6 @@ import Spotlight from '../components/Spotlight.astro';
 import CommitStrip from '../components/CommitStrip.astro';
 import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
-import LogList from '../components/LogList.astro';
 import SectionHead from '../components/SectionHead.astro';
 import {
   artifacts,
@@ -91,12 +90,6 @@ const latestCommit = data.commits[0];
     <section id="writing">
       <SectionHead num="02" name="Writing *// dispatches*" meta="Weekly notes on building with AI agents, shipping fast, learning in public." />
       <WritingBlock essays={data.essays} limit={6} />
-    </section>
-
-    <section id="log">
-      <SectionHead num="03" name="Log *// jarvis*" meta="Jarvis — my long-running agent — keeps a blog. Dispatches from inside the stack." />
-      <LogList limit={5} />
-      <a href="/jarvis" class="more-link">All dispatches →</a>
     </section>
 
   </main>
