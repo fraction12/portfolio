@@ -87,7 +87,7 @@ body::before {
   grid-template-columns: 1fr 1fr;
   gap: 56px;
   align-items: center;
-  padding: 48px 0 16px;
+  padding: 24px 0 8px;
 }
 
 /* Page header: kicker + title + lede on the left, meta / status /
@@ -97,7 +97,7 @@ body::before {
   grid-template-columns: 1.5fr 1fr;
   gap: 56px;
   align-items: end;
-  padding: 64px 0 24px;
+  padding: 32px 0 16px;
   border-bottom: 1px solid var(--line);
 }
 .page-header__kicker {
@@ -176,12 +176,12 @@ body::before {
   .hero-split {
     grid-template-columns: 1fr;
     gap: 40px;
-    padding: 32px 0 8px;
+    padding: 16px 0 4px;
   }
   .page-split {
     grid-template-columns: 1fr;
     gap: 24px;
-    padding: 40px 0 20px;
+    padding: 20px 0 12px;
   }
   .page-aside { text-align: left; }
   .page-aside__stat { justify-content: flex-start; }
@@ -202,7 +202,7 @@ body::before {
 .page-main {
   position: relative;
   z-index: var(--z-content);
-  padding-top: calc(var(--layout-nav-h) + 1rem);
+  padding-top: 0.5rem;
   padding-bottom: 2.5rem;
 }
 
@@ -417,7 +417,7 @@ section {
 }
 
 @media (max-width: 480px) {
-  .page-main { padding-top: calc(var(--layout-nav-h) + 0.6rem); }
+  .page-main { padding-top: 0.4rem; }
   .connect__links { flex-direction: column; align-items: stretch; }
   .connect-link { width: 100%; text-align: center; }
   .hero__links .hero__link { width: fit-content; }
