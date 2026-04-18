@@ -1,14 +1,9 @@
 ---
-const beliefs = [
-  { n: '01', text: '*MAP* over motivation. Map the work, act in small loops, publish results early.' },
-  { n: '02', text: 'Taste in AI means *constraints*. If an agent cannot explain what it changed, it has not earned trust.' },
-  { n: '03', text: 'One ticket, *one turn*. Speed is real only when quality survives contact.' },
-  { n: '04', text: 'Build for the *next tired* version of yourself. Future me should resume instantly.' }
-];
+import { BELIEFS } from '../data/beliefs';
 ---
 
 <div class="b-grid">
-  {beliefs.map(b => (
+  {BELIEFS.map(b => (
     <article class="card card--belief">
       <h4>// Rule · {b.n}</h4>
       <p set:html={b.text.replace(/\*(.+?)\*/g, '<em>$1</em>')}></p>
