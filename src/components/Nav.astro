@@ -3,6 +3,7 @@ interface Props { current?: 'home' | 'tools' | 'writing' | 'jarvis' | 'beliefs' 
 const { current = 'home' } = Astro.props;
 
 const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
+  { href: '/', label: 'Home', key: 'home' },
   { href: '/tools', label: 'Tools', key: 'tools' },
   { href: '/writing', label: 'Writing', key: 'writing' },
   { href: '/jarvis', label: 'Jarvis', key: 'jarvis' },
@@ -12,7 +13,6 @@ const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = 
 
 <nav class="top-nav">
   <div class="top-nav__inner">
-    <a href="/" class="top-nav__mark" aria-label="Home">Dushyant Garg</a>
     <div class="top-nav__links">
       {navLinks.map(link => (
         <a href={link.href} class:list={['top-nav__link', { active: current === link.key }]}>{link.label}</a>
