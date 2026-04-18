@@ -66,8 +66,13 @@ let _cached: { ts: number; data: Promise<SignalData> } | null = null;
 export function loadSignalData(): Promise<SignalData> {
   const now = Date.now();
   if (_cached && now - _cached.ts < SIGNAL_TTL_MS) return _cached.data;
-  _cached = { ts: now, data: doLoadSignalData() };
-  return _cached.data;
+  const pending = doLoadSignalData();
+  const entry = { ts: now, data: pending };
+  _cached = entry;
+  // Don't let a rejection pin the cache for the full TTL — clear so the
+  // next request retries instead of seeing a 60 s window of cached failure.
+  pending.catch(() => { if (_cached === entry) _cached = null; });
+  return pending;
 }
 
 async function doLoadSignalData(): Promise<SignalData> {

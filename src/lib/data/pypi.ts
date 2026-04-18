@@ -19,7 +19,9 @@ export async function loadPypi(): Promise<PypiSnapshot> {
   try {
     const entries = await Promise.all(
       pypiPackages.map(async name => {
-        const res = await fetch(`https://pypistats.org/api/packages/${encodeURIComponent(name)}/recent`);
+        const res = await fetch(`https://pypistats.org/api/packages/${encodeURIComponent(name)}/recent`, {
+          signal: AbortSignal.timeout(5000)
+        });
         if (!res.ok) throw new Error(`pypi ${name} ${res.status}`);
         const json = await res.json() as { data: { last_month: number } };
         return [name, { downloadsLastMonth: json.data.last_month }] as const;

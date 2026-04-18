@@ -50,7 +50,7 @@ After any SEO-relevant change, spot-check:
 
 - `curl -sI https://dushyantgarg.com/robots.txt` returns 200 text/plain.
 - `curl -s https://dushyantgarg.com/sitemap-index.xml` lists only the intended
-  public routes (home, projects, writing, jarvis, beliefs, colophon).
+  public routes (home, tools, writing, jarvis).
 - View-source on the home page contains two `application/ld+json` blocks
   (Person + WebSite) and a `link rel="canonical"` pointing at the production
   origin.

@@ -31,11 +31,11 @@ const isDev = artifact.status === 'dev';
   )}
 
   <div class="tool-foot">
-    {githubUrl && <a href={githubUrl} target="_blank" rel="noopener">github ↗</a>}
+    {githubUrl && <a href={githubUrl} target="_blank" rel="noopener noreferrer">github ↗</a>}
     {artifact.url && (
       <>
         {githubUrl && <span class="sep">·</span>}
-        <a href={artifact.url} target="_blank" rel="noopener">{artifact.url.replace(/^https?:\/\//, '')} ↗</a>
+        <a href={artifact.url} target="_blank" rel="noopener noreferrer">{artifact.url.replace(/^https?:\/\//, '')} ↗</a>
       </>
     )}
     {metric

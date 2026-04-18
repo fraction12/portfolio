@@ -90,7 +90,7 @@ export function parseFeed(xml: string): Essay[] {
 
 export async function fetchEssays(): Promise<Essay[]> {
   try {
-    const res = await fetch(FEED_URL);
+    const res = await fetch(FEED_URL, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) throw new Error(`substack feed ${res.status}`);
     const essays = parseFeed(await res.text());
     writeSnapshot(essays);

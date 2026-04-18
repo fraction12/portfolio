@@ -25,7 +25,9 @@ function escapeHtml(input: string): string {
 
 function renderInlineMarkdown(input: string): string {
   let output = escapeHtml(input);
-  output = output.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  // Both capture groups have already been HTML-escaped by escapeHtml above
+  // (including `"`, so URLs can't break out of the href attribute).
+  output = output.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   output = output.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   output = output.replace(/\*([^*]+)\*/g, '<em>$1</em>');
   return output;

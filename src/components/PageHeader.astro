@@ -5,8 +5,15 @@ interface Props {
   lede?: string;   // use *word* for italic-signal emphasis
 }
 const { kicker, title, lede } = Astro.props;
-const titleHtml = title.replace(/\*(.+?)\*/g, '<em>$1</em>');
-const ledeHtml = lede?.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+function escapeHtml(s: string): string {
+  return s
+    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+}
+// Escape first, then substitute — capture group is untrusted in principle.
+const titleHtml = escapeHtml(title).replace(/\*(.+?)\*/g, '<em>$1</em>');
+const ledeHtml = lede && escapeHtml(lede).replace(/\*(.+?)\*/g, '<em>$1</em>');
 ---
 
 <header class="page-header">

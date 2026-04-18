@@ -5,8 +5,9 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 // `output: 'server'` makes every page SSR by default; pages that set
 // `export const prerender = true` in their frontmatter opt back into static.
-// Only index.astro, writing.astro, and colophon.astro are SSR (they need
-// fresh GitHub/Substack data); everything else is prerendered.
+// Only index.astro, writing.astro, and tools.astro are SSR (they need
+// fresh GitHub / Substack / package-registry data); everything else is
+// prerendered.
 //
 // `site` is the canonical production origin. It drives canonical/OG URLs in
 // the shared layout and the sitemap. Do not change without also updating
@@ -22,8 +23,8 @@ export default defineConfig({
     sitemap({
       customPages: [
         'https://dushyantgarg.com/',
+        'https://dushyantgarg.com/tools/',
         'https://dushyantgarg.com/writing/',
-        'https://dushyantgarg.com/colophon/',
       ],
     }),
   ],

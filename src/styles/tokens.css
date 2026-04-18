@@ -126,7 +126,7 @@
 /* ============================================================
    LIGHT MODE
    Contrast against light --ink (#f5f2e8):
-     ivory 15.3:1 · ivory-2 8.6:1 · dim 5.1:1 · dim-2 3.4:1
+     ivory 15.3:1 · ivory-2 8.6:1 · dim 5.0:1 · dim-2 3.4:1
      signal 4.6:1 (WCAG AA normal text)
    ============================================================ */
 [data-theme="light"] {
@@ -139,7 +139,7 @@
 
   --ivory:        #1a1f2b;
   --ivory-2:      #434957;
-  --dim:          #6b7080;
+  --dim:          #5c6070;
   --dim-2:        #a3a6b0;
 
   --signal:       #a25a25;

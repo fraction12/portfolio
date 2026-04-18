@@ -5,6 +5,13 @@ function initScrollReveal() {
   const reveals = document.querySelectorAll('.reveal');
   if (!reveals.length) return;
 
+  // For users who prefer reduced motion, skip the IO + delay and mark
+  // everything visible up-front. Avoids the translate/fade reveal entirely.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    reveals.forEach(el => el.classList.add('visible'));
+    return;
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {

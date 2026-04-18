@@ -19,7 +19,9 @@ export async function loadNpm(): Promise<NpmSnapshot> {
   try {
     const entries = await Promise.all(
       npmPackages.map(async name => {
-        const res = await fetch(`https://api.npmjs.org/downloads/point/last-month/${encodeURIComponent(name)}`);
+        const res = await fetch(`https://api.npmjs.org/downloads/point/last-month/${encodeURIComponent(name)}`, {
+          signal: AbortSignal.timeout(5000)
+        });
         if (!res.ok) throw new Error(`npm ${name} ${res.status}`);
         const json = await res.json() as { downloads: number };
         return [name, { downloadsLastMonth: json.downloads }] as const;

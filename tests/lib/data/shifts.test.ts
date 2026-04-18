@@ -2,7 +2,19 @@ import { describe, it, expect } from 'vitest';
 import { clusterShifts, type CommitRecord } from '../../../src/lib/data/shifts';
 
 function mkCommit(sha: string, iso: string, filesChanged = 1, additions = 10, deletions = 2): CommitRecord {
-  return { sha, timestamp: new Date(iso), author: 'Dushyant Garg', subject: 'test commit', filesChanged, additions, deletions };
+  return {
+    sha,
+    timestamp: new Date(iso),
+    author: 'Dushyant Garg',
+    authorEmail: '',
+    subject: 'test commit',
+    body: '',
+    coAuthors: [],
+    isAgentAuthored: false,
+    filesChanged,
+    additions,
+    deletions
+  };
 }
 
 describe('clusterShifts', () => {

@@ -1,15 +1,6 @@
 ---
 import Card from './Card.astro';
-
-const FEED_URL = 'https://dushyantg.substack.com/feed';
-
-interface FeedPost {
-  title: string;
-  link: string;
-  description: string;
-  dateLabel: string;
-  readTimeMinutes: number;
-}
+import { fetchEssays, type Essay } from '../lib/data/substack';
 
 interface Props {
   limit?: number;
@@ -17,84 +8,10 @@ interface Props {
 
 const { limit } = Astro.props;
 
-const decodeXml = (input = '') =>
-  input
-    .replaceAll('&amp;', '&')
-    .replaceAll('&lt;', '<')
-    .replaceAll('&gt;', '>')
-    .replaceAll('&quot;', '"')
-    .replaceAll('&#39;', "'");
-
-const stripHtml = (input = '') =>
-  decodeXml(input)
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const getTagValue = (itemXml: string, tagName: string) => {
-  const match = itemXml.match(new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, 'i'));
-  return match?.[1]?.trim() ?? '';
-};
-
-const getReadTimeMinutes = (content: string) => {
-  const words = stripHtml(content).split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.ceil(words / 200));
-};
-
-const formatDate = (pubDate: string) => {
-  const parsed = new Date(pubDate);
-  if (Number.isNaN(parsed.getTime())) return 'Unknown date';
-
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  }).format(parsed);
-};
-
-const parseFeed = (xml: string): FeedPost[] => {
-  const itemMatches = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)];
-
-  return itemMatches
-    .map((match) => {
-      const itemXml = match[1] ?? '';
-      const title = stripHtml(getTagValue(itemXml, 'title'));
-      const link = stripHtml(getTagValue(itemXml, 'link'));
-      const descriptionRaw = getTagValue(itemXml, 'description');
-      const contentRaw =
-        getTagValue(itemXml, 'content:encoded') ||
-        getTagValue(itemXml, 'content') ||
-        descriptionRaw;
-
-      return {
-        title,
-        link,
-        description: stripHtml(descriptionRaw),
-        dateLabel: formatDate(getTagValue(itemXml, 'pubDate')),
-        readTimeMinutes: getReadTimeMinutes(contentRaw)
-      };
-    })
-    .filter((post) => post.title && post.link);
-};
-
-let posts: FeedPost[] = [];
-let hasError = false;
-
-try {
-  const response = await fetch(FEED_URL);
-  if (!response.ok) {
-    throw new Error(`Feed request failed: ${response.status}`);
-  }
-
-  const xml = await response.text();
-  posts = parseFeed(xml);
-} catch (error) {
-  hasError = true;
-  console.error('Failed to fetch Substack feed:', error);
-}
-
-const visiblePosts = typeof limit === 'number' ? posts.slice(0, limit) : posts;
+// Shared fetcher: 5s timeout, snapshot fallback on failure.
+const essays: Essay[] = await fetchEssays();
+const visiblePosts = typeof limit === 'number' ? essays.slice(0, limit) : essays;
+const hasError = essays.length === 0;
 ---
 
 <div id="writing">

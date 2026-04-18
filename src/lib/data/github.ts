@@ -46,7 +46,8 @@ export async function loadGithub(): Promise<GithubSnapshot> {
 
 async function fetchTotalStars(): Promise<number> {
   const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&type=owner`, {
-    headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' }
+    headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' },
+    signal: AbortSignal.timeout(5000)
   });
   if (!res.ok) throw new Error(`github repos ${res.status}`);
   const repos = await res.json() as Array<{ stargazers_count: number; fork: boolean }>;
@@ -68,7 +69,8 @@ async function fetchHeatmap(): Promise<HeatmapCell[]> {
   const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({ query, variables: { login: GITHUB_USER } })
+    body: JSON.stringify({ query, variables: { login: GITHUB_USER } }),
+    signal: AbortSignal.timeout(5000)
   });
   if (!res.ok) throw new Error(`github graphql ${res.status}`);
   const json = await res.json() as any;
@@ -127,7 +129,8 @@ export async function fetchGithubCommits(sinceDays = 180, perPage = 100): Promis
     const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
     const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?per_page=${perPage}&since=${encodeURIComponent(since)}`;
     const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' }
+      headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' },
+      signal: AbortSignal.timeout(5000)
     });
     if (!res.ok) throw new Error(`github commits ${res.status}`);
     const data = await res.json() as Array<{
@@ -213,7 +216,8 @@ export async function fetchAllRepoCommits(limit = 12): Promise<CommitRecord[]> {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      body: JSON.stringify({ query })
+      body: JSON.stringify({ query }),
+      signal: AbortSignal.timeout(5000)
     });
     if (!res.ok) throw new Error(`github graphql ${res.status}`);
     const json = await res.json() as any;

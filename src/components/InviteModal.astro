@@ -37,7 +37,7 @@ import Button from './Button.astro';
         href="https://dushyantg.substack.com"
         variant="primary"
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
         data-invite-action="primary"
         data-pitch-primary
       >Subscribe ↗</Button>
@@ -45,7 +45,7 @@ import Button from './Button.astro';
         href="https://github.com/fraction12"
         variant="ghost"
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
         data-invite-action="secondary"
         data-pitch-secondary
       >See the code ↗</Button>
@@ -168,7 +168,7 @@ import Button from './Button.astro';
           el.href = href;
           if (external) {
             el.target = '_blank';
-            el.rel = 'noopener';
+            el.rel = 'noopener noreferrer';
           } else {
             el.removeAttribute('target');
             el.removeAttribute('rel');
@@ -239,8 +239,28 @@ import Button from './Button.astro';
       a.addEventListener('click', remember);
     });
 
+    // Focus trap: keep Tab / Shift-Tab cycling within the modal while open.
+    // aria-modal alone isn't a guarantee — some assistive tech enforces it,
+    // many browsers don't, sighted keyboard users definitely don't.
+    const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && shown && !el.hidden) dismiss();
+      if (!shown || el.hidden) return;
+      if (e.key === 'Escape') { dismiss(); return; }
+      if (e.key !== 'Tab') return;
+
+      const focusables = Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE))
+        .filter(n => !n.hasAttribute('disabled'));
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (e.shiftKey && (active === first || !el.contains(active))) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault(); first.focus();
+      }
     });
   })();
 </script>
