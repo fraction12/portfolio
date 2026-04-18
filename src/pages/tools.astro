@@ -74,7 +74,7 @@ const catCount = CATEGORY_ORDER.filter(cat => byCategory[cat].length > 0).length
             name={`${CATEGORY_LABELS[cat]} *// ${byCategory[cat].length}*`}
             meta={CATEGORY_BLURBS[cat]}
           />
-          <div class="section-split__content">
+          <div class="section-split__content tool-cards">
             {byCategory[cat].map(a => {
               const { metric, placeholder } = metricFor(a);
               return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
@@ -92,6 +92,12 @@ const catCount = CATEGORY_ORDER.filter(cat => byCategory[cat].length > 0).length
     padding: 0 32px;
     position: relative;
     z-index: var(--z-content);
+  }
+
+  .tool-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
 
   @media (max-width: 640px) {

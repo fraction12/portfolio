@@ -15,7 +15,7 @@ const isComment = install.trim().startsWith('#');
 const isDev = artifact.status === 'dev';
 ---
 
-<article class={`tool${isDev ? ' dev' : ''}`}>
+<article class:list={['card card--tool', { 'is-dev': isDev }]}>
   <div class="tool-head">
     <span class="tool-name">{artifact.name}</span>
     <span class="tool-meta">{artifact.stack}</span>
@@ -47,48 +47,68 @@ const isDev = artifact.status === 'dev';
 </article>
 
 <style>
-  .tool {
-    padding: 18px 0 20px;
-    border-bottom: 1px solid var(--line);
+  .card--tool {
+    padding: 22px 24px 20px;
+    gap: 0;
   }
-  .tool:last-child { border-bottom: 0; }
+
   .tool-head {
     display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    gap: 12px;
   }
-  .tool-name { font-size: 17px; font-weight: 700; color: var(--ivory); }
-  .tool-meta { font-family: var(--font-mono); font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
+  .tool-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ivory);
+    letter-spacing: -0.005em;
+  }
+  .tool-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+  }
   .tool-desc {
     color: var(--ivory-2);
-    font-size: 15px; line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.6;
     max-width: 62ch;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
   }
   .tool-install {
     font-family: var(--font-mono);
     font-size: 13.5px;
-    background: var(--ink-1);
-    border: 1px solid var(--line);
+    background: var(--ink-terminal);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-sm);
     padding: 10px 14px;
     color: var(--ivory);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     overflow-x: auto;
     white-space: nowrap;
   }
   .tool-install .cmt { color: var(--dim); font-style: italic; }
   .tool-install .prompt { color: var(--signal); margin-right: 6px; user-select: none; }
-  .tool.dev .tool-install { border-style: dashed; }
+  .card--tool.is-dev .tool-install { border-style: dashed; }
+
   .tool-foot {
     display: flex; gap: 16px; flex-wrap: wrap;
     font-family: var(--font-mono); font-size: 12.5px; color: var(--dim);
   }
-  .tool-foot a { color: var(--signal); text-decoration: none; }
+  .tool-foot a {
+    color: var(--signal);
+    text-decoration: none;
+    transition: text-decoration-color var(--motion-fast) ease;
+  }
   .tool-foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .tool-foot .sep { color: var(--dim-2); }
   .tool-foot .metric { color: var(--signal); }
   .tool-foot .metric.ph { color: var(--dim-2); font-style: italic; }
 
   @media (max-width: 640px) {
+    .card--tool { padding: 18px 18px 16px; }
     .tool-head { flex-direction: column; gap: 2px; align-items: flex-start; }
   }
 </style>
