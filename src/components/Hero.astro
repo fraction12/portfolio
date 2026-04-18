@@ -11,7 +11,7 @@ const {
 
 <header class="intro">
   <p class="kicker">Portfolio · 2026</p>
-  <h1 class="name">Dushyant Garg</h1>
+  <h1 class="name">Dushyant Garg<span class="cursor" aria-hidden="true"></span></h1>
   <p class="mission">
     I build tools that make AI agents <em>usable</em> — memory that sticks,
     orchestration that doesn't deadlock, observability that doesn't lie.
@@ -56,6 +56,26 @@ const {
     line-height: 1.05;
     color: var(--ivory);
     margin-bottom: 24px;
+  }
+  /* Subtle blinking cursor after the name — blinks for ~2.4s on first
+     paint, then fades out. One moment of "this site is alive" before it
+     settles into a static heading. */
+  .cursor {
+    display: inline-block;
+    width: 0.5ch;
+    height: 1em;
+    margin-left: 6px;
+    background: var(--signal);
+    vertical-align: text-bottom;
+    animation:
+      cursorBlink 1s step-end 3,
+      heroFadeOut 0.4s ease 2.4s forwards;
+  }
+  @keyframes heroFadeOut {
+    to { opacity: 0; width: 0; margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { display: none; }
   }
   .mission {
     font-family: var(--font-display);

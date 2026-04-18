@@ -1,6 +1,9 @@
 // ── LOBSTER EASTER EGG 🦞 ──────────────────────────────────────────────
 (() => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Rarity is the delight. Only fire on ~1 in 3 loads so the lobster feels
+  // like a discovery instead of a feature. Skip entirely otherwise.
+  if (Math.random() > 0.33) return;
 
   const lobster = document.createElement('div');
   lobster.id = 'lobster';
