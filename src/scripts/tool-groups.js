@@ -1,10 +1,14 @@
 /* ============================================================
-   TOOL GROUPS — collapsible sections with scroll-triggered expand
-   • Click header to toggle.
-   • IntersectionObserver auto-expands once when the header scrolls
-     into view. No collapse on scroll-out.
-   • Respects prefers-reduced-motion (state toggles, transitions are
-     suppressed via CSS media query).
+   TOOL GROUPS — collapsible sections driven by scroll position
+   • IntersectionObserver expands a group whenever any part of it
+     is in the viewport and collapses it once it scrolls fully
+     out of view (above or below). Scrolling back reopens it.
+   • Click toggles manually — useful for keyboard users or anyone
+     who wants to override the scroll behavior. Manual clicks hold
+     for ~800ms against the next IO event so a tap doesn't get
+     undone by an in-flight callback.
+   • Respects prefers-reduced-motion (state still toggles; CSS
+     suppresses the transitions).
    ============================================================ */
 
 function initToolGroups() {
@@ -15,13 +19,24 @@ function initToolGroups() {
     if (group.dataset.expanded === 'true') return;
     group.dataset.expanded = 'true';
     const toggle = group.querySelector('[data-tool-group-toggle]');
-    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+    toggle?.setAttribute('aria-expanded', 'true');
   }
 
   function collapse(group) {
+    if (group.dataset.expanded !== 'true') return;
     group.dataset.expanded = 'false';
     const toggle = group.querySelector('[data-tool-group-toggle]');
-    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-expanded', 'false');
+  }
+
+  // Manual clicks pin a group's state briefly so a concurrent IO
+  // event doesn't immediately flip it back.
+  function pinForManualClick(group) {
+    group.dataset.tgPinned = String(Date.now() + 800);
+  }
+  function isPinned(group) {
+    const until = Number(group.dataset.tgPinned || 0);
+    return Date.now() < until;
   }
 
   groups.forEach(group => {
@@ -30,38 +45,32 @@ function initToolGroups() {
 
     const toggle = group.querySelector('[data-tool-group-toggle]');
     toggle?.addEventListener('click', () => {
+      pinForManualClick(group);
       if (group.dataset.expanded === 'true') collapse(group);
       else expand(group);
     });
   });
 
-  // Auto-expand the first group immediately so there's visible content
-  // without requiring a scroll.
-  if (groups[0]) expand(groups[0]);
-
-  // Auto-expand each subsequent group once when its header comes into view.
   if (!('IntersectionObserver' in window)) {
-    // Fallback: expand everything.
+    // Fallback: just expand everything so content is reachable.
     groups.forEach(expand);
     return;
   }
 
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
-      if (entry.isIntersecting) {
-        expand(entry.target);
-        io.unobserve(entry.target);
-      }
+      if (isPinned(entry.target)) continue;
+      if (entry.isIntersecting) expand(entry.target);
+      else collapse(entry.target);
     }
   }, {
-    rootMargin: '0px 0px -20% 0px',
-    threshold: 0.1
+    // Slight vertical inset so expand/collapse triggers shortly
+    // before/after the group fully leaves the visible area.
+    rootMargin: '-5% 0px -5% 0px',
+    threshold: 0
   });
 
-  groups.forEach((group, i) => {
-    if (i === 0) return; // first is already expanded
-    io.observe(group);
-  });
+  groups.forEach(g => io.observe(g));
 }
 
 document.addEventListener('astro:page-load', initToolGroups);
