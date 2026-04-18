@@ -80,13 +80,12 @@
   margin-bottom: 0.8rem;
 }
 .card--writing .read-link {
-  color: var(--ivory);
+  color: var(--signal);
   text-decoration: none;
   font-size: 0.88rem;
-  border-bottom: 1px solid var(--line-3);
-  padding-bottom: 0.08rem;
+  font-family: var(--font-mono);
 }
-.card--writing .read-link:hover { border-color: var(--ivory); }
+.card--writing .read-link:hover { color: var(--signal-hov); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---- Hub card (mouse spotlight optional via JS setting --mx/--my) ---- */
 .card--hub {
