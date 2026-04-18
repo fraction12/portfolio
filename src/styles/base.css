@@ -53,6 +53,59 @@ body::before {
 /* ============================================================
    LAYOUT
    ============================================================ */
+
+/* Split pattern: left label (sticky) + right content.
+   Collapses to single column on narrow viewports. */
+.section-split {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 56px;
+  padding: 48px 0;
+  align-items: start;
+}
+.section-split > .section-head {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 0;
+  border-top: none;
+  position: sticky;
+  top: calc(var(--layout-nav-h) + 20px);
+  align-self: start;
+}
+.section-split > .section-head .section-head__meta {
+  text-align: left;
+  max-width: 36ch;
+}
+.section-split__content {
+  min-width: 0;
+}
+
+/* Hero split: identity on the left, featured artifact on the right.
+   Flips to stacked on narrow viewports. */
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding: 48px 0 16px;
+}
+
+@media (max-width: 960px) {
+  .section-split {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 32px 0;
+  }
+  .section-split > .section-head {
+    position: static;
+  }
+  .hero-split {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 32px 0 8px;
+  }
+}
+
 .container {
   position: relative;
   z-index: var(--z-content);

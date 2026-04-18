@@ -1,6 +1,5 @@
 ---
 // SSR: render on request, edge-cached 5 min fresh + 30 min stale-while-revalidate.
-// Keeps the spotlight, tool metrics, commit strip, and writing feed fresh.
 export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
@@ -34,12 +33,8 @@ function metricFor(a: Artifact): { metric: string | null; placeholder: string } 
   return { metric: null, placeholder: '' };
 }
 
-// Spotlight: hand-pick the artifact that leads the page. Potato v3 is the
-// most distinctive positioning (terminal cockpit for coding agents).
 const featured = artifacts.find(a => a.slug === 'potato') ?? artifacts[0];
 
-// Three hand-picked tools that tell a story without repeating the spotlight:
-// state agents carry · how multiple agents coordinate · how humans watch them.
 const homeFeaturedSlugs = ['agentsense', 'agentplan', 'clawk'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
@@ -58,7 +53,10 @@ const latestCommit = data.commits[0];
 >
   <main class="sd-main">
 
-    <Hero />
+    <div class="hero-split">
+      <Hero />
+      <Spotlight artifact={featured} kicker="Featured" />
+    </div>
 
     {latestCommit && (
       <div class="sd-commit-strip">
@@ -66,50 +64,54 @@ const latestCommit = data.commits[0];
       </div>
     )}
 
-    <section id="spotlight" class="sd-spotlight">
-      <Spotlight artifact={featured} kicker="Featured" />
-    </section>
-
-    <section id="why">
+    <section id="why" class="section-split">
       <SectionHead
         num="01"
         name="Why *// two rules*"
         meta="Operating principles I test nightly — every agent in the stack reads them first."
       />
-      <BeliefsExcerpt />
+      <div class="section-split__content">
+        <BeliefsExcerpt />
+      </div>
     </section>
 
-    <section id="tools">
+    <section id="tools" class="section-split">
       <SectionHead
         num="02"
         name="Tools *// three I'm proud of*"
         meta="A slice from the toolkit — full browser on /tools."
       />
-      <div class="home-tools-list">
-        {homeFeatured.map(a => {
-          const { metric, placeholder } = metricFor(a);
-          return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-        })}
+      <div class="section-split__content">
+        <div class="home-tools-list">
+          {homeFeatured.map(a => {
+            const { metric, placeholder } = metricFor(a);
+            return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+          })}
+        </div>
+        <a class="more-link" href="/tools">See all {totalTools} tools →</a>
       </div>
-      <a class="more-link" href="/tools">See all {totalTools} tools →</a>
     </section>
 
-    <section id="writing">
+    <section id="writing" class="section-split">
       <SectionHead
         num="03"
         name="Writing *// dispatches*"
         meta="Weekly notes on building with AI agents, shipping fast, learning in public."
       />
-      <WritingBlock essays={data.essays} limit={3} />
+      <div class="section-split__content">
+        <WritingBlock essays={data.essays} limit={3} />
+      </div>
     </section>
 
-    <section id="contact">
+    <section id="contact" class="section-split">
       <SectionHead
         num="04"
         name="Contact *// reach out*"
         meta="Subscribe to the writing, or DM. I read everything."
       />
-      <Contact />
+      <div class="section-split__content">
+        <Contact />
+      </div>
     </section>
 
   </main>
@@ -117,16 +119,15 @@ const latestCommit = data.commits[0];
 
 <style>
   .sd-main {
-    max-width: var(--layout-max-w);
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 32px;
     position: relative;
     z-index: var(--z-content);
   }
-  section { padding: 24px 0; }
 
-  .sd-commit-strip { padding: 0 0 8px; }
-  .sd-spotlight { padding-top: 20px; padding-bottom: 12px; }
+  .sd-commit-strip {
+    padding: 8px 0 16px;
+  }
 
   .home-tools-list {
     display: flex;
