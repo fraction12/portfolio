@@ -111,12 +111,12 @@ const projects = [
 <div id="projects">
   <div class="projects-grid">
     {projects.map((project, index) => (
-      <Card className="reveal" style={`--reveal-delay: ${(0.05 + index * 0.05).toFixed(2)}s;`}>
+      <Card variant="project" className="reveal" style={`--reveal-delay: ${(0.05 + index * 0.05).toFixed(2)}s;`}>
         <h3>{project.name}</h3>
         <p class="desc">{project.description}</p>
         <div class="pills">
           {project.tech.map((tech) => (
-            <Pill tone={project.amberTech.includes(tech) ? 'amber' : 'default'}>{tech}</Pill>
+            <Pill variant={project.amberTech.includes(tech) ? 'signal' : 'dim'}>{tech}</Pill>
           ))}
         </div>
 

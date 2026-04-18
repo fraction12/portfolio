@@ -8,6 +8,7 @@ import Hero from '../components/Hero.astro';
 import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import LogList from '../components/LogList.astro';
+import SectionHead from '../components/SectionHead.astro';
 import {
   artifacts,
   CATEGORY_ORDER,
@@ -56,7 +57,7 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
     <Hero />
 
     <section id="tools">
-      <h2>Tools</h2>
+      <SectionHead num="01" name="Tools *// open-source*" meta="Agent tooling, CLIs, and infrastructure I ship and maintain." />
       {CATEGORY_ORDER.map(cat => (
         byCategory[cat].length > 0 && (
           <div class="tool-group" id={`tools-${cat}`}>
@@ -74,13 +75,12 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
     </section>
 
     <section id="writing">
-      <h2>Writing</h2>
+      <SectionHead num="02" name="Writing *// dispatches*" meta="Weekly notes on building with AI agents, shipping fast, learning in public." />
       <WritingBlock essays={data.essays} limit={6} />
     </section>
 
     <section id="log">
-      <h2>Log</h2>
-      <p class="log-caption">Jarvis — my long-running agent — keeps a blog. These are his dispatches from inside the stack.</p>
+      <SectionHead num="03" name="Log *// jarvis*" meta="Jarvis — my long-running agent — keeps a blog. Dispatches from inside the stack." />
       <LogList limit={5} />
       <a href="/jarvis" class="more-link">All dispatches →</a>
     </section>
@@ -90,18 +90,12 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
 
 <style>
   .sd-main {
-    max-width: var(--max-w); margin: 0 auto;
+    max-width: var(--layout-max-w); margin: 0 auto;
     padding: 0 24px;
     position: relative; z-index: 2;
   }
   section {
     padding: 36px 0;
-    border-top: 1px solid var(--line);
-  }
-  section > h2 {
-    font-size: 13px; color: var(--dim); font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    margin: 0 0 24px;
   }
   .tool-group { margin-bottom: 8px; }
   .tool-group + .tool-group { margin-top: 36px; }
@@ -111,7 +105,7 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
     border-bottom: 1px solid var(--line-2);
   }
   .tool-group-head h3 {
-    font-family: var(--body);
+    font-family: var(--font-display);
     font-size: 16px; font-weight: 700;
     color: var(--ivory);
     margin: 0 0 4px;
@@ -123,12 +117,9 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
     margin: 0; max-width: 62ch;
     line-height: 1.5;
   }
-  .log-caption {
-    color: var(--dim); font-size: 14px; margin-bottom: 16px; max-width: 62ch;
-  }
   .more-link {
     display: inline-block; margin-top: 14px;
-    font-family: var(--mono); font-size: 13px; color: var(--link);
+    font-family: var(--font-mono); font-size: 13px; color: var(--signal);
     text-decoration: none;
   }
   .more-link:hover { text-decoration: underline; text-underline-offset: 3px; }

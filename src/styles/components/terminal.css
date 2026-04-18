@@ -1,0 +1,90 @@
+/* ============================================================
+   TERMINAL — spec §3.7  (BEM; .now-* aliases removed)
+   ============================================================ */
+.terminal {
+  background: var(--ink-terminal);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--ivory);
+}
+
+.terminal__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--line);
+}
+.terminal__header > span {
+  margin-left: 0.6rem;
+  color: var(--dim);
+  font-size: var(--type-mono-xs-size);
+}
+
+.terminal__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.terminal__dot--r { background: var(--status-hot); }
+.terminal__dot--y { background: var(--status-warn); }
+.terminal__dot--g { background: var(--status-live); }
+
+.terminal__body {
+  position: relative;
+  padding: 1.2rem 1.4rem;
+  overflow: hidden;
+}
+/* Subtle scanline overlay — do not disable (spec §3.7). */
+.terminal__body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.008) 2px,
+    rgba(255,255,255,0.008) 4px
+  );
+}
+
+.terminal__line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5ch;
+  margin-bottom: 0.15rem;
+}
+.terminal__line--spacer { margin-bottom: 0.6rem; }
+
+.terminal__prompt  { color: var(--signal); }
+.terminal__cmd     { color: var(--signal); }
+.terminal__flag    { color: rgba(255,255,255,0.35); }
+.terminal__val     { color: #e2e8f0; }
+.terminal__comment { color: rgba(255,255,255,0.2); font-style: italic; }
+.terminal__status  { color: var(--status-live); }
+
+.terminal__cursor {
+  display: inline-block;
+  width: 7px; height: 1.1em;
+  background: var(--signal);
+  vertical-align: text-bottom;
+  animation: cursorBlink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+.terminal__divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 0.7rem 0;
+}
+
+@media (max-width: 768px) {
+  .terminal { font-size: 0.75rem; }
+  .terminal__body { padding: 0.9rem; }
+}

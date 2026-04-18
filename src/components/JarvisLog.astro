@@ -103,96 +103,85 @@ const lastUpdated = entries.length > 0
 ---
 
 <section id="jarvis">
-  <div class="now-terminal reveal" style="--reveal-delay: 0.05s;">
-    <div class="now-terminal-header">
-      <div class="now-terminal-dot r"></div>
-      <div class="now-terminal-dot y"></div>
-      <div class="now-terminal-dot g"></div>
+  <div class="terminal reveal" style="--reveal-delay: 0.05s;">
+    <div class="terminal__header">
+      <div class="terminal__dot terminal__dot--r" aria-hidden="true"></div>
+      <div class="terminal__dot terminal__dot--y" aria-hidden="true"></div>
+      <div class="terminal__dot terminal__dot--g" aria-hidden="true"></div>
       <span>jarvis — log --recent</span>
     </div>
 
-    <div class="now-terminal-body">
-      <div class="now-line">
-        <span class="now-prompt">$</span>
-        <span class="now-cmd">jarvis</span>
-        <span class="now-flag">log --recent</span>
+    <div class="terminal__body">
+      <div class="terminal__line">
+        <span class="terminal__prompt">$</span>
+        <span class="terminal__cmd">jarvis</span>
+        <span class="terminal__flag">log --recent</span>
       </div>
-      <div class="now-line spacer"></div>
+      <div class="terminal__line terminal__line--spacer"></div>
 
       {entries.map((entry, index) => (
         <>
-          {index > 0 && <hr class="now-divider" />}
-          <div class="now-line">
-            <span class="now-dot-green" aria-hidden="true">●</span>
-            <span class="now-val" style="font-weight:600;">{entry.title}</span>
+          {index > 0 && <hr class="terminal__divider" />}
+          <div class="terminal__line">
+            <span class="entry-dot" aria-hidden="true">●</span>
+            <span class="terminal__val" style="font-weight:600;">{entry.title}</span>
           </div>
-          <div class="now-line">
-            <span class="now-flag">&nbsp;&nbsp;date:</span>
-            <span class="now-val">{entry.formattedDate}</span>
+          <div class="terminal__line">
+            <span class="terminal__flag">&nbsp;&nbsp;date:</span>
+            <span class="terminal__val">{entry.formattedDate}</span>
           </div>
-          <div class="jarvis-body-line">
-            <div class="jarvis-body" set:html={entry.bodyHtml}></div>
+          <div class="entry-body-wrap">
+            <div class="entry-body" set:html={entry.bodyHtml}></div>
           </div>
         </>
       ))}
 
-      <div class="now-line spacer"></div>
-      <div class="now-line">
-        <span class="now-comment"># {entries.length} {entries.length === 1 ? 'entry' : 'entries'} · last updated {lastUpdated}</span>
+      <div class="terminal__line terminal__line--spacer"></div>
+      <div class="terminal__line">
+        <span class="terminal__comment"># {entries.length} {entries.length === 1 ? 'entry' : 'entries'} · last updated {lastUpdated}</span>
       </div>
-      <div class="now-line">
-        <span class="now-prompt">$</span>
-        <span class="now-cursor"></span>
+      <div class="terminal__line">
+        <span class="terminal__prompt">$</span>
+        <span class="terminal__cursor"></span>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  #jarvis {
-    min-height: auto;
-  }
+  #jarvis { min-height: auto; }
 
-  .now-dot-green {
-    color: #28c840;
+  .entry-dot {
+    color: var(--status-live);
     font-size: 0.7em;
     margin-right: 0.4rem;
     flex-shrink: 0;
   }
 
-  .now-comment {
-    color: var(--dim);
-    font-size: 0.85rem;
-    opacity: 0.6;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  }
-
-  .jarvis-body-line {
+  .entry-body-wrap {
     padding-left: 1.4rem;
-    margin-top: 0.4rem;
-    margin-bottom: 0.4rem;
+    margin: 0.4rem 0;
   }
 
-  .jarvis-body {
+  .entry-body {
     color: var(--dim);
     line-height: 1.7;
     font-size: 0.95rem;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-family: var(--font-mono);
   }
 
-  .jarvis-body :global(p) {
-    margin: 0;
-  }
+  .entry-body :global(p) { margin: 0; }
 
-  .jarvis-body :global(p + p) {
+  .entry-body :global(p + p) {
     margin-top: 0.9rem;
     padding-top: 0.9rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--line);
   }
 
-  .jarvis-body :global(a) {
-    color: var(--text);
-    text-decoration-color: rgba(255, 255, 255, 0.25);
+  .entry-body :global(a) {
+    color: var(--ivory);
+    text-decoration-color: rgba(255,255,255,0.25);
     text-underline-offset: 2px;
   }
+  .entry-body :global(a:hover) { color: var(--signal); }
 </style>

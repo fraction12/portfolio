@@ -1,5 +1,8 @@
 ---
-interface Props { tone?: 'default' | 'amber'; }
-const { tone = 'default' } = Astro.props;
+type Variant = 'signal' | 'dim' | 'agent';
+interface Props { variant?: Variant; /** @deprecated use variant */ tone?: 'default' | 'amber' }
+const { variant, tone } = Astro.props;
+const v: Variant = variant
+  ?? (tone === 'amber' ? 'signal' : tone === 'default' ? 'signal' : 'signal');
 ---
-<span class:list={['pill', tone === 'amber' && 'amber']}><slot /></span>
+<span class:list={['pill', `pill--${v}`]}><slot /></span>

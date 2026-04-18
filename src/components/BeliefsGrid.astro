@@ -9,19 +9,30 @@ const beliefs = [
 
 <div class="b-grid">
   {beliefs.map(b => (
-    <div class="b-cell">
-      <div class="bn">Rule · {b.n}</div>
-      <div class="bt" set:html={b.text.replace(/\*(.+?)\*/g, '<em>$1</em>')}></div>
-    </div>
+    <article class="card card--belief">
+      <h4>// Rule · {b.n}</h4>
+      <p set:html={b.text.replace(/\*(.+?)\*/g, '<em>$1</em>')}></p>
+    </article>
   ))}
 </div>
 
 <style>
-  .b-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line-2); border: 1px solid var(--line-2); }
-  .b-cell { background: var(--ink-1); padding: 24px 22px 26px; min-height: 170px; }
-  .bn { font-family: var(--mono); font-weight: 500; font-size: 11.5px; color: var(--signal); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
-  .bt { font-family: var(--display); font-weight: 400; font-size: 1.25rem; line-height: 1.4; color: var(--ivory); font-variation-settings: "opsz" 144; }
-  .bt em { font-style: italic; color: var(--signal); font-weight: 500; }
+  .b-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .card--belief :global(h4) { color: var(--signal); }
+  .card--belief :global(p) {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    line-height: 1.45;
+  }
+  .card--belief :global(p em) {
+    font-style: italic;
+    color: var(--signal);
+    font-weight: 500;
+  }
   @media (max-width: 1080px) { .b-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .b-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px)  { .b-grid { grid-template-columns: 1fr; } }
 </style>

@@ -1,4 +1,6 @@
 ---
+import Card from './Card.astro';
+
 const FEED_URL = 'https://dushyantg.substack.com/feed';
 
 interface FeedPost {
@@ -99,16 +101,14 @@ const visiblePosts = typeof limit === 'number' ? posts.slice(0, limit) : posts;
   {visiblePosts.length > 0 ? (
     <div class="writing-list">
       {visiblePosts.map((post, index) => (
-        <article class="writing-item reveal" style={`--reveal-delay: ${(index + 1) * 0.05}s;`}>
-          <div>
-            <h3>{post.title}</h3>
-            <p class="date">{post.dateLabel} · {post.readTimeMinutes} min read</p>
-            <p class="writing-description">{post.description}</p>
-            <a class="writing-read-link" href={post.link} target="_blank" rel="noopener noreferrer">
-              Read on Substack →
-            </a>
-          </div>
-        </article>
+        <Card variant="writing" className="reveal" style={`--reveal-delay: ${(index + 1) * 0.05}s;`}>
+          <h3>{post.title}</h3>
+          <p class="date">{post.dateLabel} · {post.readTimeMinutes} min read</p>
+          <p class="desc">{post.description}</p>
+          <a class="read-link" href={post.link} target="_blank" rel="noopener noreferrer">
+            Read on Substack →
+          </a>
+        </Card>
       ))}
     </div>
   ) : (
@@ -118,3 +118,20 @@ const visiblePosts = typeof limit === 'number' ? posts.slice(0, limit) : posts;
     </div>
   )}
 </div>
+
+<style>
+  .writing-list { display: flex; flex-direction: column; gap: 0.8rem; }
+  .writing-empty {
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    color: var(--dim);
+  }
+  .writing-empty a {
+    display: inline-block;
+    margin-top: 0.7rem;
+    color: var(--signal);
+    text-decoration: none;
+  }
+  .writing-empty a:hover { text-decoration: underline; text-underline-offset: 3px; }
+</style>

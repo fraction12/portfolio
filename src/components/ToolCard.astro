@@ -57,7 +57,7 @@ const isDev = artifact.status === 'dev';
     margin-bottom: 6px;
   }
   .tool-name { font-size: 17px; font-weight: 700; color: var(--ivory); }
-  .tool-meta { font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
+  .tool-meta { font-family: var(--font-mono); font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
   .tool-desc {
     color: var(--ivory-2);
     font-size: 15px; line-height: 1.6;
@@ -65,7 +65,7 @@ const isDev = artifact.status === 'dev';
     margin: 0 0 12px;
   }
   .tool-install {
-    font-family: var(--mono);
+    font-family: var(--font-mono);
     font-size: 13.5px;
     background: var(--ink-1);
     border: 1px solid var(--line);
@@ -76,16 +76,16 @@ const isDev = artifact.status === 'dev';
     white-space: nowrap;
   }
   .tool-install .cmt { color: var(--dim); font-style: italic; }
-  .tool-install .prompt { color: var(--link); margin-right: 6px; user-select: none; }
+  .tool-install .prompt { color: var(--signal); margin-right: 6px; user-select: none; }
   .tool.dev .tool-install { border-style: dashed; }
   .tool-foot {
     display: flex; gap: 16px; flex-wrap: wrap;
-    font-family: var(--mono); font-size: 12.5px; color: var(--dim);
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--dim);
   }
-  .tool-foot a { color: var(--link); text-decoration: none; }
+  .tool-foot a { color: var(--signal); text-decoration: none; }
   .tool-foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .tool-foot .sep { color: var(--dim-2); }
-  .tool-foot .metric { color: var(--link); }
+  .tool-foot .metric { color: var(--signal); }
   .tool-foot .metric.ph { color: var(--dim-2); font-style: italic; }
 
   @media (max-width: 640px) {

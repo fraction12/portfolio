@@ -1,0 +1,178 @@
+/* ============================================================
+   CARD — spec §3.6
+   One base + variants: --project, --writing, --belief, --hub, --spotlight
+   ============================================================ */
+.card {
+  position: relative;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: border-color var(--motion-card) ease, transform var(--motion-card) ease, box-shadow var(--motion-card) ease;
+  color: inherit;
+  text-decoration: none;
+}
+.card:hover {
+  border-color: var(--signal-glow);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ---- Project card ---- */
+.card--project {
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+.card--project h3 {
+  font-family: var(--font-display);
+  font-size: var(--type-h3-size);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.card--project .desc {
+  color: var(--ivory-2);
+  font-size: var(--type-small-size);
+  margin-bottom: 1rem;
+  line-height: 1.55;
+  flex: 1;
+}
+.card--project .pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+.card--project .stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--type-mono-xs-size);
+  color: var(--dim);
+}
+.card--project .stats a { color: var(--signal); text-decoration: none; }
+.card--project .stats a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- Writing card ---- */
+.card--writing {
+  border-radius: var(--radius-md);
+  padding: 1.3rem 1.5rem;
+}
+.card--writing h3 {
+  font-family: var(--font-display);
+  font-size: var(--type-h4-size);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.card--writing .date {
+  font-family: var(--font-mono);
+  color: var(--dim);
+  font-size: 0.82rem;
+  margin-bottom: 0.55rem;
+}
+.card--writing .desc {
+  color: var(--ivory-2);
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+.card--writing .read-link {
+  color: var(--ivory);
+  text-decoration: none;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--line-3);
+  padding-bottom: 0.08rem;
+}
+.card--writing .read-link:hover { border-color: var(--ivory); }
+
+/* ---- Hub card (mouse spotlight optional via JS setting --mx/--my) ---- */
+.card--hub {
+  border-radius: var(--radius-md);
+  padding: 1rem 1.1rem;
+  overflow: hidden;
+}
+.card--hub::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), var(--signal-dim), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--motion-card) ease;
+  pointer-events: none;
+}
+.card--hub:hover::before { opacity: 1; }
+.card--hub .icon {
+  font-family: var(--font-mono);
+  color: var(--ivory);
+  font-size: 1.15rem;
+}
+.card--hub h3 {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.card--hub p {
+  margin-top: 0.2rem;
+  color: var(--dim);
+  font-size: 0.88rem;
+}
+
+/* ---- Belief card ---- */
+.card--belief {
+  border-radius: var(--radius-md);
+  padding: 1.2rem 1.3rem;
+  background: rgba(255,255,255,0.02);
+}
+.card--belief h4 {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0;
+  color: var(--ivory);
+}
+.card--belief p {
+  color: var(--ivory-2);
+  font-size: 0.92rem;
+}
+
+/* ---- Spotlight card (ONE per page; only variant that may use gradient) ---- */
+.card--spotlight {
+  border-radius: var(--radius-xl);
+  border-color: var(--signal-glow);
+  background: linear-gradient(145deg, var(--signal-dim), rgba(255,255,255,0.02));
+  padding: 1.4rem;
+}
+.card--spotlight .kicker {
+  font-family: var(--font-mono);
+  font-size: var(--type-mono-sm-size);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.5rem;
+}
+.card--spotlight .title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.6vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.card--spotlight .copy {
+  color: var(--ivory-2);
+  max-width: 64ch;
+  margin-bottom: 1rem;
+}
+.card--spotlight .link {
+  color: var(--ivory);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-3);
+  padding-bottom: 0.08rem;
+}

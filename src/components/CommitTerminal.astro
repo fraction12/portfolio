@@ -68,7 +68,7 @@ function splitScope(subject: string): { scope: string; rest: string } {
   .term {
     background: var(--ink-1);
     border: 1px solid var(--line-2);
-    font-family: var(--mono);
+    font-family: var(--font-mono);
     font-size: 12.5px;
     line-height: 1.7;
     overflow: hidden;
@@ -85,7 +85,7 @@ function splitScope(subject: string): { scope: string; rest: string } {
   .term-head .live { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); letter-spacing: 0.08em; }
   .term-head .live .pulse {
     width: 7px; height: 7px; border-radius: 50%;
-    background: var(--agent);
+    background: var(--status-agent);
     box-shadow: 0 0 8px rgba(125,226,163,0.6);
     animation: term-pulse 1.9s ease-in-out infinite;
   }
@@ -99,8 +99,8 @@ function splitScope(subject: string): { scope: string; rest: string } {
     color: var(--dim);
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .term-subhead b { color: var(--agent); font-weight: 500; }
-  .term-subhead b.director { color: var(--link); }
+  .term-subhead b { color: var(--status-agent); font-weight: 500; }
+  .term-subhead b.director { color: var(--signal); }
   .term-subhead .sep { color: var(--dim-2); margin: 0 4px; }
 
   .term-body {
@@ -119,15 +119,15 @@ function splitScope(subject: string): { scope: string; rest: string } {
     white-space: nowrap;
     padding-top: 1px;
   }
-  .commit .sha { color: var(--link); }
+  .commit .sha { color: var(--signal); }
   .commit .age { color: var(--dim); margin-left: 4px; }
   .commit .body { display: flex; flex-direction: column; gap: 2px; }
   .commit .author { font-size: 11px; display: inline-flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-  .commit .author .agent { color: var(--agent); font-weight: 500; }
-  .commit .author .director { color: var(--link); }
+  .commit .author .agent { color: var(--status-agent); font-weight: 500; }
+  .commit .author .director { color: var(--signal); }
   .commit .author .sep { color: var(--dim-2); }
   .commit .subject { color: var(--ivory); font-size: 12.5px; }
-  .commit .subject .scope { color: var(--link); }
+  .commit .subject .scope { color: var(--signal); }
 
   .term-foot {
     padding: 10px 18px 14px;
@@ -137,17 +137,17 @@ function splitScope(subject: string): { scope: string; rest: string } {
     display: flex; justify-content: space-between; align-items: center;
   }
   .term-foot .cursor-line { display: inline-flex; align-items: center; }
-  .term-foot .prompt { color: var(--link); margin-right: 6px; }
+  .term-foot .prompt { color: var(--signal); margin-right: 6px; }
   .term-foot .cursor {
     display: inline-block;
     width: 7px; height: 12px;
-    background: var(--agent);
+    background: var(--status-agent);
     margin-left: 2px;
     animation: term-blink 1.05s step-end infinite;
     vertical-align: middle;
   }
   @keyframes term-blink { 50% { opacity: 0 } }
-  .term-foot .more a { color: var(--link); }
+  .term-foot .more a { color: var(--signal); }
 
   @media (max-width: 640px) {
     .commit { grid-template-columns: 1fr; gap: 4px; }

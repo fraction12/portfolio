@@ -4,12 +4,12 @@ const { className = '' } = Astro.props;
 ---
 
 <section class:list={["newsletter", className]} aria-label="Newsletter signup">
-  <p class="newsletter-value">
+  <p class="newsletter__value">
     Get practical notes on building with AI agents, shipping fast, and learning in public.
   </p>
 
   <form
-    class="newsletter-form"
+    class="newsletter__form"
     action="https://dushyantg.substack.com/api/v1/free"
     method="post"
     target="_blank"
@@ -18,6 +18,7 @@ const { className = '' } = Astro.props;
     <label class="sr-only" for="newsletter-email">Email address</label>
     <input
       id="newsletter-email"
+      class="field"
       name="email"
       type="email"
       autocomplete="email"

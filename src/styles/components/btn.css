@@ -1,0 +1,61 @@
+/* ============================================================
+   BUTTON — spec §3.1
+   Variants: .btn--primary (default), .btn--ghost, .btn--link
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--signal);
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.62rem 0.95rem;
+  font-family: var(--font-display);
+  font-size: var(--type-small-size);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter var(--motion-fast) ease, background var(--motion-fast) ease, border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  background: var(--line-2);
+  color: var(--dim-2);
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}
+
+.btn--primary {
+  background: var(--signal);
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ivory);
+  border-color: var(--line-3);
+}
+.btn--ghost:hover {
+  filter: none;
+  border-color: var(--signal-glow);
+  color: var(--ivory);
+}
+
+.btn--link {
+  background: transparent;
+  color: var(--signal);
+  border-color: transparent;
+  padding: 0;
+  font-weight: 500;
+}
+.btn--link:hover {
+  filter: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

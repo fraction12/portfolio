@@ -1,9 +1,16 @@
 ---
-interface Props { href?: string; type?: 'button' | 'submit'; className?: string; }
-const { href, type = 'button', className = '' } = Astro.props;
+type Variant = 'primary' | 'ghost' | 'link';
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: Variant;
+  className?: string;
+}
+const { href, type = 'button', variant = 'primary', className = '' } = Astro.props;
+const classes = ['btn', `btn--${variant}`, className].filter(Boolean).join(' ');
 ---
 {href ? (
-  <a href={href} class:list={['btn', className]}><slot /></a>
+  <a href={href} class={classes}><slot /></a>
 ) : (
-  <button type={type} class:list={['btn', className]}><slot /></button>
+  <button type={type} class={classes}><slot /></button>
 )}

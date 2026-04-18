@@ -10,35 +10,13 @@ const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = 
 ];
 ---
 
-<nav class="topbar">
-  <div class="inner">
-    <a href="/" class="mark" aria-label="Home">Dushyant Garg</a>
-    <div class="links">
+<nav class="top-nav">
+  <div class="top-nav__inner">
+    <a href="/" class="top-nav__mark" aria-label="Home">Dushyant Garg</a>
+    <div class="top-nav__links">
       {navLinks.map(link => (
-        <a href={link.href} class={current === link.key ? 'active' : ''}>{link.label}</a>
+        <a href={link.href} class:list={['top-nav__link', { active: current === link.key }]}>{link.label}</a>
       ))}
     </div>
   </div>
 </nav>
-
-<style>
-  .topbar { border-bottom: 1px solid var(--line); background: var(--ink); }
-  .inner {
-    max-width: var(--max-w); margin: 0 auto;
-    padding: 18px 24px;
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 14px;
-  }
-  .mark { color: var(--ivory); font-weight: 700; text-decoration: none; }
-  .links { display: flex; gap: 20px; }
-  .links a {
-    color: var(--ivory-2); font-weight: 400; text-decoration: none;
-    transition: color .2s;
-  }
-  .links a:hover, .links a.active { color: var(--link); }
-
-  @media (max-width: 640px) {
-    .inner { flex-direction: column; gap: 12px; padding: 14px 22px; align-items: flex-start; }
-    .links { gap: 14px; flex-wrap: wrap; }
-  }
-</style>

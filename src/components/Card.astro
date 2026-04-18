@@ -1,7 +1,19 @@
 ---
-interface Props { className?: string; style?: string; }
-const { className = '', style = '' } = Astro.props;
+type Variant = 'project' | 'writing' | 'belief' | 'hub' | 'spotlight';
+interface Props {
+  variant?: Variant;
+  as?: 'article' | 'a' | 'div';
+  href?: string;
+  className?: string;
+  style?: string;
+}
+const { variant, as = 'article', href, className = '', style = '' } = Astro.props;
+const classes = ['card', variant && `card--${variant}`, className].filter(Boolean).join(' ');
 ---
-<article class:list={['card', className]} style={style}>
-  <slot />
-</article>
+{as === 'a' || href ? (
+  <a class={classes} href={href} style={style}><slot /></a>
+) : as === 'div' ? (
+  <div class={classes} style={style}><slot /></div>
+) : (
+  <article class={classes} style={style}><slot /></article>
+)}

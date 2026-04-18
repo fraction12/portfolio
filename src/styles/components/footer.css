@@ -1,0 +1,38 @@
+/* ============================================================
+   FOOTER — spec §3.10
+   ============================================================ */
+.site-footer {
+  border-top: 1px solid var(--line-2);
+  margin-top: 40px;
+  position: relative;
+  z-index: var(--z-content);
+  color: var(--dim);
+}
+.site-footer__inner {
+  max-width: var(--layout-max-w);
+  margin: 0 auto;
+  padding: 24px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.site-footer__inner a {
+  color: var(--dim);
+  text-decoration: none;
+  transition: color var(--motion-fast) ease;
+}
+.site-footer__inner a:hover { color: var(--signal); }
+.site-footer__name { color: var(--ivory); font-weight: 600; }
+.site-footer__right a { margin-left: 14px; }
+
+@media (max-width: 640px) {
+  .site-footer__inner {
+    flex-direction: column;
+    padding: 20px 22px;
+    gap: 8px;
+  }
+  .site-footer__right a { margin-left: 0; margin-right: 14px; }
+}
