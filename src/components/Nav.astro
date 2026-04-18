@@ -1,11 +1,11 @@
 ---
-interface Props { current?: 'home' | 'tools' | 'writing' | 'log' | 'beliefs' | 'jarvis' | 'colophon' | 'projects' | 'stream' | 'artifacts' }
+interface Props { current?: 'home' | 'tools' | 'writing' | 'jarvis' | 'beliefs' | 'colophon' }
 const { current = 'home' } = Astro.props;
 
 const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
-  { href: '/#tools', label: 'Tools', key: 'tools' },
-  { href: '/#writing', label: 'Writing', key: 'writing' },
-  { href: '/#log', label: 'Log', key: 'log' },
+  { href: '/tools', label: 'Tools', key: 'tools' },
+  { href: '/writing', label: 'Writing', key: 'writing' },
+  { href: '/jarvis', label: 'Jarvis', key: 'jarvis' },
   { href: '/colophon', label: 'Colophon', key: 'colophon' }
 ];
 ---

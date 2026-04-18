@@ -13,11 +13,7 @@ import LogList from '../components/LogList.astro';
 import SectionHead from '../components/SectionHead.astro';
 import {
   artifacts,
-  CATEGORY_ORDER,
-  CATEGORY_LABELS,
-  CATEGORY_BLURBS,
   type Artifact,
-  type ArtifactCategory
 } from '../config/packages';
 import { loadSignalData } from '../lib/data';
 
@@ -40,16 +36,18 @@ function metricFor(a: Artifact): { metric: string | null; placeholder: string } 
   return { metric: null, placeholder: '' };
 }
 
-// Build byCategory dynamically so adding a category in config propagates here.
-const byCategory = Object.fromEntries(
-  CATEGORY_ORDER.map(k => [k, [] as Artifact[]])
-) as Record<ArtifactCategory, Artifact[]>;
-for (const a of artifacts) byCategory[a.category].push(a);
-for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.order);
-
 // Spotlight: hand-pick the artifact that leads the page. Potato v3 is the
 // most distinctive positioning (terminal cockpit for coding agents).
 const featured = artifacts.find(a => a.slug === 'potato') ?? artifacts[0];
+
+// Three hand-picked tools that tell a story without repeating the spotlight:
+// state that agents carry · how multiple agents coordinate · how humans watch them.
+const homeFeaturedSlugs = ['agentsense', 'agentplan', 'clawk'];
+const homeFeatured = homeFeaturedSlugs
+  .map(s => artifacts.find(a => a.slug === s))
+  .filter((a): a is Artifact => Boolean(a));
+
+const totalTools = artifacts.length;
 
 // Latest commit for the compact "last shipped" strip below the hero.
 const latestCommit = data.commits[0];
@@ -76,40 +74,18 @@ const latestCommit = data.commits[0];
     </section>
 
     <section id="tools">
-      <SectionHead num="01" name="Tools *// open-source*" meta="Agent tooling, CLIs, and infrastructure I ship and maintain." />
-      {CATEGORY_ORDER.map(cat => (
-        byCategory[cat].length > 0 && (
-          <div class="tool-group" id={`tools-${cat}`} data-tool-group>
-            <button
-              type="button"
-              class="tool-group__head"
-              aria-expanded="false"
-              aria-controls={`tool-group-body-${cat}`}
-              data-tool-group-toggle
-            >
-              <span class="tool-group__head-main">
-                <span class="tool-group__chev" aria-hidden="true">›</span>
-                <h3>{CATEGORY_LABELS[cat]}</h3>
-                <span class="tool-group__count" aria-hidden="true">{byCategory[cat].length}</span>
-              </span>
-              <p class="tool-group__blurb">{CATEGORY_BLURBS[cat]}</p>
-            </button>
-            <div
-              class="tool-group__body"
-              id={`tool-group-body-${cat}`}
-              role="region"
-              aria-labelledby={`tools-${cat}`}
-            >
-              <div class="tool-group__body-inner">
-                {byCategory[cat].map(a => {
-                  const { metric, placeholder } = metricFor(a);
-                  return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-                })}
-              </div>
-            </div>
-          </div>
-        )
-      ))}
+      <SectionHead
+        num="01"
+        name="Tools *// three I'm proud of*"
+        meta="A slice from the toolkit — full browser on /tools."
+      />
+      <div class="home-tools-list">
+        {homeFeatured.map(a => {
+          const { metric, placeholder } = metricFor(a);
+          return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+        })}
+      </div>
+      <a class="more-link" href="/tools">See all {totalTools} tools →</a>
     </section>
 
     <section id="writing">
@@ -142,6 +118,11 @@ const latestCommit = data.commits[0];
   .sd-spotlight {
     padding-top: 20px;
     padding-bottom: 12px;
+  }
+  .home-tools-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
   .tool-group { margin-bottom: 8px; }
   .tool-group + .tool-group { margin-top: 12px; }
