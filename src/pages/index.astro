@@ -35,7 +35,7 @@ function metricFor(a: Artifact): { metric: string | null; placeholder: string } 
 
 const featured = artifacts.find(a => a.slug === 'potato') ?? artifacts[0];
 
-const homeFeaturedSlugs = ['agentsense', 'agentplan', 'clawk'];
+const homeFeaturedSlugs = ['tradespec', 'clawk', 'potato'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
   .filter((a): a is Artifact => Boolean(a));
