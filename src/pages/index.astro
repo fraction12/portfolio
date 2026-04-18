@@ -60,15 +60,34 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
       <SectionHead num="01" name="Tools *// open-source*" meta="Agent tooling, CLIs, and infrastructure I ship and maintain." />
       {CATEGORY_ORDER.map(cat => (
         byCategory[cat].length > 0 && (
-          <div class="tool-group" id={`tools-${cat}`}>
-            <div class="tool-group-head">
-              <h3>{CATEGORY_LABELS[cat]}</h3>
-              <p class="tool-group-blurb">{CATEGORY_BLURBS[cat]}</p>
+          <div class="tool-group" id={`tools-${cat}`} data-tool-group>
+            <button
+              type="button"
+              class="tool-group__head"
+              aria-expanded="false"
+              aria-controls={`tool-group-body-${cat}`}
+              data-tool-group-toggle
+            >
+              <span class="tool-group__head-main">
+                <span class="tool-group__chev" aria-hidden="true">›</span>
+                <h3>{CATEGORY_LABELS[cat]}</h3>
+                <span class="tool-group__count" aria-hidden="true">{byCategory[cat].length}</span>
+              </span>
+              <p class="tool-group__blurb">{CATEGORY_BLURBS[cat]}</p>
+            </button>
+            <div
+              class="tool-group__body"
+              id={`tool-group-body-${cat}`}
+              role="region"
+              aria-labelledby={`tools-${cat}`}
+            >
+              <div class="tool-group__body-inner">
+                {byCategory[cat].map(a => {
+                  const { metric, placeholder } = metricFor(a);
+                  return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+                })}
+              </div>
             </div>
-            {byCategory[cat].map(a => {
-              const { metric, placeholder } = metricFor(a);
-              return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-            })}
           </div>
         )
       ))}
@@ -98,24 +117,88 @@ for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.ord
     padding: 36px 0;
   }
   .tool-group { margin-bottom: 8px; }
-  .tool-group + .tool-group { margin-top: 36px; }
-  .tool-group-head {
-    margin: 0 0 14px;
-    padding-bottom: 10px;
+  .tool-group + .tool-group { margin-top: 12px; }
+
+  .tool-group__head {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 0;
+    padding: 14px 0 12px;
+    border: 0;
     border-bottom: 1px solid var(--line-2);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: border-color var(--motion-fast) ease;
   }
-  .tool-group-head h3 {
+  .tool-group__head:hover { border-bottom-color: var(--signal-glow); }
+  .tool-group__head:hover h3 { color: var(--signal); }
+
+  .tool-group__head-main {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .tool-group__chev {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--signal);
+    display: inline-block;
+    width: 14px;
+    transform: rotate(0deg);
+    transition: transform var(--motion-card) ease, color var(--motion-fast) ease;
+  }
+  .tool-group__head h3 {
     font-family: var(--font-display);
     font-size: 16px; font-weight: 700;
     color: var(--ivory);
-    margin: 0 0 4px;
+    margin: 0;
     letter-spacing: -0.005em;
     text-transform: none;
+    transition: color var(--motion-fast) ease;
   }
-  .tool-group-blurb {
+  .tool-group__count {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono-xs-size);
+    color: var(--dim);
+    margin-left: auto;
+    padding: 1px 7px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-pill);
+    line-height: 1.4;
+  }
+  .tool-group__blurb {
     font-size: 13.5px; color: var(--dim);
-    margin: 0; max-width: 62ch;
+    margin: 6px 0 0 24px;
+    max-width: 62ch;
     line-height: 1.5;
+  }
+
+  /* Expand/collapse via max-height — reliable across browsers. 2000px
+     is a generous cap that comfortably fits any tool-group body. */
+  .tool-group__body {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height var(--motion-card) ease, opacity var(--motion-card) ease;
+  }
+  .tool-group[data-expanded="true"] .tool-group__body {
+    max-height: 2000px;
+    opacity: 1;
+  }
+  .tool-group[data-expanded="true"] .tool-group__chev {
+    transform: rotate(90deg);
+  }
+  .tool-group[data-expanded="true"] .tool-group__head {
+    border-bottom-color: var(--signal-glow);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tool-group__body,
+    .tool-group__chev { transition: none; }
   }
   .more-link {
     display: inline-block; margin-top: 14px;
