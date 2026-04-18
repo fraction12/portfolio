@@ -77,8 +77,8 @@
   --radius-pill: 99px;
 
   /* ---- Layout ---- */
-  --layout-max-w:        1040px;
-  --layout-max-w-narrow: 780px;
+  --layout-max-w:        100%;
+  --layout-max-w-narrow: 100%;
   --layout-nav-h:        60px;
 
   /* ---- Shadows ---- */
