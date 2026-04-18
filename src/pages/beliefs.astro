@@ -2,8 +2,9 @@
 export const prerender = true;
 
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SectionHead from '../components/SectionHead.astro';
-import BeliefsGrid from '../components/BeliefsGrid.astro';
+import { BELIEFS } from '../data/beliefs';
 ---
 
 <Layout
@@ -11,13 +12,62 @@ import BeliefsGrid from '../components/BeliefsGrid.astro';
   title="Beliefs — Dushyant Garg"
   description="The four operating rules Dushyant Garg tests nightly — every agent in the stack reads them before it acts."
 >
-  <main class="beliefs-main">
-    <SectionHead num="§" name="Beliefs" meta="four rules · tested nightly · every agent reads them" />
-    <BeliefsGrid />
+  <main class="page-main-split">
+
+    <div class="page-split">
+      <PageHeader
+        kicker="Operating rules"
+        title="Beliefs *// tested nightly*"
+        lede="Four principles I test against every decision — the rules my agents read before they act. Short enough to remember, specific enough to fail."
+      />
+      <aside class="page-aside">
+        <div class="page-aside__stat"><b>{BELIEFS.length}</b><span class="label">rules</span></div>
+        <div class="page-aside__stat"><b>1/day</b><span class="label">reviewed · by jarvis</span></div>
+      </aside>
+    </div>
+
+    {BELIEFS.map((b, i) => (
+      <section class="section-split">
+        <SectionHead
+          num={b.n}
+          name={`Rule *// ${b.n}*`}
+          meta={i === 0 ? 'Read them top to bottom, or skip to the one you disagree with.' : ''}
+        />
+        <div class="section-split__content">
+          <article class="card card--belief belief-expanded">
+            <p set:html={b.text.replace(/\*(.+?)\*/g, '<em>$1</em>')}></p>
+          </article>
+        </div>
+      </section>
+    ))}
+
   </main>
 </Layout>
 
 <style>
-  .beliefs-main { max-width: var(--layout-max-w); margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
-  @media (max-width: 640px) { .beliefs-main { padding: 0 22px; } }
+  .page-main-split {
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: var(--z-content);
+  }
+
+  .belief-expanded :global(p) {
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ivory);
+    max-width: 60ch;
+    margin: 0;
+  }
+  .belief-expanded :global(p em) {
+    font-style: italic;
+    color: var(--signal);
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .page-main-split { padding: 0 22px; }
+    .belief-expanded :global(p) { font-size: 18px; }
+  }
 </style>

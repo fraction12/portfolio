@@ -90,6 +90,80 @@ body::before {
   padding: 48px 0 16px;
 }
 
+/* Page header: kicker + title + lede on the left, meta / status /
+   quick-info on the right. First beat of every first-class page. */
+.page-split {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 56px;
+  align-items: end;
+  padding: 64px 0 24px;
+  border-bottom: 1px solid var(--line);
+}
+.page-header__kicker {
+  font-family: var(--font-mono);
+  font-size: var(--type-mono-sm-size);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 18px;
+}
+.page-header__title {
+  font-family: var(--font-display);
+  font-size: var(--type-page-title-size);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ivory);
+  margin-bottom: 16px;
+}
+.page-header__title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--signal);
+}
+.page-header__lede {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ivory-2);
+  max-width: 56ch;
+}
+.page-header__lede em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--signal);
+}
+.page-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--dim);
+  text-align: right;
+}
+.page-aside__stat {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  align-items: baseline;
+}
+.page-aside__stat b {
+  color: var(--ivory);
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+.page-aside__stat .label {
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+
 @media (max-width: 960px) {
   .section-split {
     grid-template-columns: 1fr;
@@ -104,6 +178,13 @@ body::before {
     gap: 40px;
     padding: 32px 0 8px;
   }
+  .page-split {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 40px 0 20px;
+  }
+  .page-aside { text-align: left; }
+  .page-aside__stat { justify-content: flex-start; }
 }
 
 .container {

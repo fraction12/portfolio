@@ -5,26 +5,93 @@
 export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SectionHead from '../components/SectionHead.astro';
 import Writing from '../components/Writing.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
-import Section from '../components/Section.astro';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 ---
+
 <Layout
   current="writing"
   title="Writing — Dushyant Garg"
   description="Essays by Dushyant Garg on AI agents, product building, and shipping fast — published weekly on Substack, mirrored here within minutes."
 >
-  <div class="container">
-    <Section className="page-intro section-tight">
-      <h1 class="page-title reveal">Writing<span class="dot">.</span></h1>
-    </Section>
-    <Section>
-      <Writing />
-    </Section>
-    <Section className="section-tight">
-      <NewsletterSignup className="reveal" />
-    </Section>
-  </div>
+  <main class="page-main-split">
+
+    <div class="page-split">
+      <PageHeader
+        kicker="Essays · weekly"
+        title="Writing *// from the stack*"
+        lede="Practical notes on building with AI agents — what's working, what broke, what I'd undo. Published on Substack; mirrored here within minutes."
+      />
+      <aside class="page-aside">
+        <div class="status-pill">
+          <span class="pulse" aria-hidden="true"></span>
+          <span>subscribe · weekly</span>
+        </div>
+        <div class="page-aside__stat"><b>Open</b><span class="label">to anyone · no paywall</span></div>
+      </aside>
+    </div>
+
+    <section class="section-split">
+      <SectionHead
+        num="01"
+        name="Essays *// recent*"
+        meta="Pulled live from the Substack feed. Click through to read on Substack."
+      />
+      <div class="section-split__content">
+        <Writing />
+      </div>
+    </section>
+
+    <section class="section-split">
+      <SectionHead
+        num="02"
+        name="Subscribe *// practical notes*"
+        meta="One email per essay. Unsubscribe any time."
+      />
+      <div class="section-split__content">
+        <NewsletterSignup />
+      </div>
+    </section>
+
+  </main>
 </Layout>
+
+<style>
+  .page-main-split {
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: var(--z-content);
+  }
+  .status-pill {
+    display: inline-flex;
+    align-self: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-pill);
+    background: var(--signal-dim);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--signal);
+  }
+  .status-pill .pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 8px var(--signal-glow);
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  @media (max-width: 960px) {
+    .status-pill { align-self: flex-start; }
+  }
+  @media (max-width: 640px) {
+    .page-main-split { padding: 0 22px; }
+  }
+</style>

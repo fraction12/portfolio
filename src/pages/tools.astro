@@ -3,6 +3,7 @@
 export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ToolCard from '../components/ToolCard.astro';
 import {
@@ -41,6 +42,8 @@ for (const a of artifacts) byCategory[a.category].push(a);
 for (const key of CATEGORY_ORDER) byCategory[key].sort((a, b) => a.order - b.order);
 
 const totalCount = artifacts.length;
+const liveCount = artifacts.filter(a => a.status === 'live').length;
+const catCount = CATEGORY_ORDER.filter(cat => byCategory[cat].length > 0).length;
 ---
 
 <Layout
@@ -48,69 +51,75 @@ const totalCount = artifacts.length;
   title="Tools — Dushyant Garg"
   description="Open-source tooling for AI agents by Dushyant Garg — memory, libraries, orchestration, observability. Every artifact, every install command, every live metric."
 >
-  <main class="tools-main">
-    <SectionHead
-      num="§"
-      name="Tools *// open-source*"
-      meta={`${totalCount} artifacts · ${CATEGORY_ORDER.length} categories · live metrics`}
-    />
+  <main class="page-main-split">
 
-    <p class="intro">
-      Everything I ship for AI agents. Each group collapses — scroll down,
-      they expand as you reach them.
-    </p>
+    <div class="page-split">
+      <PageHeader
+        kicker="Toolkit · open-source"
+        title="Tools *// for agents*"
+        lede="Everything I ship for AI agents — memory, libraries, orchestration, the tools that let humans actually see what's running. Each group collapses; scroll down and they expand as you reach them."
+      />
+      <aside class="page-aside">
+        <div class="page-aside__stat"><b>{totalCount}</b><span class="label">artifacts</span></div>
+        <div class="page-aside__stat"><b>{catCount}</b><span class="label">categories</span></div>
+        <div class="page-aside__stat"><b>{liveCount}</b><span class="label">live · shipping</span></div>
+      </aside>
+    </div>
 
-    {CATEGORY_ORDER.map(cat => (
+    {CATEGORY_ORDER.map((cat, i) => (
       byCategory[cat].length > 0 && (
-        <div class="tool-group" id={`tools-${cat}`} data-tool-group>
-          <button
-            type="button"
-            class="tool-group__head"
-            aria-expanded="false"
-            aria-controls={`tool-group-body-${cat}`}
-            data-tool-group-toggle
-          >
-            <span class="tool-group__head-main">
-              <span class="tool-group__chev" aria-hidden="true">›</span>
-              <h3>{CATEGORY_LABELS[cat]}</h3>
-              <span class="tool-group__count" aria-hidden="true">{byCategory[cat].length}</span>
-            </span>
-            <p class="tool-group__blurb">{CATEGORY_BLURBS[cat]}</p>
-          </button>
-          <div
-            class="tool-group__body"
-            id={`tool-group-body-${cat}`}
-            role="region"
-            aria-labelledby={`tools-${cat}`}
-          >
-            <div class="tool-group__body-inner">
-              {byCategory[cat].map(a => {
-                const { metric, placeholder } = metricFor(a);
-                return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-              })}
+        <section class="section-split">
+          <SectionHead
+            num={String(i + 1).padStart(2, '0')}
+            name={`${CATEGORY_LABELS[cat]} *// ${byCategory[cat].length}*`}
+            meta={CATEGORY_BLURBS[cat]}
+          />
+          <div class="section-split__content">
+            <div class="tool-group" id={`tools-${cat}`} data-tool-group>
+              <button
+                type="button"
+                class="tool-group__head"
+                aria-expanded="false"
+                aria-controls={`tool-group-body-${cat}`}
+                data-tool-group-toggle
+              >
+                <span class="tool-group__head-main">
+                  <span class="tool-group__chev" aria-hidden="true">›</span>
+                  <h3>{CATEGORY_LABELS[cat]}</h3>
+                  <span class="tool-group__count" aria-hidden="true">{byCategory[cat].length}</span>
+                </span>
+                <p class="tool-group__blurb">Tap to {byCategory[cat].length === 1 ? 'see' : 'see all ' + byCategory[cat].length}.</p>
+              </button>
+              <div
+                class="tool-group__body"
+                id={`tool-group-body-${cat}`}
+                role="region"
+                aria-labelledby={`tools-${cat}`}
+              >
+                <div class="tool-group__body-inner">
+                  {byCategory[cat].map(a => {
+                    const { metric, placeholder } = metricFor(a);
+                    return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
+                  })}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       )
     ))}
   </main>
 </Layout>
 
 <style>
-  .tools-main {
-    max-width: var(--layout-max-w); margin: 0 auto;
-    padding: 0 24px;
-    position: relative; z-index: 2;
-  }
-  .intro {
-    color: var(--ivory-2);
-    margin: 24px 0 32px;
-    max-width: 62ch;
-    line-height: 1.6;
+  .page-main-split {
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: var(--z-content);
   }
 
-  .tool-group { margin-bottom: 8px; }
-  .tool-group + .tool-group { margin-top: 12px; }
+  .tool-group { margin: 0; }
 
   .tool-group__head {
     display: block;
@@ -164,10 +173,8 @@ const totalCount = artifacts.length;
     line-height: 1.4;
   }
   .tool-group__blurb {
-    font-size: 13.5px; color: var(--dim);
-    margin: 6px 0 0 24px;
-    max-width: 62ch;
-    line-height: 1.5;
+    font-size: 13px; color: var(--dim);
+    margin: 4px 0 0 24px;
   }
 
   .tool-group__body {
@@ -196,6 +203,6 @@ const totalCount = artifacts.length;
   }
 
   @media (max-width: 640px) {
-    .tools-main { padding: 0 22px; }
+    .page-main-split { padding: 0 22px; }
   }
 </style>

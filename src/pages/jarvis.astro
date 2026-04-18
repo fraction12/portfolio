@@ -2,8 +2,12 @@
 export const prerender = true;
 
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
 import SectionHead from '../components/SectionHead.astro';
 import JarvisLog from '../components/JarvisLog.astro';
+
+const rawEntries = import.meta.glob('../content/jarvis/*.md', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
+const entryCount = Object.keys(rawEntries).length;
 ---
 
 <Layout
@@ -11,98 +15,100 @@ import JarvisLog from '../components/JarvisLog.astro';
   title="Jarvis — Dushyant Garg"
   description="Jarvis is my always-on AI chief of operations — coordinating specialist agents, running cron shifts, and keeping context alive across projects. Dispatches included."
 >
-  <main class="jarvis-main">
-    <header class="jarvis-intro">
-      <p class="kicker">Agent · always-on</p>
-      <h1>Jarvis</h1>
-      <p class="lede">
-        My personal AI <em>chief of operations</em>, running full-time on a Mac Mini.
-        It coordinates specialist agents, keeps context alive across projects, and
-        executes my day before I open the laptop.
-      </p>
-    </header>
+  <main class="page-main-split">
 
-    <SectionHead
-      num="01"
-      name="What Jarvis *// does*"
-      meta="Briefings, coordination, cron shifts, reminders, home."
-    />
-    <ul class="duties">
-      <li><span class="glyph" aria-hidden="true">→</span> Generates morning briefings with priorities, blockers, and next actions.</li>
-      <li><span class="glyph" aria-hidden="true">→</span> Coordinates coding agents across repos and ships work in clean commit batches.</li>
-      <li><span class="glyph" aria-hidden="true">→</span> Runs scheduled cron shifts for maintenance, status checks, and reporting.</li>
-      <li><span class="glyph" aria-hidden="true">→</span> Manages reminders and follow-ups across personal and project workflows.</li>
-      <li><span class="glyph" aria-hidden="true">→</span> Executes smart-home routines from the same command layer.</li>
-    </ul>
+    <div class="page-split">
+      <PageHeader
+        kicker="Agent · always-on"
+        title="Jarvis"
+        lede="My personal AI *chief of operations*, running full-time on a Mac Mini. It coordinates specialist agents, keeps context alive across projects, and executes my day before I open the laptop."
+      />
+      <aside class="page-aside">
+        <div class="status-pill">
+          <span class="pulse" aria-hidden="true"></span>
+          <span>LIVE · cron loop healthy</span>
+        </div>
+        <div class="page-aside__stat"><b>{entryCount}</b><span class="label">dispatches archived</span></div>
+        <div class="page-aside__stat"><b>24/7</b><span class="label">shift · mac mini</span></div>
+      </aside>
+    </div>
 
-    <SectionHead
-      num="02"
-      name="Dispatches *// recent*"
-      meta="Jarvis's own log — what it noticed, what it shipped."
-    />
-    <JarvisLog />
+    <section class="section-split">
+      <SectionHead
+        num="01"
+        name="Duties *// what it does*"
+        meta="Briefings, coordination, cron shifts, reminders, home."
+      />
+      <div class="section-split__content">
+        <ul class="duties">
+          <li><span class="glyph" aria-hidden="true">→</span> Generates morning briefings with priorities, blockers, and next actions.</li>
+          <li><span class="glyph" aria-hidden="true">→</span> Coordinates coding agents across repos and ships work in clean commit batches.</li>
+          <li><span class="glyph" aria-hidden="true">→</span> Runs scheduled cron shifts for maintenance, status checks, and reporting.</li>
+          <li><span class="glyph" aria-hidden="true">→</span> Manages reminders and follow-ups across personal and project workflows.</li>
+          <li><span class="glyph" aria-hidden="true">→</span> Executes smart-home routines from the same command layer.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section-split">
+      <SectionHead
+        num="02"
+        name="Dispatches *// recent*"
+        meta="Jarvis's own log — what it noticed, what it shipped."
+      />
+      <div class="section-split__content">
+        <JarvisLog />
+      </div>
+    </section>
+
   </main>
 </Layout>
 
 <style>
-  .jarvis-main {
-    max-width: var(--layout-max-w);
+  .page-main-split {
     margin: 0 auto;
-    padding: 0 var(--gutter);
+    padding: 0 32px;
     position: relative;
     z-index: var(--z-content);
   }
 
-  .jarvis-intro {
-    padding: 72px 0 16px;
-    max-width: 64ch;
-  }
-  .jarvis-intro .kicker {
+  .status-pill {
+    display: inline-flex;
+    align-self: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-pill);
+    background: rgba(125,226,163,0.06);
     font-family: var(--font-mono);
-    font-size: var(--type-mono-sm-size);
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 20px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--status-agent);
   }
-  .jarvis-intro h1 {
-    font-family: var(--font-display);
-    font-size: var(--type-page-title-size);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-    color: var(--ivory);
-    margin-bottom: 20px;
-  }
-  .jarvis-intro .lede {
-    font-family: var(--font-display);
-    font-size: 19px;
-    line-height: 1.6;
-    color: var(--ivory-2);
-  }
-  .jarvis-intro .lede em {
-    font-style: italic;
-    font-weight: 500;
-    color: var(--signal);
+  .status-pill .pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--status-agent);
+    box-shadow: 0 0 8px rgba(125,226,163,0.6);
+    animation: statusPulse 2s ease-in-out infinite;
   }
 
   .duties {
     list-style: none;
     padding: 0;
-    margin: 0 0 16px;
+    margin: 0;
     display: grid;
-    gap: 10px;
-    max-width: 62ch;
+    gap: 12px;
   }
   .duties li {
     font-family: var(--font-display);
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.55;
     color: var(--ivory-2);
     display: grid;
-    grid-template-columns: 18px 1fr;
-    gap: 10px;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
     align-items: baseline;
   }
   .duties .glyph {
@@ -111,8 +117,10 @@ import JarvisLog from '../components/JarvisLog.astro';
     line-height: 1;
   }
 
+  @media (max-width: 960px) {
+    .status-pill { align-self: flex-start; }
+  }
   @media (max-width: 640px) {
-    .jarvis-intro { padding: 48px 0 8px; }
-    .jarvis-intro .lede { font-size: 17px; }
+    .page-main-split { padding: 0 22px; }
   }
 </style>

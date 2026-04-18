@@ -1,0 +1,16 @@
+---
+interface Props {
+  kicker?: string;
+  title: string;   // use *word* for italic-signal emphasis
+  lede?: string;   // use *word* for italic-signal emphasis
+}
+const { kicker, title, lede } = Astro.props;
+const titleHtml = title.replace(/\*(.+?)\*/g, '<em>$1</em>');
+const ledeHtml = lede?.replace(/\*(.+?)\*/g, '<em>$1</em>');
+---
+
+<header class="page-header">
+  {kicker && <p class="page-header__kicker">{kicker}</p>}
+  <h1 class="page-header__title" set:html={titleHtml}></h1>
+  {ledeHtml && <p class="page-header__lede" set:html={ledeHtml}></p>}
+</header>
