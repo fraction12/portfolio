@@ -9,6 +9,7 @@ import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Contact from '../components/Contact.astro';
+import InviteModal from '../components/InviteModal.astro';
 import { artifacts, type Artifact } from '../config/packages';
 import { loadSignalData } from '../lib/data';
 
@@ -80,6 +81,8 @@ const totalTools = artifacts.length;
     </section>
 
   </main>
+
+  <InviteModal />
 </Layout>
 
 <style>

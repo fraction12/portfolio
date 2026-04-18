@@ -1,0 +1,214 @@
+---
+// A quiet slide-in card that appears after a reader has spent some
+// time on the homepage and scrolled past the hero. Two CTAs:
+// subscribe to the Substack, or browse the source on GitHub.
+// Dismissal is persisted in localStorage for 14 days.
+---
+
+<aside
+  class="invite"
+  data-invite
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="invite-title"
+  hidden
+>
+  <header class="invite__head">
+    <span class="invite__dot" aria-hidden="true"></span>
+    <h2 id="invite-title" class="invite__title">Still reading?</h2>
+    <button type="button" class="invite__close" data-invite-close aria-label="Dismiss">×</button>
+  </header>
+
+  <p class="invite__body">
+    New essays weekly — notes on what I'm building, what breaks,
+    what I'd undo. Or browse the source; it's all open.
+  </p>
+
+  <div class="invite__actions">
+    <a
+      class="btn btn--primary"
+      href="https://dushyantg.substack.com"
+      target="_blank"
+      rel="noopener"
+      data-invite-action="subscribe"
+    >Subscribe ↗</a>
+    <a
+      class="btn btn--ghost"
+      href="https://github.com/fraction12"
+      target="_blank"
+      rel="noopener"
+      data-invite-action="github"
+    >See the code ↗</a>
+  </div>
+</aside>
+
+<script>
+  (() => {
+    const STORAGE_KEY = 'invite-dismissed-until';
+    const DISMISS_DAYS = 14;
+    const SHOW_AFTER_MS = 15_000;
+    const SCROLL_TRIGGER_RATIO = 0.25;
+
+    const el = document.querySelector<HTMLElement>('[data-invite]');
+    if (!el) return;
+
+    // Respect prior dismissal.
+    try {
+      const until = Number(localStorage.getItem(STORAGE_KEY) || 0);
+      if (Date.now() < until) return;
+    } catch { /* localStorage can throw in private mode; fall through */ }
+
+    let shown = false;
+    let scrolled = false;
+    let timePassed = false;
+
+    const maybeShow = () => {
+      if (shown || !scrolled || !timePassed) return;
+      shown = true;
+      el.hidden = false;
+      requestAnimationFrame(() => el.classList.add('invite--visible'));
+    };
+
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - doc.clientHeight;
+      if (scrollable <= 0) { scrolled = true; maybeShow(); return; }
+      if (window.scrollY / scrollable >= SCROLL_TRIGGER_RATIO) {
+        scrolled = true;
+        maybeShow();
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(() => { timePassed = true; maybeShow(); }, SHOW_AFTER_MS);
+
+    const dismiss = () => {
+      el.classList.remove('invite--visible');
+      setTimeout(() => { el.hidden = true; }, 260);
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          String(Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000)
+        );
+      } catch { /* ignore */ }
+    };
+
+    el.querySelector<HTMLButtonElement>('[data-invite-close]')
+      ?.addEventListener('click', dismiss);
+
+    // Clicking an action also counts as dismissal (don't nag the
+    // reader with the same invite after they've acted on it).
+    el.querySelectorAll<HTMLAnchorElement>('[data-invite-action]').forEach(a => {
+      a.addEventListener('click', () => {
+        try {
+          localStorage.setItem(
+            STORAGE_KEY,
+            String(Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000)
+          );
+        } catch { /* ignore */ }
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && shown && !el.hidden) dismiss();
+    });
+  })();
+</script>
+
+<style>
+  .invite {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: var(--z-overlay);
+    width: min(340px, calc(100vw - 40px));
+    padding: 16px 18px 18px;
+    background: var(--ink-1);
+    border: 1px solid var(--line-3);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45), 0 0 0 1px var(--line);
+    font-family: var(--font-display);
+    color: var(--ivory-2);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--motion-card) ease, transform var(--motion-card) ease;
+    pointer-events: none;
+  }
+  .invite--visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .invite__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .invite__dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--status-agent);
+    box-shadow: 0 0 8px rgba(125,226,163,0.5);
+    animation: statusPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .invite__title {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ivory);
+    letter-spacing: -0.005em;
+    margin: 0;
+    flex: 1;
+  }
+  .invite__close {
+    width: 26px; height: 26px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--dim);
+    font-family: var(--font-mono);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  }
+  .invite__close:hover {
+    color: var(--ivory);
+    border-color: var(--line-3);
+  }
+
+  .invite__body {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ivory-2);
+    margin: 0 0 14px;
+  }
+
+  .invite__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .invite__actions .btn {
+    font-size: 13px;
+    padding: 0.5rem 0.8rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .invite { transition: none; }
+  }
+
+  @media (max-width: 640px) {
+    .invite {
+      right: 12px;
+      bottom: 12px;
+      left: 12px;
+      width: auto;
+    }
+  }
+</style>
