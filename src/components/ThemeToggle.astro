@@ -5,9 +5,9 @@
 ---
 
 <div class="theme-toggle" role="group" aria-label="Theme">
-  <button type="button" class="theme-toggle__btn" data-theme-set="light"  aria-label="Light mode">☼</button>
-  <button type="button" class="theme-toggle__btn" data-theme-set="system" aria-label="System theme">◐</button>
-  <button type="button" class="theme-toggle__btn" data-theme-set="dark"   aria-label="Dark mode">☾</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="light">Light</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="system">System</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="dark">Dark</button>
 </div>
 
 <script>
@@ -77,14 +77,14 @@
     background: var(--surface-raised);
   }
   .theme-toggle__btn {
-    width: 28px;
     height: 26px;
-    padding: 0;
+    padding: 0 10px;
     background: transparent;
     border: 0;
     color: var(--dim);
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
     line-height: 1;
     cursor: pointer;
     transition: color var(--motion-fast) ease, background var(--motion-fast) ease;
