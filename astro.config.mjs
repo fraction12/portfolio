@@ -25,6 +25,10 @@ export default defineConfig({
         'https://dushyantgarg.com/',
         'https://dushyantgarg.com/tools/',
         'https://dushyantgarg.com/writing/',
+        // llms.txt is a static asset in public/, not a route, so it
+        // isn't auto-discovered. Listing it here surfaces it to any
+        // crawler indexing the XML sitemap.
+        'https://dushyantgarg.com/llms.txt',
       ],
     }),
   ],

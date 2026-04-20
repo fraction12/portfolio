@@ -130,6 +130,10 @@ const websiteSchema = includeIdentitySchema
   {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
   {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <!-- Advertises the llms.txt summary (https://llmstxt.org) so agents
+       fetching any page can discover the machine-readable portfolio
+       digest without guessing at /llms.txt by convention. -->
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly summary" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
