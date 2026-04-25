@@ -32,7 +32,7 @@ function metricFor(a: Artifact): { metric: string | null; placeholder: string } 
   return { metric: null, placeholder: '' };
 }
 
-const homeFeaturedSlugs = ['tradespec', 'clawk', 'potato'];
+const homeFeaturedSlugs = ['tradespec', 'spec-ui', 'microcanvas', 'potato'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
   .filter((a): a is Artifact => Boolean(a));
@@ -54,7 +54,7 @@ const totalTools = artifacts.length;
     </div>
 
     <section id="tools" class="section-split">
-      <SectionHead num="01" name="Tools *// three I'm proud of*" />
+      <SectionHead num="01" name="Tools *// four I'm proud of*" />
       <div class="section-split__content">
         <div class="home-tools-list">
           {homeFeatured.map(a => {

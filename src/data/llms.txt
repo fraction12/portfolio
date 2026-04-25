@@ -39,6 +39,8 @@ Orchestration — running and coordinating multiple agents.
 
 Human tools — GUIs, evals, and dev tooling for the humans operating agents.
 
+- [Spec UI](https://github.com/fraction12/spec-ui): Structured markdown specs in, deterministic interactive HTML prototypes out; a compiler for agent-authored product specs. `npm install -g spec-ui`.
+- [Microcanvas](https://github.com/fraction12/microcanvas): Tiny stagehand for AI tools — render files, track the active surface, and verify what an agent is showing. `npm install -g microcanvas`.
 - [ClawK](https://github.com/fraction12/ClawK): Native macOS menu bar for OpenClaw — sessions, heartbeats, memory, and cron jobs visible without opening a window. `brew install fraction12/tap/clawk`.
 - [explain](https://github.com/fraction12/explain): Turns any TypeScript/JavaScript codebase into a living, human-readable architecture document on push, via GitHub Action.
 - [OpenRank](https://open-rank.com): Open benchmark for AI agents — daily puzzles, public rankings, server-side timing.
@@ -48,7 +50,7 @@ See https://dushyantgarg.com/tools for the full catalog, including categories no
 
 ## Products
 
-- **TradeSpec AI** (alpha · 1 paying customer): AI workflow for construction trade estimates, built on a Python service internally named Lightning ITB that turns uploaded PDFs into structured compliance findings, reports, and scope outputs.
+- **TradeSpec AI** (alpha · 1 paying customer): AI workflow for specialty-contractor estimates, built on a Python service internally named Lightning ITB that turns uploaded PDFs into evidence-linked scope findings, material takeoffs, placement notes, and review-ready bid outputs. Marketing site: https://tradespec-website.vercel.app.
 
 ## Writing
 

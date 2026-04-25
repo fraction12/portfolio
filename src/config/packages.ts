@@ -98,37 +98,49 @@ export const artifacts: Artifact[] = [
 
 
   // ────────────── HUMAN TOOLS ──────────────
-  { slug: 'clawk', order: 1, category: 'human-tools',
+  { slug: 'spec-ui', order: 1, category: 'human-tools',
+    name: 'Spec UI', emphasisWord: 'Spec UI',
+    description: 'Structured markdown specs in, deterministic interactive HTML prototypes out. A compiler for agent-authored product specs, built so two agents reading the same spec produce the same prototype.',
+    stack: 'typescript · compiler · html', kind: 'typescript · spec compiler', status: 'live',
+    repo: 'fraction12/spec-ui', installCommand: 'npm install -g spec-ui' },
+
+  { slug: 'microcanvas', order: 2, category: 'human-tools',
+    name: 'Microcanvas', emphasisWord: 'Microcanvas',
+    description: 'Tiny stagehand for AI tools. Renders files into a reliable viewer, tracks the active surface, and lets agents verify what they are showing instead of saying “trust me, it opened.”',
+    stack: 'typescript · native viewer · cli', kind: 'typescript · canvas runtime', status: 'live',
+    repo: 'fraction12/microcanvas', installCommand: 'npm install -g microcanvas' },
+
+  { slug: 'clawk', order: 3, category: 'human-tools',
     name: 'ClawK', emphasisWord: 'ClawK',
     description: 'Native macOS menu bar for OpenClaw. Monitor sessions, heartbeats, memory, and cron jobs from your menu bar — background runs observable without opening a window.',
     stack: 'swift · swiftui · macOS', kind: 'swift · macOS menubar', status: 'live',
     repo: 'fraction12/ClawK', installCommand: 'brew install fraction12/tap/clawk' },
 
-  { slug: 'explain', order: 2, category: 'human-tools',
+  { slug: 'explain', order: 4, category: 'human-tools',
     name: 'explain', emphasisWord: 'explain',
     description: 'Turn any TypeScript/JavaScript codebase into a living, human-readable architecture document. Push to main → GitHub Action runs → your entire codebase is explained in plain English. Built for PMs and founders who build with AI but need to understand what got built.',
     stack: 'typescript · ts-morph · gh action', kind: 'typescript · cli + gh action', status: 'live',
     repo: 'fraction12/explain', installCommand: 'npx fraction12/explain' },
 
-  { slug: 'openrank', order: 3, category: 'human-tools',
+  { slug: 'openrank', order: 5, category: 'human-tools',
     name: 'OpenRank', emphasisWord: 'OpenRank',
     description: 'The open benchmark for AI agents — daily puzzles, public rankings, server-side timing. Because "did it work" is not "did it beat the others."',
     stack: 'astro · supabase · ts', kind: 'astro · web platform', status: 'live',
     repo: 'fraction12/open-rank', url: 'https://open-rank.com', installCommand: '# visit open-rank.com' },
 
-  { slug: 'wireflow', order: 4, category: 'human-tools',
+  { slug: 'wireflow', order: 6, category: 'human-tools',
     name: 'WireFlow', emphasisWord: 'WireFlow',
     description: 'Wireframing and planning app — imagine ExcaliDraw but better. Quick diagrams that stay legible when the meeting moves on.',
     stack: 'typescript · canvas', kind: 'typescript · web app', status: 'live',
     repo: 'fraction12/WireFlow', installCommand: '# clone + pnpm dev — deploy coming' },
 
-  { slug: 'agent-office', order: 5, category: 'human-tools',
+  { slug: 'agent-office', order: 7, category: 'human-tools',
     name: 'Agent Office', emphasisWord: 'Agent Office',
     description: 'Watch agents live — not logs, not dashboards, but actually see them moving through a room. OpenClaw-native spatial interface, built in Godot.',
     stack: 'godot · gdscript · openclaw', kind: 'godot · spatial UI · private', status: 'dev',
     metricOverride: '🔒 private · in dev', installCommand: '# private preview — reach out if interested' },
 
-  { slug: 'hunt', order: 6, category: 'human-tools',
+  { slug: 'hunt', order: 8, category: 'human-tools',
     name: 'Hunt', emphasisWord: 'Hunt',
     description: 'Personal job hunt CRM for me and my agents — applications, companies, roles, notes. Agents file new leads, I triage the shortlist.',
     stack: 'typescript · sqlite', kind: 'typescript · personal CRM', status: 'dev',
@@ -140,9 +152,10 @@ export const artifacts: Artifact[] = [
   // ────────────── PRODUCTS ──────────────
   { slug: 'tradespec', order: 1, category: 'products',
     name: 'TradeSpec AI', emphasisWord: 'TradeSpec',
-    description: 'AI workflow for trade estimates — faster, safer, grounded in messy contractor source inputs. In alpha with a real customer. Python service (LightningITB) + HTML frontend.',
-    stack: 'python · saas · alpha', kind: 'saas · alpha · private', status: 'private',
-    metricOverride: '🔒 alpha · 1 customer live', installCommand: '# in alpha with a customer — reach out for a demo' },
+    description: 'AI workflow for specialty-contractor estimates — reads messy plan sets, pulls scope, and creates evidence-linked review packs from real bid inputs.',
+    stack: 'python · next.js · saas', kind: 'saas · alpha · customer pilot', status: 'private',
+    url: 'https://tradespec-website.vercel.app',
+    metricOverride: '🔒 alpha · 1 customer live', installCommand: '# alpha with a real customer — see the marketing site' },
 
 
   // ────────────── EXPERIMENTS ──────────────
