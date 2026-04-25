@@ -102,13 +102,13 @@ export const artifacts: Artifact[] = [
     name: 'Spec UI', emphasisWord: 'Spec UI',
     description: 'Structured markdown specs in, deterministic interactive HTML prototypes out. A compiler for agent-authored product specs, built so two agents reading the same spec produce the same prototype.',
     stack: 'typescript · compiler · html', kind: 'typescript · spec compiler', status: 'live',
-    repo: 'fraction12/spec-ui', installCommand: 'npm install -g spec-ui' },
+    repo: 'fraction12/spec-ui', installCommand: '# source available on GitHub — npm package not published' },
 
   { slug: 'microcanvas', order: 2, category: 'human-tools',
     name: 'Microcanvas', emphasisWord: 'Microcanvas',
     description: 'Tiny stagehand for AI tools. Renders files into a reliable viewer, tracks the active surface, and lets agents verify what they are showing instead of saying “trust me, it opened.”',
     stack: 'typescript · native viewer · cli', kind: 'typescript · canvas runtime', status: 'live',
-    repo: 'fraction12/microcanvas', installCommand: 'npm install -g microcanvas' },
+    repo: 'fraction12/microcanvas', installCommand: '# source available on GitHub — npm package not published' },
 
   { slug: 'clawk', order: 3, category: 'human-tools',
     name: 'ClawK', emphasisWord: 'ClawK',
