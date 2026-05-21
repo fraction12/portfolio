@@ -14,6 +14,7 @@ const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = 
 
 <nav class="top-nav">
   <div class="top-nav__inner">
+    <a class="top-nav__brand" href="/">Dushyant Garg</a>
     <div class="top-nav__links">
       {navLinks.map(link => (
         <a href={link.href} class:list={['top-nav__link', { active: current === link.key }]}>{link.label}</a>

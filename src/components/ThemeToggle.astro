@@ -20,7 +20,7 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
       } catch { /* private mode */ }
-      return 'system';
+      return 'dark';
     }
 
     function resolve(pref: Pref): 'light' | 'dark' {

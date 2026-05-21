@@ -4,12 +4,11 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import ColophonTerminal from '../components/ColophonTerminal.astro';
+import SelectedProof from '../components/SelectedProof.astro';
 import ToolCard from '../components/ToolCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Contact from '../components/Contact.astro';
-import InviteModal from '../components/InviteModal.astro';
 import { artifacts, type Artifact } from '../config/packages';
 import { loadSignalData } from '../lib/data';
 
@@ -17,25 +16,39 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 
 const data = await loadSignalData();
 
-function metricFor(a: Artifact): { metric: string | null; placeholder: string } {
-  if (a.metricOverride) return { metric: a.metricOverride, placeholder: '' };
-  if (a.npmName) {
-    const d = data.npm.packages[a.npmName]?.downloadsLastMonth;
-    if (typeof d === 'number') return { metric: `↓ ${d.toLocaleString()} / mo`, placeholder: '' };
-    return { metric: null, placeholder: '[npm stats pending]' };
-  }
-  if (a.pypiName) {
-    const d = data.pypi.packages[a.pypiName]?.downloadsLastMonth;
-    if (typeof d === 'number') return { metric: `↓ ${d.toLocaleString()} / mo`, placeholder: '' };
-    return { metric: null, placeholder: '[pypi stats pending]' };
-  }
-  return { metric: null, placeholder: '' };
-}
+const proofCopy: Partial<Record<string, { proof: string; note: string }>> = {
+  tradespec: {
+    proof: 'AI-assisted bid review workspace for construction estimators, built around evidence-linked outputs and real customer feedback.',
+    note: 'Private alpha',
+  },
+  'spec-ui': {
+    proof: 'Turns structured product specs into deterministic interactive prototypes that agents and humans can review together.',
+    note: 'Open source',
+  },
+  microcanvas: {
+    proof: 'A compact runtime for showing, testing, and inspecting agent-created UI artifacts instead of trusting screenshots.',
+    note: 'Open source',
+  },
+  agenttk: {
+    proof: 'Typed command-line primitives for giving agents safer, more discoverable tools to operate with.',
+    note: 'Open source',
+  },
+};
 
-const homeFeaturedSlugs = ['tradespec', 'spec-ui', 'microcanvas', 'potato'];
+const cardCopy: Partial<Record<string, string>> = {
+  tradespec: 'AI review packs for construction estimators, grounded in plan evidence and customer workflow.',
+  'spec-ui': 'A compiler that turns structured product specs into reviewable interactive prototypes.',
+  microcanvas: 'A viewer/runtime for agent-created UI artifacts that need to be inspected and tested.',
+  agenttk: 'Typed CLI primitives for giving agents safer tools and clearer operating contracts.',
+};
+
+const homeFeaturedSlugs = ['tradespec', 'spec-ui', 'microcanvas', 'agenttk'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
   .filter((a): a is Artifact => Boolean(a));
+
+const selectedProof = homeFeatured
+  .map(a => ({ artifact: a, ...(proofCopy[a.slug] ?? { proof: a.description, note: a.kind }) }));
 
 const totalTools = artifacts.length;
 ---
@@ -43,38 +56,44 @@ const totalTools = artifacts.length;
 <Layout
   current="home"
   title="Dushyant Garg"
-  description="Dushyant Garg — builds open-source tools that make AI agents usable. Memory, orchestration, observability. Shipped to real customers."
+  description="Dushyant Garg — Product Manager and builder turning ambiguous AI ideas into working products, workflows, and open-source tools."
   includeIdentitySchema
 >
   <div class="sd-main">
 
     <div class="hero-split">
       <Hero />
-      <ColophonTerminal />
+      <SelectedProof items={selectedProof} />
     </div>
 
-    <section id="tools" class="section-split">
-      <SectionHead num="01" name="Tools *// four I'm proud of*" />
+    <section id="work" class="section-split">
+      <SectionHead num="01" name="Selected Work" />
       <div class="section-split__content">
         <div class="home-tools-list">
-          {homeFeatured.map(a => {
-            const { metric, placeholder } = metricFor(a);
-            return <ToolCard artifact={a} metric={metric} metricPlaceholder={placeholder} />;
-          })}
+          {homeFeatured.map(a => (
+            <ToolCard
+              artifact={a}
+              metric={null}
+              metricPlaceholder=""
+              showInstall={false}
+              quiet
+              descriptionOverride={cardCopy[a.slug]}
+            />
+          ))}
         </div>
         <a class="more-link" href="/tools">See all {totalTools} tools →</a>
       </div>
     </section>
 
     <section id="writing" class="section-split">
-      <SectionHead num="02" name="Writing *// dispatches*" />
+      <SectionHead num="02" name="Writing" />
       <div class="section-split__content">
         <WritingBlock essays={data.essays} limit={3} />
       </div>
     </section>
 
     <section id="contact" class="section-split">
-      <SectionHead num="03" name="Contact *// reach out*" />
+      <SectionHead num="03" name="Contact" />
       <div class="section-split__content">
         <Contact />
       </div>
@@ -82,7 +101,6 @@ const totalTools = artifacts.length;
 
   </div>
 
-  <InviteModal />
 </Layout>
 
 <style>
@@ -96,7 +114,7 @@ const totalTools = artifacts.length;
   .home-tools-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
   }
 
   .more-link {

@@ -4,22 +4,26 @@ interface Props {
   secondary?: { label: string; href: string };
 }
 const {
-  primary = { label: 'See the tools', href: '/tools' },
-  secondary = { label: 'Read the writing', href: '/writing' },
+  primary = { label: 'See selected work', href: '#work' },
+  secondary = { label: 'Read the writing', href: '#writing' },
 } = Astro.props;
 ---
 
 <header class="intro">
+  <p class="role">Product Manager / Builder</p>
   <h1 class="name">Dushyant Garg<span class="cursor" aria-hidden="true"></span></h1>
   <p class="mission">
-    I build tools that make AI agents <em>usable</em> — memory that sticks,
-    orchestration that doesn't deadlock, observability that doesn't lie.
-    Open-source by default, shipped to real customers.
+    I turn ambiguous AI ideas into working products.
+  </p>
+  <p class="summary">
+    I build practical AI systems, product workflows, and open-source tools.
+    The throughline is simple: find the useful interface, ground it in real work,
+    and ship the smallest honest proof.
   </p>
 
   <div class="ctas">
-    <a class="btn btn--primary" href={primary.href}>{primary.label} →</a>
-    <a class="btn btn--ghost" href={secondary.href}>{secondary.label} ↗</a>
+    <a class="btn btn--primary" href={primary.href}>{primary.label}</a>
+    <a class="btn btn--ghost" href={secondary.href}>{secondary.label}</a>
   </div>
 
   <div class="socials">
@@ -35,8 +39,17 @@ const {
 
 <style>
   .intro {
-    padding: 36px 0 20px;
+    padding: 40px 0 24px;
     max-width: 72ch;
+  }
+  .role {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono-sm-size);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: 18px;
   }
   .name {
     font-family: var(--font-display);
@@ -45,7 +58,7 @@ const {
     letter-spacing: -0.03em;
     line-height: 1.05;
     color: var(--ivory);
-    margin-bottom: 24px;
+    margin-bottom: 18px;
   }
   /* Subtle blinking cursor after the name — blinks for ~2.4s on first
      paint, then fades out. One moment of "this site is alive" before it
@@ -69,16 +82,20 @@ const {
   }
   .mission {
     font-family: var(--font-display);
-    font-size: 20px;
-    line-height: 1.55;
-    color: var(--ivory-2);
-    max-width: 54ch;
-    margin-bottom: 32px;
+    font-size: clamp(28px, 4.5vw, 48px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--ivory);
+    max-width: 15ch;
+    margin-bottom: 22px;
   }
-  .mission em {
-    font-style: italic;
-    font-weight: 500;
-    color: var(--signal);
+  .summary {
+    font-family: var(--font-display);
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ivory-2);
+    max-width: 55ch;
+    margin-bottom: 30px;
   }
   .ctas {
     display: flex;
@@ -104,6 +121,8 @@ const {
 
   @media (max-width: 640px) {
     .intro { padding: 24px 0 14px; }
-    .mission { font-size: 17px; }
+    .role { margin-bottom: 14px; }
+    .mission { font-size: 30px; }
+    .summary { font-size: 16px; }
   }
 </style>

@@ -84,7 +84,7 @@ const websiteSchema = includeIdentitySchema
           var raw = localStorage.getItem('theme');
           if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
         } catch (e) {}
-        return 'system';
+        return 'dark';
       }
       function resolve(pref) {
         if (pref === 'system') {
@@ -158,7 +158,6 @@ const websiteSchema = includeIdentitySchema
 
   <script>
     import '../scripts/scroll-reveal.js';
-    import '../scripts/lobster.js';
   </script>
 </body>
 </html>
