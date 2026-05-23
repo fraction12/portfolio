@@ -13,11 +13,10 @@ export const AGENT_NAME_PATTERNS: RegExp[] = [
 
 /**
  * Display label for agent-authored commits. All agent co-authors are surfaced
- * in the UI under this single persona name — matches how the site talks about
- * the long-running agent in the footer ("agents commit to this repo").
+ * under one neutral label in any internal data surfaces.
  */
-export const AGENT_DISPLAY_NAME = 'Jarvis';
-export const AGENT_DISPLAY_EMAIL = 'jarvis@dushyant.ops';
+export const AGENT_DISPLAY_NAME = 'Agent';
+export const AGENT_DISPLAY_EMAIL = 'agent@dushyant.ops';
 
 export function isAgentAuthor(nameAndEmail: string): boolean {
   return AGENT_NAME_PATTERNS.some(p => p.test(nameAndEmail));

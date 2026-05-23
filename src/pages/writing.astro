@@ -1,7 +1,5 @@
 ---
-// SSR: Substack essays update independently of deploys, so this page
-// re-fetches the RSS feed on each stale-cache request. 5 min edge cache
-// keeps things fast; new Substack posts appear within ~5 min of publishing.
+// SSR: Substack essays update independently of deploys.
 export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
@@ -16,54 +14,30 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 <Layout
   current="writing"
   title="Writing — Dushyant Garg"
-  description="Essays by Dushyant Garg on AI agents, product building, and shipping fast — published weekly on Substack, mirrored here within minutes."
+  description="Essays by Dushyant Garg on product work, AI systems, and building useful software."
+  ogImage="/og/writing.svg"
 >
-  <div class="page-main-split">
-
-    <div class="page-split page-split--solo">
+  <div class="page-shell">
+    <div class="page-split">
       <PageHeader
-        kicker="Essays · weekly"
-        title="Writing *// from the stack*"
-        lede="Practical notes on building with AI agents — what's working, what broke, what I'd undo. Published on Substack; mirrored here within minutes."
+        kicker="Writing"
+        title="Notes from the work"
+        lede="Essays on product work, AI systems, and what becomes clearer after shipping."
       />
     </div>
 
     <section class="section-split">
-      <SectionHead
-        num="01"
-        name="Essays *// recent*"
-        meta="Pulled live from the Substack feed. Click through to read on Substack."
-      />
+      <SectionHead name="Essays" meta="Recent writing, published on Substack and mirrored here." />
       <div class="section-split__content">
         <Writing />
       </div>
     </section>
 
     <section class="section-split">
-      <SectionHead
-        num="02"
-        name="Subscribe *// practical notes*"
-        meta="One email per essay. Unsubscribe any time."
-      />
+      <SectionHead name="Subscribe" meta="One concise prompt, below the work." />
       <div class="section-split__content">
         <NewsletterSignup />
       </div>
     </section>
-
   </div>
 </Layout>
-
-<style>
-  .page-main-split {
-    margin: 0 auto;
-    padding: 0 32px;
-    position: relative;
-    z-index: var(--z-content);
-  }
-  .page-split--solo {
-    grid-template-columns: 1fr;
-  }
-  @media (max-width: 640px) {
-    .page-main-split { padding: 0 22px; }
-  }
-</style>

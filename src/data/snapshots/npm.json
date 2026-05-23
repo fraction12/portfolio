@@ -1,1 +1,8 @@
-{ "fetchedAt": null, "packages": {} }
+{
+  "fetchedAt": "2026-05-23T00:04:05.446Z",
+  "packages": {
+    "agentrem": {
+      "downloadsLastMonth": 188
+    }
+  }
+}

@@ -1,13 +1,10 @@
 ---
-// Segmented control: [☼ light] [◐ system] [☾ dark].
-// State is owned by the inline head script in Layout.astro; this
-// component just renders the UI and dispatches a `set` on click.
+// Quiet theme control. State is owned by the inline head script in Layout.astro.
 ---
 
 <div class="theme-toggle" role="group" aria-label="Theme">
-  <button type="button" class="theme-toggle__btn" data-theme-set="light">Light</button>
-  <button type="button" class="theme-toggle__btn" data-theme-set="system">System</button>
-  <button type="button" class="theme-toggle__btn" data-theme-set="dark">Dark</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="light" aria-label="Use light theme">Light</button>
+  <button type="button" class="theme-toggle__btn" data-theme-set="dark" aria-label="Use dark theme">Dark</button>
 </div>
 
 <script>
@@ -20,7 +17,7 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
       } catch { /* private mode */ }
-      return 'dark';
+      return 'light';
     }
 
     function resolve(pref: Pref): 'light' | 'dark' {
@@ -37,7 +34,7 @@
       try { localStorage.setItem(STORAGE_KEY, pref); } catch {}
 
       const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-      if (meta) meta.content = actual === 'light' ? '#f5f2e8' : '#0c1018';
+      if (meta) meta.content = actual === 'dark' ? '#11100e' : '#f7f4ed';
 
       syncUI(pref);
     }
@@ -70,20 +67,20 @@
   .theme-toggle {
     display: inline-flex;
     align-items: center;
-    border: 1px solid var(--line-2);
-    border-radius: var(--radius-pill);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
     overflow: hidden;
     background: var(--surface-raised);
   }
   .theme-toggle__btn {
-    height: 26px;
-    padding: 0 10px;
+    min-height: 28px;
+    padding: 0 9px;
     background: transparent;
     border: 0;
     color: var(--dim);
     font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: 0.04em;
+    font-size: 12px;
+    letter-spacing: 0;
     line-height: 1;
     cursor: pointer;
     transition: color var(--motion-fast) ease, background var(--motion-fast) ease;

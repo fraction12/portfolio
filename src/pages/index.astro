@@ -4,8 +4,7 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import SelectedProof from '../components/SelectedProof.astro';
-import ToolCard from '../components/ToolCard.astro';
+import BuildCard from '../components/BuildCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Contact from '../components/Contact.astro';
@@ -16,118 +15,98 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 
 const data = await loadSignalData();
 
-const proofCopy: Partial<Record<string, { proof: string; note: string }>> = {
+const selectedWorkCopy: Partial<Record<string, { description: string; context: string }>> = {
   tradespec: {
-    proof: 'AI-assisted bid review workspace for construction estimators, built around evidence-linked outputs and real customer feedback.',
-    note: 'Private alpha',
+    description: 'AI bid-review workspace for construction estimators, built around plan evidence and customer feedback.',
+    context: 'Product',
   },
   'spec-ui': {
-    proof: 'Turns structured product specs into deterministic interactive prototypes that agents and humans can review together.',
-    note: 'Open source',
+    description: 'Spec-to-prototype compiler for turning product plans into deterministic, reviewable interfaces.',
+    context: 'Open source',
   },
   microcanvas: {
-    proof: 'A compact runtime for showing, testing, and inspecting agent-created UI artifacts instead of trusting screenshots.',
-    note: 'Open source',
+    description: 'Small viewer/runtime for inspecting UI artifacts with real browser checks instead of static screenshots.',
+    context: 'Open source',
   },
   agenttk: {
-    proof: 'Typed command-line primitives for giving agents safer, more discoverable tools to operate with.',
-    note: 'Open source',
+    description: 'Typed command primitives for safer agent-facing tools and clearer operating contracts.',
+    context: 'Open source',
   },
-};
-
-const cardCopy: Partial<Record<string, string>> = {
-  tradespec: 'AI review packs for construction estimators, grounded in plan evidence and customer workflow.',
-  'spec-ui': 'A compiler that turns structured product specs into reviewable interactive prototypes.',
-  microcanvas: 'A viewer/runtime for agent-created UI artifacts that need to be inspected and tested.',
-  agenttk: 'Typed CLI primitives for giving agents safer tools and clearer operating contracts.',
 };
 
 const homeFeaturedSlugs = ['tradespec', 'spec-ui', 'microcanvas', 'agenttk'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
   .filter((a): a is Artifact => Boolean(a));
-
-const selectedProof = homeFeatured
-  .map(a => ({ artifact: a, ...(proofCopy[a.slug] ?? { proof: a.description, note: a.kind }) }));
-
-const totalTools = artifacts.length;
 ---
 
 <Layout
   current="home"
   title="Dushyant Garg"
-  description="Dushyant Garg — Product Manager and builder turning ambiguous AI ideas into working products, workflows, and open-source tools."
+  description="Dushyant Garg — Product Manager and builder working on practical AI products, product systems, and open-source tools."
+  ogImage="/og/home.svg"
   includeIdentitySchema
 >
-  <div class="sd-main">
-
-    <div class="hero-split">
-      <Hero />
-      <SelectedProof items={selectedProof} />
-    </div>
+  <div class="page-shell home-shell">
+    <Hero />
 
     <section id="work" class="section-split">
-      <SectionHead num="01" name="Selected Work" />
-      <div class="section-split__content">
-        <div class="home-tools-list">
-          {homeFeatured.map(a => (
-            <ToolCard
+      <SectionHead name="Work" meta="Selected builds that show the range: product workflow, open-source infrastructure, and tools for evaluating what gets shipped." />
+      <div class="section-split__content work-list">
+        {homeFeatured.map(a => {
+          const copy = selectedWorkCopy[a.slug] ?? { description: a.description, context: a.kind };
+          return (
+            <BuildCard
               artifact={a}
-              metric={null}
-              metricPlaceholder=""
-              showInstall={false}
-              quiet
-              descriptionOverride={cardCopy[a.slug]}
+              description={copy.description}
+              context={copy.context}
+              compact
             />
-          ))}
-        </div>
-        <a class="more-link" href="/tools">See all {totalTools} tools →</a>
+          );
+        })}
+        <a class="text-link" href="/tools">See the broader work catalog</a>
       </div>
     </section>
 
     <section id="writing" class="section-split">
-      <SectionHead num="02" name="Writing" />
+      <SectionHead name="Writing" meta="Notes on product work, AI systems, and what becomes clearer after shipping." />
       <div class="section-split__content">
         <WritingBlock essays={data.essays} limit={3} />
       </div>
     </section>
 
     <section id="contact" class="section-split">
-      <SectionHead num="03" name="Contact" />
+      <SectionHead name="Contact" meta="A direct way to reach me." />
       <div class="section-split__content">
         <Contact />
       </div>
     </section>
-
   </div>
-
 </Layout>
 
 <style>
-  .sd-main {
-    margin: 0 auto;
-    padding: 0 32px;
+  .home-shell {
     position: relative;
     z-index: var(--z-content);
   }
 
-  .home-tools-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  .work-list {
+    display: grid;
   }
 
-  .more-link {
-    display: inline-block;
-    margin-top: 14px;
-    font-family: var(--font-mono);
-    font-size: 13px;
+  .text-link {
+    display: inline-flex;
+    justify-self: start;
+    margin-top: 1rem;
     color: var(--signal);
+    font-size: var(--type-small-size);
+    font-weight: 700;
     text-decoration: none;
   }
-  .more-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-  @media (max-width: 640px) {
-    .sd-main { padding: 0 22px; }
+  .text-link:hover {
+    color: var(--signal-hov);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>

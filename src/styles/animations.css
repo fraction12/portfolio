@@ -1,34 +1,19 @@
 /* ============================================================
-   MOTION — only STATE, never decoration (spec §1.5).
-   Three canonical keyframes: statusPulse, cursorBlink, reveal.
-   Plus rippleAnim for connect-link hover response.
+   MOTION
+   Restrained transitions only. Reduced motion keeps everything static.
    ============================================================ */
-
-@keyframes statusPulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(40,200,64,0.4); }
-  50%      { opacity: 0.6; box-shadow: 0 0 0 6px rgba(40,200,64,0); }
-}
-
-@keyframes cursorBlink {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0; }
-}
-
 @keyframes reveal {
-  from { opacity: 0; transform: translateY(28px); }
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes rippleAnim {
-  0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal.visible {
-    opacity: 1;
-    transform: none;
-    animation: none;
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }

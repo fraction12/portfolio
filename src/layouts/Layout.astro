@@ -10,7 +10,7 @@ import '../styles/animations.css';
 interface Props {
   title?: string;
   description?: string;
-  current?: 'home' | 'tools' | 'writing' | 'jarvis';
+  current?: 'home' | 'tools' | 'writing' | 'contact';
   ogImage?: string;
   /** When true, adds Person + WebSite JSON-LD for the canonical portfolio. Use on the home page only. */
   includeIdentitySchema?: boolean;
@@ -18,7 +18,7 @@ interface Props {
 
 const {
   title = 'Dushyant Garg',
-  description = 'Dushyant Garg — PM building AI tools, open-source products, and writing dispatches from real execution.',
+  description = 'Dushyant Garg — Product Manager and builder working on practical AI products, product systems, and open-source tools.',
   current = 'home',
   ogImage = '/og-default.svg',
   includeIdentitySchema = false,
@@ -41,7 +41,7 @@ const personSchema = includeIdentitySchema
       name: 'Dushyant Garg',
       url: siteOrigin + '/',
       description:
-        'PM building AI tools, open-source products, and writing dispatches from real execution.',
+        'Product Manager and builder working on practical AI products, product systems, and open-source tools.',
       sameAs: [
         'https://github.com/fraction12',
         'https://linkedin.com/in/dushyantgarg',
@@ -57,7 +57,7 @@ const websiteSchema = includeIdentitySchema
       name: 'Dushyant Garg',
       url: siteOrigin + '/',
       description:
-        'Canonical portfolio of Dushyant Garg — AI tools, products, and writing.',
+        'Canonical portfolio of Dushyant Garg — product work, open-source builds, and writing.',
       author: {
         '@type': 'Person',
         name: 'Dushyant Garg',
@@ -72,7 +72,7 @@ const websiteSchema = includeIdentitySchema
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0c1018" />
+  <meta name="theme-color" content="#f7f4ed" />
   <script is:inline>
     // Single source of truth for theme. Runs inline to apply before
     // first paint (no FOUC), and hooks astro:before-swap so
@@ -84,7 +84,7 @@ const websiteSchema = includeIdentitySchema
           var raw = localStorage.getItem('theme');
           if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
         } catch (e) {}
-        return 'dark';
+        return 'light';
       }
       function resolve(pref) {
         if (pref === 'system') {
@@ -97,7 +97,7 @@ const websiteSchema = includeIdentitySchema
         doc.documentElement.setAttribute('data-theme', actual);
         doc.documentElement.setAttribute('data-theme-pref', pref);
         var meta = doc.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', actual === 'light' ? '#f5f2e8' : '#0c1018');
+        if (meta) meta.setAttribute('content', actual === 'dark' ? '#11100e' : '#f7f4ed');
       }
       // Initial paint.
       applyTo(document, readPref());
@@ -123,6 +123,8 @@ const websiteSchema = includeIdentitySchema
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={new URL(ogImage, canonical).toString()} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={ogTitle} />
   <meta name="twitter:description" content={description} />

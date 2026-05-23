@@ -1,36 +1,32 @@
 /* ============================================================
-   NAV — spec §3.9
-   Container max 780px; active indicator is 1px signal underline (no pill).
+   NAVIGATION
    ============================================================ */
 .top-nav {
   border-bottom: 1px solid var(--line);
-  background: var(--ink);
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  backdrop-filter: blur(12px);
 }
 
 .top-nav__inner {
-  position: relative;
-  max-width: var(--layout-max-w-narrow);
+  max-width: var(--layout-max-w);
   margin: 0 auto;
-  padding: 18px 32px;
-  display: grid;
-  grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
-  gap: 24px;
+  padding: 18px var(--gutter);
+  display: flex;
+  gap: 2rem;
   align-items: center;
+  justify-content: space-between;
   font-family: var(--font-display);
   font-size: var(--type-small-size);
-}
-
-.top-nav__inner > .theme-toggle {
-  justify-self: end;
-  margin: 0;
 }
 
 .top-nav__brand {
   color: var(--ivory);
   font-weight: 700;
-  letter-spacing: -0.01em;
   text-decoration: none;
-  justify-self: start;
+  white-space: nowrap;
 }
 
 .top-nav__brand:hover {
@@ -39,20 +35,24 @@
 
 .top-nav__links {
   display: flex;
-  gap: 24px;
+  gap: clamp(1rem, 3vw, 1.8rem);
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .top-nav__link {
-  color: var(--ivory-2);
-  font-weight: 400;
+  color: var(--dim);
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
-  padding-bottom: 2px;
   border-bottom: 1px solid transparent;
-  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  transition:
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
 }
-.top-nav__link:hover { color: var(--ivory); }
+
+.top-nav__link:hover,
 .top-nav__link.active {
   color: var(--ivory);
   border-bottom-color: var(--signal);
@@ -60,13 +60,13 @@
 
 @media (max-width: 640px) {
   .top-nav__inner {
-    padding: 14px 22px;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 12px;
+    padding: 14px var(--gutter);
+    gap: 1rem;
+    align-items: flex-start;
+    flex-direction: column;
   }
-  .top-nav__links { gap: 16px; }
-  .top-nav__inner > .theme-toggle {
-    justify-self: center;
+
+  .top-nav__links {
+    justify-content: flex-start;
   }
 }

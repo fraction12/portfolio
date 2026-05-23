@@ -5,7 +5,7 @@ const { className = '' } = Astro.props;
 
 <section class:list={["newsletter", className]} aria-label="Newsletter signup">
   <p class="newsletter__value">
-    Get practical notes on building with AI agents, shipping fast, and learning in public.
+    Get new essays by email.
   </p>
 
   <form
@@ -28,3 +28,28 @@ const { className = '' } = Astro.props;
     <Button type="submit">Subscribe</Button>
   </form>
 </section>
+
+<style>
+  .newsletter {
+    display: grid;
+    gap: 1rem;
+    max-width: 520px;
+  }
+
+  .newsletter__value {
+    color: var(--ivory-2);
+    line-height: 1.6;
+  }
+
+  .newsletter__form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 560px) {
+    .newsletter__form {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,8 +1,8 @@
 ---
 interface Props {
   kicker?: string;
-  title: string;   // use *word* for italic-signal emphasis
-  lede?: string;   // use *word* for italic-signal emphasis
+  title: string;
+  lede?: string;
 }
 const { kicker, title, lede } = Astro.props;
 
@@ -11,7 +11,6 @@ function escapeHtml(s: string): string {
     .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 }
-// Escape first, then substitute — capture group is untrusted in principle.
 const titleHtml = escapeHtml(title).replace(/\*(.+?)\*/g, '<em>$1</em>');
 const ledeHtml = lede && escapeHtml(lede).replace(/\*(.+?)\*/g, '<em>$1</em>');
 ---

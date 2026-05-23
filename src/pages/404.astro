@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Page Not Found — Dushyant Garg"
+  description="This page does not exist. Find Dushyant Garg's work, writing, or contact information."
+>
+  <div class="page-shell not-found-shell">
+    <p class="kicker">404</p>
+    <h1>Page not found</h1>
+    <p class="lede">This page is not part of the current portfolio.</p>
+
+    <nav class="not-found-links" aria-label="Not found navigation">
+      <a class="btn btn--primary" href="/tools">Work</a>
+      <a class="btn btn--ghost" href="/writing">Writing</a>
+      <a class="btn btn--ghost" href="/#contact">Contact</a>
+    </nav>
+  </div>
+</Layout>
+
+<style>
+  .not-found-shell {
+    min-height: calc(100vh - var(--layout-nav-h));
+    display: grid;
+    align-content: center;
+    padding-block: clamp(4rem, 12vw, 8rem);
+  }
+
+  .kicker {
+    color: var(--dim);
+    font-size: var(--type-small-size);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    color: var(--ivory);
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.98;
+    max-width: 9ch;
+    margin-bottom: 1.25rem;
+  }
+
+  .lede {
+    color: var(--ivory-2);
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.7;
+    max-width: 42ch;
+  }
+
+  .not-found-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+</style>

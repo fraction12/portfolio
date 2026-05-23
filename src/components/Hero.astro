@@ -4,125 +4,98 @@ interface Props {
   secondary?: { label: string; href: string };
 }
 const {
-  primary = { label: 'See selected work', href: '#work' },
+  primary = { label: 'View the work', href: '#work' },
   secondary = { label: 'Read the writing', href: '#writing' },
 } = Astro.props;
 ---
 
 <header class="intro">
-  <p class="role">Product Manager / Builder</p>
-  <h1 class="name">Dushyant Garg<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="mission">
-    I turn ambiguous AI ideas into working products.
-  </p>
-  <p class="summary">
-    I build practical AI systems, product workflows, and open-source tools.
-    The throughline is simple: find the useful interface, ground it in real work,
-    and ship the smallest honest proof.
-  </p>
+  <div class="intro__content">
+    <p class="role">Product Manager / Builder</p>
+    <h1 class="name">Dushyant Garg</h1>
+    <p class="summary">
+      I build practical AI products and product systems for messy workflows,
+      fast-moving teams, and users who need useful software more than impressive demos.
+    </p>
 
-  <div class="ctas">
-    <a class="btn btn--primary" href={primary.href}>{primary.label}</a>
-    <a class="btn btn--ghost" href={secondary.href}>{secondary.label}</a>
+    <div class="ctas">
+      <a class="btn btn--primary" href={primary.href}>{primary.label}</a>
+      <a class="btn btn--ghost" href={secondary.href}>{secondary.label}</a>
+    </div>
   </div>
 
-  <div class="socials">
-    <a href="https://github.com/fraction12" target="_blank" rel="noopener noreferrer">github</a>
-    <span class="dot" aria-hidden="true">·</span>
-    <a href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener noreferrer">linkedin</a>
-    <span class="dot" aria-hidden="true">·</span>
-    <a href="https://dushyantg.substack.com" target="_blank" rel="noopener noreferrer">substack</a>
-    <span class="dot" aria-hidden="true">·</span>
-    <a href="mailto:dushyantgarg3@gmail.com">email</a>
-  </div>
+  <figure class="portrait">
+    <img src="/dushyant-garg-avatar.jpg" alt="Dushyant Garg" width="160" height="160" loading="eager" decoding="async" />
+  </figure>
 </header>
 
 <style>
   .intro {
-    padding: 40px 0 24px;
-    max-width: 72ch;
+    display: grid;
+    grid-template-columns: minmax(0, 760px) 144px;
+    gap: clamp(2rem, 7vw, 6rem);
+    align-items: start;
+    padding: clamp(4.5rem, 10vw, 7rem) 0 clamp(3rem, 7vw, 5rem);
   }
+  .intro__content { min-width: 0; }
   .role {
-    font-family: var(--font-mono);
-    font-size: var(--type-mono-sm-size);
+    font-family: var(--font-display);
+    font-size: var(--type-small-size);
     font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--signal);
-    margin-bottom: 18px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--dim);
+    margin-bottom: 16px;
   }
   .name {
     font-family: var(--font-display);
     font-size: var(--type-hero-name-size);
-    font-weight: 750;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 0.98;
     color: var(--ivory);
-    margin-bottom: 18px;
-  }
-  /* Subtle blinking cursor after the name — blinks for ~2.4s on first
-     paint, then fades out. One moment of "this site is alive" before it
-     settles into a static heading. */
-  .cursor {
-    display: inline-block;
-    width: 0.5ch;
-    height: 1em;
-    margin-left: 6px;
-    background: var(--signal);
-    vertical-align: text-bottom;
-    animation:
-      cursorBlink 1s step-end 3,
-      heroFadeOut 0.4s ease 2.4s forwards;
-  }
-  @keyframes heroFadeOut {
-    to { opacity: 0; width: 0; margin-left: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cursor { display: none; }
-  }
-  .mission {
-    font-family: var(--font-display);
-    font-size: clamp(28px, 4.5vw, 48px);
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    color: var(--ivory);
-    max-width: 15ch;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
   }
   .summary {
     font-family: var(--font-display);
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: clamp(1.16rem, 2vw, 1.35rem);
+    line-height: 1.65;
     color: var(--ivory-2);
-    max-width: 55ch;
-    margin-bottom: 30px;
+    max-width: 60ch;
+    margin-bottom: 32px;
   }
   .ctas {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .socials {
-    display: flex;
     gap: 10px;
-    align-items: center;
-    font-size: 14px;
-    color: var(--dim);
     flex-wrap: wrap;
   }
-  .socials a {
-    color: var(--dim);
-    text-decoration: none;
-    transition: color var(--motion-fast) ease;
+  .portrait {
+    margin-top: 4px;
+    width: 144px;
+    aspect-ratio: 1;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--line-2);
+    background: var(--ink-2);
   }
-  .socials a:hover { color: var(--signal); }
-  .socials .dot { color: var(--dim-2); }
+  .portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   @media (max-width: 640px) {
-    .intro { padding: 24px 0 14px; }
-    .role { margin-bottom: 14px; }
-    .mission { font-size: 30px; }
+    .intro {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      padding: 3.25rem 0 2.5rem;
+    }
+    .portrait {
+      order: -1;
+      width: 78px;
+      margin-top: 0;
+    }
     .summary { font-size: 16px; }
   }
 </style>

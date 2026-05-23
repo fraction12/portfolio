@@ -1,46 +1,52 @@
 /* ============================================================
-   FIELD (input) — spec §3.2
+   FORM FIELDS
    ============================================================ */
 .field {
   display: block;
   width: 100%;
   min-width: 0;
-  background: var(--ink-2);
+  min-height: 42px;
+  background: var(--ink-1);
   border: 1px solid var(--line-2);
   color: var(--ivory);
   border-radius: var(--radius-sm);
-  padding: 0.62rem 0.75rem;
+  padding: 0.66rem 0.78rem;
   font-family: var(--font-display);
   font-size: var(--type-small-size);
   line-height: 1.45;
   transition: border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
 }
+
 .field:focus {
   outline: none;
   border-color: var(--signal);
-  box-shadow: 0 0 0 2px var(--signal-glow);
+  box-shadow: 0 0 0 3px var(--signal-dim);
 }
+
 .field::placeholder {
   color: var(--dim);
   opacity: 1;
 }
+
 .field[aria-invalid="true"] {
   border-color: var(--status-hot);
-  box-shadow: 0 0 0 2px rgba(255,91,91,0.15);
+  box-shadow: 0 0 0 3px rgba(178, 58, 53, 0.14);
 }
+
 .field:disabled {
   color: var(--dim-2);
   cursor: not-allowed;
-  background: var(--ink-1);
+  background: var(--ink-2);
 }
 
-/* Visually hide, remain available to assistive tech. */
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
 }

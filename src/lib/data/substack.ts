@@ -21,7 +21,12 @@ const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/substack.json
 function readSnapshot(): Essay[] {
   try {
     const raw = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8')) as { fetchedAt: string | null; essays: Array<Omit<Essay, 'publishedAt'> & { publishedAt: string }> };
-    return raw.essays.map(e => ({ ...e, publishedAt: new Date(e.publishedAt) }));
+    return raw.essays.map(e => ({
+      ...e,
+      title: decodeXml(e.title),
+      description: decodeXml(e.description),
+      publishedAt: new Date(e.publishedAt)
+    }));
   } catch { return []; }
 }
 
@@ -35,7 +40,13 @@ function writeSnapshot(essays: Essay[]) {
 export function decodeXml(input = ''): string {
   return input
     .replaceAll('&amp;', '&').replaceAll('&lt;', '<').replaceAll('&gt;', '>')
-    .replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+    .replaceAll('&quot;', '"').replaceAll('&#39;', "'")
+    .replace(/&#(x[0-9a-f]+|\d+);/gi, (_entity, value: string) => {
+      const codePoint = value.toLowerCase().startsWith('x')
+        ? Number.parseInt(value.slice(1), 16)
+        : Number.parseInt(value, 10);
+      return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : _entity;
+    });
 }
 
 export function stripHtml(input = ''): string {

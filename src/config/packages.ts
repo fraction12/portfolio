@@ -36,12 +36,12 @@ export const CATEGORY_LABELS: Record<ArtifactCategory, string> = {
 };
 
 export const CATEGORY_BLURBS: Record<ArtifactCategory, string> = {
-  'memory':        'Durable state for agents — what they carry across turns and sessions.',
-  'libraries':     'SDKs and primitives for building agents.',
-  'orchestration': 'Running and coordinating multiple agents.',
-  'human-tools':   'GUIs, evals, and dev tooling for people who operate agents.',
-  'products':      'Customer-facing SaaS. Shipped to real users.',
-  'experiments':   "Things I built to learn something. Some worked, some didn't. The lessons travel."
+  'memory':        'Durable context for agent systems.',
+  'libraries':     'Reusable primitives for building safer tools.',
+  'orchestration': 'Local coordination and task systems for multi-agent work.',
+  'human-tools':   'Interfaces and utilities for people operating AI systems.',
+  'products':      'Customer-facing product work.',
+  'experiments':   'Smaller builds and parked ideas with useful lessons.'
 };
 
 export const CATEGORY_ORDER: ArtifactCategory[] = [
@@ -58,13 +58,13 @@ export const artifacts: Artifact[] = [
   // ────────────── MEMORY ──────────────
   { slug: 'agentsense', order: 1, category: 'memory',
     name: 'AgentSense', emphasisWord: 'AgentSense',
-    description: 'Knowledge-graph memory plugin for OpenClaw — entity extraction plus relationship-aware context. Built for agents that need to remember last week.',
+    description: 'Knowledge-graph memory plugin for OpenClaw with entity extraction and relationship-aware context.',
     stack: 'typescript · sqlite · fts5', kind: 'typescript · mcp plugin', status: 'live',
     repo: 'fraction12/agentsense', installCommand: 'npm install agentsense' },
 
   { slug: 'agentrem', order: 2, category: 'memory',
     name: 'agentrem', emphasisWord: 'agentrem',
-    description: 'Structured reminders CLI + MCP server for AI agents — time, keyword, condition triggers with priority escalation, recurrence, and token budgets.',
+    description: 'Structured reminders CLI and MCP server for time, keyword, condition, recurrence, and priority workflows.',
     stack: 'typescript · mcp · npm', kind: 'typescript · cli + mcp', status: 'live',
     repo: 'fraction12/agentrem', npmName: 'agentrem', installCommand: 'npm install -g agentrem' },
 
@@ -72,13 +72,13 @@ export const artifacts: Artifact[] = [
   // ────────────── LIBRARIES ──────────────
   { slug: 'agenttk', order: 1, category: 'libraries',
     name: 'AgentTK', emphasisWord: 'AgentTK',
-    description: "Agent-facing CLI primitives. Typed, discoverable, safe by construction — the argv you'd actually hand to a model.",
+    description: 'Typed command-line primitives for building safer, more discoverable agent-facing tools.',
     stack: 'typescript · cli', kind: 'typescript · cli primitives', status: 'live',
     repo: 'fraction12/agenttk', installCommand: 'npm install agenttk' },
 
   { slug: 'starglass', order: 2, category: 'libraries',
     name: 'Starglass', emphasisWord: 'Starglass',
-    description: 'Observation and dispatch layer for agent systems. Stdout, events, tool-calls — one timeline, zero plumbing.',
+    description: 'Observation layer for agent systems that combines stdout, events, and tool calls into one timeline.',
     stack: 'typescript · mcp · skill', kind: 'typescript · mcp skill', status: 'live',
     repo: 'fraction12/starglass', installCommand: 'npm install starglass' },
 
@@ -86,13 +86,13 @@ export const artifacts: Artifact[] = [
   // ────────────── ORCHESTRATION ──────────────
   { slug: 'potato', order: 1, category: 'orchestration',
     name: 'Potato v3', emphasisWord: 'Potato',
-    description: 'Personal Orchestration Tool for Agentic Task Operations. Terminal cockpit for coding agents — run Claude, Codex, or others in real PTYs with roles and MCP coordination.',
-    stack: 'rust · ratatui · mcp', kind: 'rust · tui cockpit', status: 'live',
+    description: 'Local orchestration tool for running coding agents in real PTYs with roles and coordination boundaries.',
+    stack: 'rust · ratatui · mcp', kind: 'rust · local orchestration', status: 'live',
     repo: 'fraction12/potato-v3', installCommand: 'cargo install potato-v3' },
 
   { slug: 'agentplan', order: 2, category: 'orchestration',
     name: 'agentplan', emphasisWord: 'agentplan',
-    description: 'Shared to-do list for AI agents. Zero deps, pure Python. Dependencies, priorities, atomic claims — built after three Claudes duplicated a PR on my machine.',
+    description: 'SQLite-backed task board for multiple agents with dependencies, priorities, and atomic claims.',
     stack: 'python · sqlite · pypi', kind: 'python · cli + lib', status: 'live',
     repo: 'fraction12/agentplan', pypiName: 'agentplan', installCommand: 'pip install agentplan' },
 
@@ -100,76 +100,81 @@ export const artifacts: Artifact[] = [
   // ────────────── HUMAN TOOLS ──────────────
   { slug: 'spec-ui', order: 1, category: 'human-tools',
     name: 'Spec UI', emphasisWord: 'Spec UI',
-    description: 'Structured markdown specs in, deterministic interactive HTML prototypes out. A compiler for agent-authored product specs, built so two agents reading the same spec produce the same prototype.',
+    description: 'Compiler that turns structured product specs into deterministic interactive prototypes.',
     stack: 'typescript · compiler · html', kind: 'typescript · spec compiler', status: 'live',
     repo: 'fraction12/spec-ui', installCommand: '# source available on GitHub — npm package not published' },
 
   { slug: 'microcanvas', order: 2, category: 'human-tools',
     name: 'Microcanvas', emphasisWord: 'Microcanvas',
-    description: 'Tiny stagehand for AI tools. Renders files into a reliable viewer, tracks the active surface, and lets agents verify what they are showing instead of saying “trust me, it opened.”',
+    description: 'Viewer/runtime for opening, inspecting, and testing UI artifacts created by agents or code tools.',
     stack: 'typescript · native viewer · cli', kind: 'typescript · canvas runtime', status: 'live',
     repo: 'fraction12/microcanvas', installCommand: '# source available on GitHub — npm package not published' },
 
-  { slug: 'clawk', order: 3, category: 'human-tools',
+  { slug: 'openspec-studio', order: 3, category: 'human-tools',
+    name: 'OpenSpec Studio', emphasisWord: 'OpenSpec Studio',
+    description: 'Local-first desktop workbench for inspecting OpenSpec repositories, changes, specs, validation, and archive readiness.',
+    stack: 'tauri · react · typescript · rust', kind: 'tauri · desktop workbench', status: 'live',
+    repo: 'fraction12/openspec-studio', installCommand: '# build from source — npm run tauri:dev' },
+
+  { slug: 'clawk', order: 4, category: 'human-tools',
     name: 'ClawK', emphasisWord: 'ClawK',
-    description: 'Native macOS menu bar for OpenClaw. Monitor sessions, heartbeats, memory, and cron jobs from your menu bar — background runs observable without opening a window.',
+    description: 'Native macOS menu bar for monitoring OpenClaw sessions, heartbeats, memory, and background runs.',
     stack: 'swift · swiftui · macOS', kind: 'swift · macOS menubar', status: 'live',
     repo: 'fraction12/ClawK', installCommand: 'brew install fraction12/tap/clawk' },
 
-  { slug: 'explain', order: 4, category: 'human-tools',
+  { slug: 'explain', order: 5, category: 'human-tools',
     name: 'explain', emphasisWord: 'explain',
-    description: 'Turn any TypeScript/JavaScript codebase into a living, human-readable architecture document. Push to main → GitHub Action runs → your entire codebase is explained in plain English. Built for PMs and founders who build with AI but need to understand what got built.',
+    description: 'Codebase-to-architecture documentation generator for teams that need to understand what changed.',
     stack: 'typescript · ts-morph · gh action', kind: 'typescript · cli + gh action', status: 'live',
     repo: 'fraction12/explain', installCommand: 'npx fraction12/explain' },
 
-  { slug: 'openrank', order: 5, category: 'human-tools',
+  { slug: 'openrank', order: 6, category: 'human-tools',
     name: 'OpenRank', emphasisWord: 'OpenRank',
-    description: 'The open benchmark for AI agents — daily puzzles, public rankings, server-side timing. Because "did it work" is not "did it beat the others."',
+    description: 'Public benchmark platform for comparing agent performance on timed puzzles.',
     stack: 'astro · supabase · ts', kind: 'astro · web platform', status: 'live',
     repo: 'fraction12/open-rank', url: 'https://open-rank.com', installCommand: '# visit open-rank.com' },
 
-  { slug: 'wireflow', order: 6, category: 'human-tools',
+  { slug: 'wireflow', order: 7, category: 'human-tools',
     name: 'WireFlow', emphasisWord: 'WireFlow',
-    description: 'Wireframing and planning app — imagine ExcaliDraw but better. Quick diagrams that stay legible when the meeting moves on.',
+    description: 'Planning and wireframing app for product flows, meetings, and implementation sketches.',
     stack: 'typescript · canvas', kind: 'typescript · web app', status: 'live',
-    repo: 'fraction12/WireFlow', installCommand: '# clone + pnpm dev — deploy coming' },
+    repo: 'fraction12/WireFlow', url: 'https://wire-flow.vercel.app', installCommand: '# visit wire-flow.vercel.app' },
 
-  { slug: 'agent-office', order: 7, category: 'human-tools',
+  { slug: 'agent-office', order: 8, category: 'human-tools',
     name: 'Agent Office', emphasisWord: 'Agent Office',
-    description: 'Watch agents live — not logs, not dashboards, but actually see them moving through a room. OpenClaw-native spatial interface, built in Godot.',
+    description: 'Spatial interface experiment for watching agent work as activity rather than logs.',
     stack: 'godot · gdscript · openclaw', kind: 'godot · spatial UI · private', status: 'dev',
-    metricOverride: '🔒 private · in dev', installCommand: '# private preview — reach out if interested' },
+    metricOverride: 'Private development', installCommand: '# private preview — reach out if interested' },
 
-  { slug: 'hunt', order: 8, category: 'human-tools',
+  { slug: 'hunt', order: 9, category: 'human-tools',
     name: 'Hunt', emphasisWord: 'Hunt',
-    description: 'Personal job hunt CRM for me and my agents — applications, companies, roles, notes. Agents file new leads, I triage the shortlist.',
+    description: 'Personal CRM for roles, companies, applications, notes, and assisted lead triage.',
     stack: 'typescript · sqlite', kind: 'typescript · personal CRM', status: 'dev',
-    repo: 'fraction12/Hunt',
-    metricOverride: '🔨 building in the open',
-    installCommand: '# dev preview — clone and run' },
+    metricOverride: 'In development',
+    installCommand: '# private development preview' },
 
 
   // ────────────── PRODUCTS ──────────────
   { slug: 'tradespec', order: 1, category: 'products',
     name: 'TradeSpec AI', emphasisWord: 'TradeSpec',
-    description: 'AI workflow for specialty-contractor estimates — reads messy plan sets, pulls scope, and creates evidence-linked review packs from real bid inputs.',
+    description: 'AI workflow for specialty-contractor estimates that turns plan sets into evidence-linked review packs.',
     stack: 'python · next.js · saas', kind: 'saas · alpha · customer pilot', status: 'private',
     url: 'https://tradespec-website.vercel.app',
-    metricOverride: '🔒 alpha · 1 customer live', installCommand: '# alpha with a real customer — see the marketing site' },
+    metricOverride: 'Private alpha', installCommand: '# alpha with a real customer — see the marketing site' },
 
 
   // ────────────── EXPERIMENTS ──────────────
   { slug: 'eat', order: 1, category: 'experiments',
     name: 'eat', emphasisWord: 'eat',
-    description: 'Kitchen inventory + recipe discovery. AI receipt scanning, 15 RSS feeds, inventory-aware recipe matching. My first Dark Factory build — I never looked at a line of the code. Agents wrote, reviewed, shipped.',
-    stack: 'next.js · supabase · gpt-4 vision', kind: 'next.js · live app · dark factory', status: 'live',
-    repo: 'fraction12/eat', url: 'https://eat-tawny.vercel.app', installCommand: '# visit eat-tawny.vercel.app' },
+    description: 'Kitchen inventory and recipe discovery experiment with receipt scanning and inventory-aware matching.',
+    stack: 'next.js · supabase · gpt-4 vision', kind: 'next.js · experiment', status: 'dev',
+    repo: 'fraction12/eat', installCommand: '# source available on GitHub — deployment not currently public' },
 
   { slug: 'vault-mind', order: 2, category: 'experiments',
     name: 'Vault Mind', emphasisWord: 'Vault Mind',
-    description: 'CLI that talks to your Second Brain through a fine-tuned local model. Experiment parked — fine-tuning at scale was the wrong unit of work for the problem. The learnings are shipping as essays.',
+    description: 'Parked local-model experiment for talking to a personal knowledge base through a CLI.',
     stack: 'go · local llm · cli', kind: 'go · experiment · parked', status: 'private',
-    metricOverride: '🔒 parked · learnings published', installCommand: '# private experiment — see essays for the postmortem' }
+    metricOverride: 'Parked experiment', installCommand: '# private experiment — see essays for the postmortem' }
 
 ];
 

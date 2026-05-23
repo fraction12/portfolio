@@ -1,14 +1,11 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
-
-interface Props { current?: 'home' | 'tools' | 'writing' | 'jarvis' | 'beliefs' }
+interface Props { current?: 'home' | 'tools' | 'writing' | 'contact' }
 const { current = 'home' } = Astro.props;
 
 const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
-  { href: '/', label: 'Home', key: 'home' },
-  { href: '/tools', label: 'Tools', key: 'tools' },
+  { href: '/tools', label: 'Work', key: 'tools' },
   { href: '/writing', label: 'Writing', key: 'writing' },
-  { href: '/jarvis', label: 'Jarvis', key: 'jarvis' }
+  { href: '/#contact', label: 'Contact', key: 'contact' }
 ];
 ---
 
@@ -20,6 +17,5 @@ const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = 
         <a href={link.href} class:list={['top-nav__link', { active: current === link.key }]}>{link.label}</a>
       ))}
     </div>
-    <ThemeToggle />
   </div>
 </nav>

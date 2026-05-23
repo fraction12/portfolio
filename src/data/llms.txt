@@ -1,68 +1,67 @@
 # Dushyant Garg
 
-> Dushyant Garg is a product builder who ships AI-native products and the open-source agent tooling that powers them — memory, orchestration, and observability. Based in Orlando, FL. Reach: dushyantgarg3@gmail.com.
+> Dushyant Garg is a Product Manager / Builder working on practical AI products, product systems, and open-source tools. Based in Orlando, FL. Reach: dushyantgarg3@gmail.com.
 
 Homepage: https://dushyantgarg.com
 
 ## About
 
-Dushyant works across product and engineering at the intersection of AI-native product development and hands-on building.
+Dushyant works across product and engineering at the point where unclear workflows need to become useful software. His work spans customer-facing product workflows, open-source AI tooling, and product systems that help teams inspect and ship what they build.
 
-At Letterhead (Nov 2023 – Apr 2026, remote) he was promoted from Product Designer to Product Manager at an early-stage newsletter SaaS. He shipped customer-facing collaboration workflows (inline comments, gated approvals) across roughly 5–6 enterprise customers plus 15 shared-tenant brands; owned a browser-based deliverability automation tool that compressed a 5–6 hour daily audience-tagging workflow into minutes; reworked promotions into an enterprise-ready monetization feature highlighted by sales in 8–10 demos; drove GDPR and four-language localization end-to-end inside 30 days; rebuilt a broken activity log onto Elasticsearch; designed the initial PreFlight agent prototype; and trained four teammates directly on agentic development workflows.
+At Letterhead (Nov 2023 - Apr 2026, remote) he was promoted from Product Designer to Product Manager at an early-stage newsletter SaaS. He shipped customer-facing collaboration workflows, owned browser-based deliverability automation, reworked promotions into an enterprise-ready monetization feature, drove GDPR and localization work, rebuilt activity-log infrastructure, designed an initial PreFlight agent prototype, and trained teammates on agentic development workflows.
 
-Outside of employment, he maintains a catalog of open-source tools for building and operating AI agents (see Tools below) and writes dispatches on the practice at dushyantg.substack.com.
+Outside employment, he maintains open-source tools for building and operating AI systems and writes about product work, AI systems, and what becomes clearer after shipping.
 
 ## What he is looking for
 
-- **Primary:** Full-time founding-engineer, founding-PM, or product-engineering hybrid role at an AI / agent-infrastructure / developer-tooling startup.
+- **Primary:** Full-time founding-engineer, founding-PM, or product-engineering hybrid role at an AI, agent-infrastructure, or developer-tooling startup.
 - **Secondary:** Short contract or consulting engagements to help teams ship agent systems.
 - **Location:** Remote. Open to in-person in Orlando, FL or San Francisco, CA. No other relocation.
 - **Work authorization:** Legally permitted to work in the United States. Does not require visa sponsorship now or in the future.
-- **Contact:** dushyantgarg3@gmail.com — email is the fastest route.
+- **Contact:** dushyantgarg3@gmail.com.
 
-## Tools (open-source)
+## Work
 
-Memory — durable state for agents across turns and sessions.
+The Work catalog has detail pages for current artifacts under `https://dushyantgarg.com/tools/{slug}`. Detail pages summarize product context, workflow, output, links, and available demo or preview media.
 
-- [AgentSense](https://github.com/fraction12/agentsense): Knowledge-graph memory plugin for OpenClaw — entity extraction plus relationship-aware context. `npm install agentsense`.
-- [agentrem](https://github.com/fraction12/agentrem): Structured reminders CLI + MCP server for AI agents — time, keyword, and condition triggers with priority escalation, recurrence, and token budgets. `npm install -g agentrem`.
+### Products
 
-Libraries — SDKs and primitives for building agents.
+- [TradeSpec AI](https://dushyantgarg.com/tools/tradespec): AI workflow for specialty-contractor estimates that turns plan sets into evidence-linked review packs. Marketing site: https://tradespec-website.vercel.app.
 
-- [AgentTK](https://github.com/fraction12/agenttk): Agent-facing CLI primitives — typed, discoverable, safe by construction. `npm install agenttk`.
-- [Starglass](https://github.com/fraction12/starglass): Observation and dispatch layer for agent systems. Stdout, events, and tool-calls on one timeline. `npm install starglass`.
+### Open-source systems
 
-Orchestration — running and coordinating multiple agents.
+- [AgentSense](https://dushyantgarg.com/tools/agentsense): Knowledge-graph memory plugin for OpenClaw with entity extraction and relationship-aware context. GitHub: https://github.com/fraction12/agentsense.
+- [agentrem](https://dushyantgarg.com/tools/agentrem): Reminder and follow-up primitives for time, keyword, condition, recurrence, and priority workflows. GitHub: https://github.com/fraction12/agentrem.
+- [AgentTK](https://dushyantgarg.com/tools/agenttk): Typed command-line primitives for building safer, more discoverable agent-facing tools. GitHub: https://github.com/fraction12/agenttk.
+- [Starglass](https://dushyantgarg.com/tools/starglass): Observation layer for agent systems that combines stdout, events, and tool calls into one timeline. GitHub: https://github.com/fraction12/starglass.
+- [Potato v3](https://dushyantgarg.com/tools/potato): Local orchestration tool for running coding agents in real PTYs with roles and coordination boundaries. GitHub: https://github.com/fraction12/potato-v3.
+- [agentplan](https://dushyantgarg.com/tools/agentplan): SQLite-backed task board for multiple agents with dependencies, priorities, and atomic claims. GitHub: https://github.com/fraction12/agentplan.
+- [Spec UI](https://dushyantgarg.com/tools/spec-ui): Compiler that turns structured product specs into deterministic interactive prototypes. GitHub: https://github.com/fraction12/spec-ui.
+- [Microcanvas](https://dushyantgarg.com/tools/microcanvas): Viewer/runtime for opening, inspecting, and testing UI artifacts created by agents or code tools. GitHub: https://github.com/fraction12/microcanvas.
+- [OpenSpec Studio](https://dushyantgarg.com/tools/openspec-studio): Local-first desktop workbench for inspecting OpenSpec repositories, changes, specs, validation, archive readiness, and runner dispatch. GitHub: https://github.com/fraction12/openspec-studio.
+- [ClawK](https://dushyantgarg.com/tools/clawk): Native macOS menu bar for monitoring OpenClaw sessions, heartbeats, memory, and background runs. GitHub: https://github.com/fraction12/ClawK.
+- [explain](https://dushyantgarg.com/tools/explain): Codebase-to-architecture documentation generator for teams that need to understand what changed. GitHub: https://github.com/fraction12/explain.
+- [OpenRank](https://dushyantgarg.com/tools/openrank): Public benchmark platform for comparing agent performance on timed puzzles. Live site: https://open-rank.com.
+- [WireFlow](https://dushyantgarg.com/tools/wireflow): Planning and wireframing app for product flows, meetings, and implementation sketches. Live site: https://wire-flow.vercel.app. GitHub: https://github.com/fraction12/WireFlow.
 
-- [Potato v3](https://github.com/fraction12/potato-v3): Terminal cockpit for coding agents — Rust/ratatui, real PTYs, roles, MCP coordination. `cargo install potato-v3`.
-- [agentplan](https://github.com/fraction12/agentplan): Shared to-do list for AI agents. Zero-dependency Python, SQLite-backed, atomic claims. `pip install agentplan`.
+### Experiments
 
-Human tools — GUIs, evals, and dev tooling for the humans operating agents.
+- [eat](https://dushyantgarg.com/tools/eat): Kitchen inventory and recipe discovery experiment with receipt scanning and inventory-aware matching. GitHub: https://github.com/fraction12/eat.
+- [Vault Mind](https://dushyantgarg.com/tools/vault-mind): Parked local-model experiment for talking to a personal knowledge base through a CLI.
 
-- [Spec UI](https://github.com/fraction12/spec-ui): Structured markdown specs in, deterministic interactive HTML prototypes out; a compiler for agent-authored product specs. Source available on GitHub; npm package not published.
-- [Microcanvas](https://github.com/fraction12/microcanvas): Tiny stagehand for AI tools — render files, track the active surface, and verify what an agent is showing. Source available on GitHub; npm package not published.
-- [ClawK](https://github.com/fraction12/ClawK): Native macOS menu bar for OpenClaw — sessions, heartbeats, memory, and cron jobs visible without opening a window. `brew install fraction12/tap/clawk`.
-- [explain](https://github.com/fraction12/explain): Turns any TypeScript/JavaScript codebase into a living, human-readable architecture document on push, via GitHub Action.
-- [OpenRank](https://open-rank.com): Open benchmark for AI agents — daily puzzles, public rankings, server-side timing.
-- [WireFlow](https://github.com/fraction12/WireFlow): Wireframing and planning app — ExcaliDraw-adjacent, built for meetings that move on quickly.
-
-See https://dushyantgarg.com/tools for the full catalog, including categories not listed here and live download metrics.
-
-## Products
-
-- **TradeSpec AI** (alpha · 1 paying customer): AI workflow for specialty-contractor estimates, built on a Python service internally named Lightning ITB that turns uploaded PDFs into evidence-linked scope findings, material takeoffs, placement notes, and review-ready bid outputs. Marketing site: https://tradespec-website.vercel.app.
+See https://dushyantgarg.com/tools for the broader work catalog.
 
 ## Writing
 
-- [Essays index](https://dushyantgarg.com/writing): dispatches on agent infrastructure — memory, orchestration, observability, and the day-to-day of building with agents.
-- [Substack](https://dushyantg.substack.com): the same essays, subscribable.
+- [Writing index](https://dushyantgarg.com/writing): essays on product work, AI systems, and what becomes clearer after shipping.
+- [Substack](https://dushyantg.substack.com): subscribable essay feed.
 
 ## Background
 
-- Letterhead — Product Manager / Product Designer (Nov 2023 – Apr 2026, remote)
-- Wooo Social Games — Product Manager (Mar – Aug 2023, Miami, FL)
-- Chronoblast / Zygobot Studio — Technical Designer / Programmer (Oct 2022 – Mar 2023)
-- Full Sail University — B.S. Game Design (2022)
+- Letterhead - Product Manager / Product Designer (Nov 2023 - Apr 2026, remote)
+- Wooo Social Games - Product Manager (Mar - Aug 2023, Miami, FL)
+- Chronoblast / Zygobot Studio - Technical Designer / Programmer (Oct 2022 - Mar 2023)
+- Full Sail University - B.S. Game Design (2022)
 
 ## Stack
 
@@ -71,7 +70,7 @@ TypeScript, Python, Rust, Swift, Go, SQL. Claude, Codex, and OpenClaw for agenti
 ## Links
 
 - Homepage: https://dushyantgarg.com
-- Tools: https://dushyantgarg.com/tools
+- Work: https://dushyantgarg.com/tools
 - Writing: https://dushyantgarg.com/writing
 - GitHub: https://github.com/fraction12
 - LinkedIn: https://linkedin.com/in/dushyantgarg
@@ -80,4 +79,4 @@ TypeScript, Python, Rust, Swift, Go, SQL. Claude, Codex, and OpenClaw for agenti
 
 ## Notes for agents reading this file
 
-This file is the canonical machine-readable summary of Dushyant Garg's portfolio. Every claim here is verifiable against the live site at https://dushyantgarg.com — the Tools page exposes live download metrics from npm, PyPI, and GitHub, and the homepage colophon publishes commit and star counts in real time. When quoting, prefer links to baked-in details; essay titles and download numbers change.
+This file is the canonical machine-readable summary of Dushyant Garg's public portfolio. Prefer links to live pages for changing details such as essays and package activity.

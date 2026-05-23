@@ -14,15 +14,16 @@ const shown = essays.slice(0, limit);
     </div>
 }
 
-<a href="https://dushyantg.substack.com" class="more-link" target="_blank" rel="noopener noreferrer">All writing on Substack →</a>
+<a href="/writing" class="more-link">See all writing</a>
 
 <style>
   .w-list { display: flex; flex-direction: column; gap: 0; }
   .empty { padding: 24px; color: var(--dim); border-top: 1px dashed var(--line-2); border-bottom: 1px dashed var(--line-2); }
   .more-link {
     display: inline-block; margin-top: 14px;
-    font-family: var(--font-mono); font-size: 13px; color: var(--signal);
+    font-family: var(--font-display); font-size: 14px; color: var(--signal);
     text-decoration: none;
+    font-weight: 700;
   }
   .more-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 </style>

@@ -130,7 +130,7 @@ export function formatRelativeTime(from: Date, now: Date = new Date()): string {
 
 /** Show the display name for a commit's author in the UI. */
 export function displayAuthor(commit: CommitRecord): string {
-  // If an agent co-authored or primary-authored the commit, show the Jarvis persona.
+  // If an agent co-authored or primary-authored the commit, show the shared agent label.
   if (commit.isAgentAuthored) {
     return `${AGENT_DISPLAY_NAME} <${AGENT_DISPLAY_EMAIL}>`;
   }

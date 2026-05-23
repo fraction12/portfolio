@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f7f4ed"/>
+  <rect x="72" y="72" width="1056" height="486" fill="#ffffff" stroke="#d8d1c3"/>
+  <text x="120" y="160" fill="#706c63" font-family="Arial, sans-serif" font-size="28" font-weight="700">Open Source</text>
+  <text x="120" y="285" fill="#171717" font-family="Arial, sans-serif" font-size="88" font-weight="700">Spec UI</text>
+  <text x="120" y="375" fill="#42403b" font-family="Arial, sans-serif" font-size="36">Product specs to deterministic HTML prototypes.</text>
+  <text x="120" y="490" fill="#8f4f24" font-family="Arial, sans-serif" font-size="30" font-weight="700">Dushyant Garg</text>
+</svg>

@@ -34,7 +34,7 @@ const SYNTHETIC_COMMIT: CommitRecord = {
 };
 
 /**
- * Resolve recent commits for the hero terminal / footer.
+ * Resolve recent commits for portfolio data surfaces.
  * Priority:
  *   1. Cross-repo via GitHub GraphQL (captures public + private if token has repo scope)
  *   2. Single-repo via GitHub REST (portfolio only, still works with public_repo scope)

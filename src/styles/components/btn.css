@@ -1,41 +1,47 @@
 /* ============================================================
-   BUTTON — spec §3.1
-   Variants: .btn--primary (default), .btn--ghost, .btn--link
+   BUTTONS
    ============================================================ */
 .btn {
   display: inline-flex;
+  min-height: 40px;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  background: var(--signal);
-  /* Dark text on apricot — WCAG AA normal text (9.2:1). White on
-     apricot would be ~2.1:1 and fail AA. */
-  color: var(--ink);
-  border: 1px solid transparent;
+  border: 1px solid var(--ivory);
   border-radius: var(--radius-sm);
-  padding: 0.62rem 0.95rem;
+  background: var(--ivory);
+  color: var(--ink);
+  padding: 0.68rem 1rem;
   font-family: var(--font-display);
   font-size: var(--type-small-size);
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
   text-decoration: none;
-  transition: filter var(--motion-fast) ease, background var(--motion-fast) ease, border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+  transition:
+    background var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
 }
-.btn:hover { filter: brightness(1.06); }
-.btn:active { transform: translateY(1px); }
+
+.btn:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--ink-1);
+}
+
 .btn:disabled,
 .btn[aria-disabled="true"] {
   background: var(--line-2);
+  border-color: transparent;
   color: var(--dim-2);
   cursor: not-allowed;
-  filter: none;
-  transform: none;
 }
 
 .btn--primary {
-  background: var(--signal);
+  background: var(--ivory);
   color: var(--ink);
-  border-color: transparent;
+  border-color: var(--ivory);
 }
 
 .btn--ghost {
@@ -43,21 +49,26 @@
   color: var(--ivory);
   border-color: var(--line-3);
 }
+
 .btn--ghost:hover {
-  filter: none;
-  border-color: var(--signal-glow);
+  background: transparent;
+  border-color: var(--ivory);
   color: var(--ivory);
 }
 
 .btn--link {
+  min-height: 0;
   background: transparent;
   color: var(--signal);
   border-color: transparent;
   padding: 0;
-  font-weight: 500;
+  font-weight: 700;
 }
+
 .btn--link:hover {
-  filter: none;
+  background: transparent;
+  border-color: transparent;
+  color: var(--signal-hov);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
