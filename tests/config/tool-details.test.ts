@@ -22,6 +22,12 @@ describe('tool detail content', () => {
     expect(detail?.links.some(link => link.href === 'https://tradespec-website.vercel.app')).toBe(true);
   });
 
+  it('links repo-backed public websites when GitHub metadata exposes a working homepage', () => {
+    expect(getToolDetail('agentplan')?.links.some(link => link.href === 'https://fraction12.github.io/agentplan/')).toBe(true);
+    expect(getToolDetail('agentrem')?.links.some(link => link.href === 'https://fraction12.github.io/agentrem/')).toBe(true);
+    expect(getToolDetail('eat')?.links.some(link => link.href === 'https://eat-tawny.vercel.app')).toBe(false);
+  });
+
   it('keeps missing demo media out of public media slots', () => {
     const missingMedia = toolDetails.filter(detail => detail.demo.status === 'none');
 
@@ -47,6 +53,8 @@ describe('tool detail content', () => {
 
   it('attaches ready previews for tools that have public product surfaces', () => {
     const readyPreviewBySlug = {
+      agentplan: '/tool-media/agentplan/agentplan-preview.jpg',
+      agentrem: '/tool-media/agentrem/agentrem-preview.jpg',
       openrank: '/tool-media/openrank/openrank-preview.jpg',
       tradespec: '/tool-media/tradespec/tradespec-preview.jpg',
       wireflow: '/tool-media/wireflow/wireflow-preview.jpg',

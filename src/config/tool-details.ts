@@ -140,12 +140,13 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       'Static notes and memory files can store reminders, but they do not wake up on time, trigger on conditions, or fit reminder recall into a bounded context window.',
     statusNote: 'Public npm package, CLI, native notification flow, and MCP server.',
     demo: {
-      type: 'video',
-      status: 'none',
-      label: 'agentrem trigger demo',
-      duration: '75 sec target',
+      type: 'image',
+      status: 'ready',
+      label: 'agentrem website preview',
+      src: '/tool-media/agentrem/agentrem-preview.jpg',
+      alt: 'agentrem website showing the install command, status badges, and agent reminder positioning.',
       caption:
-        'Show adding a reminder, checking due work, using watch mode, and surfacing the same reminder through the MCP server.',
+        'The public agentrem site explains the reminder CLI and MCP server, including install flow and agent-focused positioning.',
     },
     sections: sections(
       [
@@ -261,12 +262,13 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       'Agents can plan, but without shared durable task state they duplicate work, lose dependencies, and need the user to manually coordinate the queue.',
     statusNote: 'Public PyPI package with CLI, local storage, plugins, and optional dashboard.',
     demo: {
-      type: 'video',
-      status: 'none',
-      label: 'agentplan shared backlog demo',
-      duration: '90 sec target',
+      type: 'image',
+      status: 'ready',
+      label: 'agentplan website preview',
+      src: '/tool-media/agentplan/agentplan-preview.jpg',
+      alt: 'agentplan website showing project management for AI-native teams and the PyPI install command.',
       caption:
-        'Show creating a project, adding dependent tickets, claiming work atomically, and watching progress in the dashboard.',
+        'The public agentplan site frames the project as a shared task board for AI-native teams and points visitors to install and docs.',
     },
     sections: sections(
       [
@@ -677,7 +679,7 @@ function externalLinksFor(artifact: Artifact): ToolDetailLink[] {
 
   if (artifact.url) {
     links.push({
-      label: artifact.slug === 'tradespec' ? 'Marketing site' : 'Live surface',
+      label: artifact.slug === 'tradespec' ? 'Marketing site' : artifact.url.includes('github.io') ? 'Website' : 'Live surface',
       href: artifact.url,
       external: true,
     });

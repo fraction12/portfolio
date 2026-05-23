@@ -66,7 +66,8 @@ export const artifacts: Artifact[] = [
     name: 'agentrem', emphasisWord: 'agentrem',
     description: 'Structured reminders CLI and MCP server for time, keyword, condition, recurrence, and priority workflows.',
     stack: 'typescript · mcp · npm', kind: 'typescript · cli + mcp', status: 'live',
-    repo: 'fraction12/agentrem', npmName: 'agentrem', installCommand: 'npm install -g agentrem' },
+    repo: 'fraction12/agentrem', npmName: 'agentrem', url: 'https://fraction12.github.io/agentrem/',
+    installCommand: 'npm install -g agentrem' },
 
 
   // ────────────── LIBRARIES ──────────────
@@ -94,7 +95,8 @@ export const artifacts: Artifact[] = [
     name: 'agentplan', emphasisWord: 'agentplan',
     description: 'SQLite-backed task board for multiple agents with dependencies, priorities, and atomic claims.',
     stack: 'python · sqlite · pypi', kind: 'python · cli + lib', status: 'live',
-    repo: 'fraction12/agentplan', pypiName: 'agentplan', installCommand: 'pip install agentplan' },
+    repo: 'fraction12/agentplan', pypiName: 'agentplan', url: 'https://fraction12.github.io/agentplan/',
+    installCommand: 'pip install agentplan' },
 
 
   // ────────────── HUMAN TOOLS ──────────────

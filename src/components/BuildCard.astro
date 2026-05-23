@@ -15,7 +15,9 @@ const githubUrl = artifact.repo ? `https://github.com/${artifact.repo}` : null;
 const detailUrl = hasToolDetail(artifact.slug) ? `/tools/${artifact.slug}` : null;
 const externalUrl = artifact.url ?? githubUrl;
 const host = externalUrl ? externalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') : null;
-const externalLabel = artifact.url ? (artifact.slug === 'tradespec' ? 'Marketing site' : host) : 'GitHub';
+const externalLabel = artifact.url
+  ? (artifact.slug === 'tradespec' ? 'Marketing site' : artifact.url.includes('github.io') ? 'Website' : host)
+  : 'GitHub';
 ---
 
 <article class:list={['build-card', { 'build-card--compact': compact }]}>
