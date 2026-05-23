@@ -169,8 +169,8 @@ export const artifacts: Artifact[] = [
   { slug: 'eat', order: 1, category: 'experiments',
     name: 'eat', emphasisWord: 'eat',
     description: 'Kitchen inventory and recipe discovery experiment with receipt scanning and inventory-aware matching.',
-    stack: 'next.js · supabase · gpt-4 vision', kind: 'next.js · experiment', status: 'dev',
-    repo: 'fraction12/eat', installCommand: '# source available on GitHub — deployment not currently public' },
+    stack: 'next.js · supabase · gpt-4 vision', kind: 'next.js · experiment', status: 'live',
+    repo: 'fraction12/eat', url: 'https://eat-ai.app', installCommand: '# visit eat-ai.app' },
 
   { slug: 'vault-mind', order: 2, category: 'experiments',
     name: 'Vault Mind', emphasisWord: 'Vault Mind',

@@ -613,14 +613,15 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       'Home cooks who want inventory-aware meal ideas without manually reconciling receipts, pantry items, and recipe tabs.',
     problem:
       'Kitchen planning breaks when grocery inventory and recipe discovery live in separate places, especially after receipts, quantities, and favorites drift out of date.',
-    statusNote: 'Public source; the previous Vercel deployment is not currently available.',
+    statusNote: 'Live public web app with source available on GitHub.',
     demo: {
-      type: 'video',
-      status: 'none',
-      label: 'Eat receipt-to-recipe demo',
-      duration: '90 sec target',
+      type: 'image',
+      status: 'ready',
+      label: 'Eat website preview',
+      src: '/tool-media/eat/eat-preview.jpg',
+      alt: 'Eat web app landing page with recipe URL checker and magic-link sign-in.',
       caption:
-        'Show scanning a receipt, updating inventory, filtering matched recipes, saving a favorite, and sending feedback.',
+        'The live Eat web app helps users stop asking what is for dinner by checking recipes against their food workflow.',
     },
     sections: sections(
       [
@@ -679,7 +680,13 @@ function externalLinksFor(artifact: Artifact): ToolDetailLink[] {
 
   if (artifact.url) {
     links.push({
-      label: artifact.slug === 'tradespec' ? 'Marketing site' : artifact.url.includes('github.io') ? 'Website' : 'Live surface',
+      label: artifact.slug === 'tradespec'
+        ? 'Marketing site'
+        : artifact.slug === 'eat'
+          ? 'Live app'
+          : artifact.url.includes('github.io')
+            ? 'Website'
+            : 'Live surface',
       href: artifact.url,
       external: true,
     });

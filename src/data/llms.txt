@@ -46,7 +46,7 @@ The Work catalog has detail pages for current artifacts under `https://dushyantg
 
 ### Experiments
 
-- [eat](https://dushyantgarg.com/tools/eat): Kitchen inventory and recipe discovery experiment with receipt scanning and inventory-aware matching. GitHub: https://github.com/fraction12/eat.
+- [eat](https://dushyantgarg.com/tools/eat): Kitchen inventory and recipe discovery experiment with receipt scanning and inventory-aware matching. Website: https://eat-ai.app. GitHub: https://github.com/fraction12/eat.
 - [Vault Mind](https://dushyantgarg.com/tools/vault-mind): Parked local-model experiment for talking to a personal knowledge base through a CLI.
 
 See https://dushyantgarg.com/tools for the broader work catalog.
