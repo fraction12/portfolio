@@ -85,15 +85,6 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
       </div>
     </section>
 
-    <section class="detail-section" aria-labelledby="problem-heading">
-      <div class="section-label">
-        <h2 id="problem-heading">Problem</h2>
-      </div>
-      <div class="section-body prose-block">
-        <p>{detail.problem}</p>
-      </div>
-    </section>
-
     {hasReadyMedia && (
       <section id="media" class="detail-section" aria-labelledby="media-heading">
         <div class="section-label">
@@ -129,6 +120,15 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
         </div>
       </section>
     )}
+
+    <section class="detail-section" aria-labelledby="problem-heading">
+      <div class="section-label">
+        <h2 id="problem-heading">Problem</h2>
+      </div>
+      <div class="section-body prose-block">
+        <p>{detail.problem}</p>
+      </div>
+    </section>
 
     <section class="detail-section" aria-labelledby="story-heading">
       <div class="section-label">
@@ -168,7 +168,7 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
 
   .detail-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 360px);
     gap: clamp(2rem, 6vw, 5rem);
     padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(3rem, 6vw, 4.5rem);
     border-bottom: 1px solid var(--line);
@@ -186,10 +186,12 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
   }
 
   .detail-hero h1 {
-    font-size: clamp(3.2rem, 9vw, 7rem);
-    line-height: 0.95;
-    max-width: 9ch;
+    font-size: clamp(2.85rem, 7vw, 5.55rem);
+    line-height: 0.98;
+    max-width: min(100%, 12ch);
     margin-bottom: 1.4rem;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
   }
 
   .tagline {
@@ -288,9 +290,10 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
   .media-frame img {
     display: block;
     width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: contain;
-    background: var(--ink-2);
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center;
+    background: var(--ink-1);
   }
 
   .media-frame figcaption {

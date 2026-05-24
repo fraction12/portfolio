@@ -34,7 +34,7 @@
       try { localStorage.setItem(STORAGE_KEY, pref); } catch {}
 
       const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-      if (meta) meta.content = actual === 'dark' ? '#11100e' : '#f7f4ed';
+      if (meta) meta.content = actual === 'dark' ? '#191713' : '#f7f4ed';
 
       syncUI(pref);
     }

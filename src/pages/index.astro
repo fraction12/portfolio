@@ -8,6 +8,7 @@ import BuildCard from '../components/BuildCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Contact from '../components/Contact.astro';
+import ProofStrip from '../components/ProofStrip.astro';
 import { artifacts, type Artifact } from '../config/packages';
 import { loadSignalData } from '../lib/data';
 
@@ -38,6 +39,40 @@ const homeFeaturedSlugs = ['tradespec', 'spec-ui', 'microcanvas', 'agenttk'];
 const homeFeatured = homeFeaturedSlugs
   .map(s => artifacts.find(a => a.slug === s))
   .filter((a): a is Artifact => Boolean(a));
+
+type ProofSignal = {
+  label: string;
+  title: string;
+  body: string;
+  href: string;
+};
+
+const proofSignals: ProofSignal[] = [
+  {
+    label: 'Product proof',
+    title: 'TradeSpec AI',
+    body: 'Customer-pilot estimating workflow for evidence-linked bid review.',
+    href: '/tools/tradespec',
+  },
+  {
+    label: 'Builder proof',
+    title: 'OpenSpec Studio',
+    body: 'Desktop workbench for inspecting spec-driven product work.',
+    href: '/tools/openspec-studio',
+  },
+  {
+    label: 'Systems proof',
+    title: 'Agent tooling',
+    body: 'Reusable primitives for memory, planning, orchestration, and visual QA.',
+    href: '/tools',
+  },
+  {
+    label: 'Judgment',
+    title: 'Writing',
+    body: 'Notes on AI products, product systems, and lessons from shipping.',
+    href: '/writing',
+  },
+];
 ---
 
 <Layout
@@ -49,6 +84,7 @@ const homeFeatured = homeFeaturedSlugs
 >
   <div class="page-shell home-shell">
     <Hero />
+    <ProofStrip signals={proofSignals} />
 
     <section id="work" class="section-split">
       <SectionHead name="Work" meta="Selected builds that show the range: product workflow, open-source infrastructure, and tools for evaluating what gets shipped." />

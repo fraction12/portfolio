@@ -107,14 +107,14 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --ink:          #11100e;
-  --ink-1:        #171512;
-  --ink-2:        #211e19;
+  --ink:          #191713;
+  --ink-1:        #211e19;
+  --ink-2:        #2b261f;
 
-  --ivory:        #f3efe6;
-  --ivory-2:      #c9c2b6;
-  --dim:          #928a7e;
-  --dim-2:        #655f56;
+  --ivory:        #f5efe5;
+  --ivory-2:      #d2cabd;
+  --dim:          #a0988c;
+  --dim-2:        #777064;
 
   --signal:       #d19463;
   --signal-hov:   #e0aa7d;

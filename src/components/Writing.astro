@@ -1,5 +1,5 @@
 ---
-import Card from './Card.astro';
+import WritingRow from './WritingRow.astro';
 import { fetchEssays, type Essay } from '../lib/data/substack';
 
 interface Props {
@@ -17,17 +17,7 @@ const hasError = essays.length === 0;
 <div id="writing">
   {visiblePosts.length > 0 ? (
     <div class="writing-list">
-      {visiblePosts.map((post, index) => (
-        <Card variant="writing" className="reveal" style={`--reveal-delay: ${(index + 1) * 0.05}s;`}>
-          <h3>
-            <a class="title-link" href={post.link} target="_blank" rel="noopener noreferrer">
-              {post.title}
-            </a>
-          </h3>
-          <p class="date">{post.dateLabel} · {post.readTimeMinutes} min</p>
-          <p class="desc">{post.description}</p>
-        </Card>
-      ))}
+      {visiblePosts.map(post => <WritingRow essay={post} />)}
     </div>
   ) : (
     <div class="writing-empty">
@@ -38,15 +28,11 @@ const hasError = essays.length === 0;
 </div>
 
 <style>
-  .writing-list { display: flex; flex-direction: column; gap: 0.8rem; }
-  .title-link {
-    color: inherit;
-    text-decoration: none;
-  }
-  .title-link:hover {
-    color: var(--signal);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  .writing-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--line);
   }
   .writing-empty {
     border: 1px dashed var(--line);

@@ -97,7 +97,7 @@ const websiteSchema = includeIdentitySchema
         doc.documentElement.setAttribute('data-theme', actual);
         doc.documentElement.setAttribute('data-theme-pref', pref);
         var meta = doc.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', actual === 'dark' ? '#11100e' : '#f7f4ed');
+        if (meta) meta.setAttribute('content', actual === 'dark' ? '#191713' : '#f7f4ed');
       }
       // Initial paint.
       applyTo(document, readPref());

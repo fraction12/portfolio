@@ -1,0 +1,113 @@
+---
+import type { ToolDetail } from '../config/tool-details';
+
+interface Props {
+  detail: ToolDetail;
+  proof: string;
+}
+
+const { detail, proof } = Astro.props;
+const { artifact } = detail;
+const mediaSrc = detail.demo.status === 'ready'
+  ? detail.demo.type === 'video'
+    ? detail.demo.poster
+    : detail.demo.src
+  : undefined;
+---
+
+<article class="flagship-card">
+  <a class="flagship-card__media" href={detail.detailPath} aria-label={`Open ${artifact.name} case study`}>
+    {mediaSrc ? (
+      <img src={mediaSrc} alt={detail.demo.alt ?? `${artifact.name} product preview`} loading="lazy" decoding="async" />
+    ) : (
+      <span>{artifact.name}</span>
+    )}
+  </a>
+
+  <div class="flagship-card__body">
+    <p class="flagship-card__eyebrow">{detail.categoryLabel}</p>
+    <h3><a href={detail.detailPath}>{artifact.name}</a></h3>
+    <p>{proof}</p>
+    <a class="flagship-card__link" href={detail.detailPath}>Open case study</a>
+  </div>
+</article>
+
+<style>
+  .flagship-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-width: 0;
+    border: 1px solid var(--line);
+    background: var(--surface-raised);
+  }
+
+  .flagship-card__media {
+    display: grid;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--ink-2);
+    color: var(--dim);
+    text-decoration: none;
+  }
+
+  .flagship-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform var(--motion-slow) ease;
+  }
+
+  .flagship-card:hover .flagship-card__media img {
+    transform: scale(1.015);
+  }
+
+  .flagship-card__media span {
+    place-self: center;
+    font-size: var(--type-small-size);
+    font-weight: 700;
+  }
+
+  .flagship-card__body {
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+    padding: 1rem;
+  }
+
+  .flagship-card__eyebrow {
+    color: var(--dim);
+    font-size: var(--type-caption-size);
+    font-weight: 700;
+  }
+
+  .flagship-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .flagship-card h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .flagship-card h3 a:hover,
+  .flagship-card__link:hover {
+    color: var(--signal);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .flagship-card__body > p:not(.flagship-card__eyebrow) {
+    color: var(--ivory-2);
+    font-size: var(--type-small-size);
+    line-height: 1.55;
+  }
+
+  .flagship-card__link {
+    align-self: end;
+    color: var(--signal);
+    font-size: var(--type-small-size);
+    font-weight: 700;
+    text-decoration: none;
+  }
+</style>

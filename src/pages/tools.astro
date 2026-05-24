@@ -6,7 +6,9 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import SectionHead from '../components/SectionHead.astro';
 import BuildCard from '../components/BuildCard.astro';
+import FlagshipWorkCard from '../components/FlagshipWorkCard.astro';
 import { artifacts, type Artifact } from '../config/packages';
+import { getToolDetail, type ToolDetail } from '../config/tool-details';
 import { loadSignalData } from '../lib/data';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
@@ -47,16 +49,27 @@ const catalogCopy: Record<string, string> = {
   'vault-mind': 'Parked local-model experiment for talking to a second brain through a CLI.',
 };
 
+const flagshipSlugs = ['tradespec', 'openspec-studio', 'microcanvas', 'agentplan'];
+const flagshipSet = new Set(flagshipSlugs);
+const flagshipProof: Record<string, string> = {
+  tradespec:
+    'Customer-facing AI workflow for estimating teams, with evidence-linked outputs and a clear private-alpha boundary.',
+  'openspec-studio':
+    'A visual workbench for spec-driven development: changes, tasks, validation, archive readiness, and runner state in one place.',
+  microcanvas:
+    'A display surface for agent-created artifacts, built around real rendering, verification, and screenshot evidence.',
+  agentplan:
+    'A shared task board for AI-native teams, with local durable state and claimable work for multiple agents.',
+};
+const flagshipDetails = flagshipSlugs
+  .map(slug => getToolDetail(slug))
+  .filter((detail): detail is ToolDetail => Boolean(detail));
+
 const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
   {
-    name: 'Products',
-    meta: 'Customer-facing work and product workflows.',
-    items: artifacts.filter(a => a.category === 'products'),
-  },
-  {
-    name: 'Open-source systems',
-    meta: 'Infrastructure, tools, and primitives for building and operating AI software.',
-    items: artifacts.filter(a => a.category !== 'products' && a.category !== 'experiments'),
+    name: 'Supporting systems',
+    meta: 'Infrastructure, tools, and primitives that support the larger product thesis.',
+    items: artifacts.filter(a => a.category !== 'products' && a.category !== 'experiments' && !flagshipSet.has(a.slug)),
   },
   {
     name: 'Experiments',
@@ -81,6 +94,18 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
       />
     </div>
 
+    <section class="section-split" id="flagship-work">
+      <SectionHead name="Flagship work" meta="The strongest proof surfaces: product workflow, spec workbench, visual QA, and agent coordination." />
+      <div class="section-split__content flagship-grid">
+        {flagshipDetails.map(detail => (
+          <FlagshipWorkCard
+            detail={detail}
+            proof={flagshipProof[detail.slug] ?? detail.summary}
+          />
+        ))}
+      </div>
+    </section>
+
     {groups.map(group => (
       <section class="section-split" id={`work-${group.name.toLowerCase().replaceAll(' ', '-')}`}>
         <SectionHead name={group.name} meta={group.meta} />
@@ -100,7 +125,19 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
 </Layout>
 
 <style>
+  .flagship-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
   .catalog-list {
     display: grid;
+  }
+
+  @media (max-width: 760px) {
+    .flagship-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

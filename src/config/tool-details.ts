@@ -92,9 +92,9 @@ function sections(
   output: string[],
 ): ToolDetailSection[] {
   return [
-    { title: 'What it is', body: whatItIs },
-    { title: 'Workflow', body: workflow },
-    { title: 'Output', body: output },
+    { title: 'What I built', body: whatItIs },
+    { title: 'How it works', body: workflow },
+    { title: 'What it proves', body: output },
   ];
 }
 
@@ -584,21 +584,21 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
     },
     sections: [
       {
-        title: 'What it is',
+        title: 'What I built',
         body: [
           'A product workflow for turning plan sets and bid documents into a structured review pack.',
           'The product keeps outputs tied to plan evidence so estimators can inspect the reasoning instead of trusting a floating summary.',
         ],
       },
       {
-        title: 'Workflow',
+        title: 'Product decision',
         body: [
           'Upload bid material, extract scope and notes, review evidence-linked findings, and hand off a starter pack for estimator judgment.',
           'The useful product boundary is not full automation. It is a faster first pass that keeps the expert in control.',
         ],
       },
       {
-        title: 'Output',
+        title: 'Review output',
         body: [
           'The intended output is a review-ready packet: scope summary, notes, source evidence, and exportable handoff material.',
         ],
