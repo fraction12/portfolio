@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_route_ea46a259b5",
+  "title": "Writing And Jarvis Content",
+  "summary": "Writing index, content collection configuration, Jarvis markdown entries, and row/block presentation components.\n\nAgent mapper reason: Writing pages combine route rendering, content schema validation, and markdown content; reviewing them together catches schema/content/display drift.",
+  "kind": "route",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/pages/writing.astro",
+      "symbol": null,
+      "route": "/writing",
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/pages/writing.astro",
+      "reason": "Writing index route."
+    },
+    {
+      "path": "src/content.config.ts",
+      "reason": "Astro content collection schema/configuration."
+    },
+    {
+      "path": "src/components/WritingBlock.astro",
+      "reason": "Writing section grouping component."
+    },
+    {
+      "path": "src/components/WritingRow.astro",
+      "reason": "Individual writing entry component."
+    },
+    {
+      "path": "src/content/jarvis/001-the-night-shift.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/002-the-linear-sprint.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/003-first-entry.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/004-the-coffee-problem.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/005-the-assembly-line.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/006-the-wrong-door.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/007-the-fourth-wall.md",
+      "reason": "Jarvis content entry."
+    },
+    {
+      "path": "src/content/jarvis/008-the-house-learns-its-name.md",
+      "reason": "Jarvis content entry."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "public/og/writing.svg",
+      "reason": "Writing social preview asset."
+    },
+    {
+      "path": "src/layouts/Layout.astro",
+      "reason": "Shared page metadata and layout context."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "writing",
+    "content",
+    "astro-content",
+    "markdown"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-route-ea46a259b5-90890b_068dae97c3",
+    "fnd_sig-feat-route-ea46a259b5-a10025_2a8f2dc6c4"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "2 finding(s); prompt=36962 bytes; approxTokens=9228; includedFiles=14; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:36:32.101Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:32.619Z"
+}

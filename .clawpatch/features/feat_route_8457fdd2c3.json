@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_route_8457fdd2c3",
+  "title": "SEO And Discoverability",
+  "summary": "Robots, llms.txt, static LLM data, SEO operations docs, and search discoverability specs.\n\nAgent mapper reason: Robots and LLMS routes are small but high-impact public endpoints; they should be checked against SEO requirements and the static content they publish.",
+  "kind": "route",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/pages/robots.txt.ts",
+      "symbol": null,
+      "route": "/robots.txt",
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/pages/robots.txt.ts",
+      "reason": "Robots.txt endpoint."
+    },
+    {
+      "path": "src/pages/llms.txt.ts",
+      "reason": "LLMS.txt endpoint."
+    },
+    {
+      "path": "src/data/llms.txt",
+      "reason": "Static LLMS.txt content source."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "docs/seo-operations.md",
+      "reason": "Operational SEO guidance."
+    },
+    {
+      "path": "openspec/specs/search-discoverability/spec.md",
+      "reason": "Current search discoverability requirements."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-add-search-discoverability-foundation/specs/search-discoverability/spec.md",
+      "reason": "Archived source change for SEO foundation."
+    },
+    {
+      "path": "src/layouts/Layout.astro",
+      "reason": "Metadata behavior affects discoverability."
+    },
+    {
+      "path": "public/og-default.svg",
+      "reason": "Default social preview asset."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "seo",
+    "robots",
+    "llms",
+    "discoverability"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-route-8457fdd2c3-ba438e_a497d11b6d"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=35528 bytes; approxTokens=8872; includedFiles=8; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:35:28.874Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:32.273Z"
+}

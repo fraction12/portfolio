@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260524T223334-c3b802",
+  "command": "review",
+  "args": [
+    "review",
+    "--since",
+    "HEAD~1",
+    "--limit",
+    "13",
+    "--jobs",
+    "3"
+  ],
+  "rootPath": "/Users/dushyantgarg/Documents/Projects/portfolio",
+  "headSha": "0112b3c5b8882bb761a2f007bb0cc6d51a3af8c0",
+  "startedAt": "2026-05-24T22:33:34.087Z",
+  "finishedAt": "2026-05-24T22:38:24.915Z",
+  "status": "completed",
+  "claimedFeatureIds": [
+    "feat_agent-tool_5410120634",
+    "feat_config_e637da564c",
+    "feat_library_59123dc688",
+    "feat_route_0e5eafb69c",
+    "feat_route_564515f3c3",
+    "feat_route_8457fdd2c3",
+    "feat_route_b968e989ce",
+    "feat_route_ea46a259b5",
+    "feat_test-suite_aaab826675",
+    "feat_ui-flow_3aa2d6c051",
+    "feat_ui-flow_a325c76229",
+    "feat_ui-flow_e4d8df2355",
+    "feat_unknown_48742698c4"
+  ],
+  "findingIds": [
+    "fnd_sig-feat-agent-tool-5410120634-9_30955b9b9d",
+    "fnd_sig-feat-library-59123dc688-c24c_1d0d39010a",
+    "fnd_sig-feat-route-b968e989ce-aa580b_dbeca44cf3",
+    "fnd_sig-feat-route-8457fdd2c3-ba438e_a497d11b6d",
+    "fnd_sig-feat-route-564515f3c3-e8fd5d_0eb1a80aae",
+    "fnd_sig-feat-route-564515f3c3-9d4068_1b9b51029e",
+    "fnd_sig-feat-test-suite-aaab826675-b_76545ccd9b",
+    "fnd_sig-feat-route-ea46a259b5-90890b_068dae97c3",
+    "fnd_sig-feat-route-ea46a259b5-a10025_2a8f2dc6c4",
+    "fnd_sig-feat-ui-flow-e4d8df2355-bf4e_910fec1b1e",
+    "fnd_sig-feat-ui-flow-a325c76229-088f_c7113d9ff3",
+    "fnd_sig-feat-ui-flow-3aa2d6c051-5469_ae26d34cd6",
+    "fnd_sig-feat-ui-flow-3aa2d6c051-93e4_1a48b13cdb",
+    "fnd_sig-feat-unknown-48742698c4-9932_06b31c51f1",
+    "fnd_sig-feat-unknown-48742698c4-d613_d1d7e6ca39"
+  ],
+  "patchAttemptIds": [],
+  "errors": []
+}

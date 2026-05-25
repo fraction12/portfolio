@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-fd49585146-130b_0337d9caa1",
+  "featureId": "feat_library_fd49585146",
+  "title": "Cross-repo commit history can miss the newest commits when one repo has more than 10 recent commits",
+  "category": "bug",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "confirmed-bug",
+  "evidence": [
+    {
+      "path": "src/lib/data/index.ts",
+      "startLine": 79,
+      "endLine": 80,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "startLine": 178,
+      "endLine": 194,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "startLine": 252,
+      "endLine": 254,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "loadSignalData asks for 12 commits, and fetchAllRepoCommits advertises returning the newest limit after merging histories, but the GraphQL query only fetches history(first: 10) for each repo. If the most active repo has the 11th and 12th newest commits overall, those commits are never fetched, so the final sorted slice can backfill older commits from other repos or return fewer than requested. This makes the portfolio activity feed stale or misordered for common single-repo work bursts.",
+  "reproduction": "Mock the GraphQL response so repo A has 12 commits newer than repo B's commits, but expose only the first 10 because the query asks history(first: 10). fetchAllRepoCommits(12) cannot include repo A's 11th and 12th commits and will return older repo B commits instead.",
+  "recommendation": "Request at least history(first: limit) per repo, and consider paginating repositories and histories if the UI contract is truly cross-repo newest commits. Keep the final merge-and-sort cap after fetching enough candidates.",
+  "whyTestsDoNotAlreadyCoverThis": "The included tests cover local git parsing, shift clustering, and Substack parsing only. There is no test for fetchAllRepoCommits or its GraphQL pagination limits.",
+  "suggestedRegressionTest": "Add a Vitest test that stubs global fetch for the GraphQL endpoint, simulates one repo with more than 10 newest commits, calls fetchAllRepoCommits(12), and asserts the 11th and 12th newest commits are included after the fix.",
+  "minimumFixScope": "Update fetchAllRepoCommits query sizing and add focused tests for the cross-repo merge limit behavior.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:31.811Z"
+    }
+  ],
+  "signature": "sig_feat-library-fd49585146_130b5374bf",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093527-16bb9c",
+  "createdAt": "2026-05-24T09:37:15.092Z",
+  "updatedAt": "2026-05-25T17:54:31.811Z"
+}

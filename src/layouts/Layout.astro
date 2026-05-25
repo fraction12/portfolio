@@ -20,7 +20,7 @@ const {
   title = 'Dushyant Garg',
   description = 'Dushyant Garg — Product Manager and builder working on practical AI products, product systems, and open-source tools.',
   current = 'home',
-  ogImage = '/og-default.svg',
+  ogImage = '/og-default.png',
   includeIdentitySchema = false,
 } = Astro.props;
 
@@ -79,6 +79,7 @@ const websiteSchema = includeIdentitySchema
     // ViewTransitions navigations paint in the correct theme instead
     // of briefly rendering the server default.
     (function () {
+      var state = window.__portfolioThemeState || (window.__portfolioThemeState = {});
       function readPref() {
         try {
           var raw = localStorage.getItem('theme');
@@ -88,7 +89,10 @@ const websiteSchema = includeIdentitySchema
       }
       function resolve(pref) {
         if (pref === 'system') {
-          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          var media = typeof window.matchMedia === 'function'
+            ? window.matchMedia('(prefers-color-scheme: dark)')
+            : null;
+          return media && media.matches ? 'dark' : 'light';
         }
         return pref;
       }
@@ -102,17 +106,29 @@ const websiteSchema = includeIdentitySchema
       // Initial paint.
       applyTo(document, readPref());
 
-      // Astro ViewTransitions: apply theme to the incoming document
-      // BEFORE it's swapped in, so the new page never paints with
-      // the server-rendered (themeless) HTML.
-      document.addEventListener('astro:before-swap', function (ev) {
-        applyTo(ev.newDocument, readPref());
-      });
+      if (!state.installed) {
+        state.installed = true;
 
-      // When on system mode, follow OS preference changes live.
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
-        if (readPref() === 'system') applyTo(document, 'system');
-      });
+        // Astro ViewTransitions: apply theme to the incoming document
+        // BEFORE it's swapped in, so the new page never paints with
+        // the server-rendered (themeless) HTML.
+        document.addEventListener('astro:before-swap', function (ev) {
+          applyTo(ev.newDocument, readPref());
+        });
+
+        // When on system mode, follow OS preference changes live.
+        var media = typeof window.matchMedia === 'function'
+          ? window.matchMedia('(prefers-color-scheme: dark)')
+          : null;
+        if (media) {
+          var onSystemChange = function () {
+            if (readPref() === 'system') applyTo(document, 'system');
+          };
+          if (typeof media.addEventListener === 'function') {
+            media.addEventListener('change', onSystemChange);
+          }
+        }
+      }
     })();
   </script>
   <title>{title}</title>
@@ -140,10 +156,10 @@ const websiteSchema = includeIdentitySchema
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   {personSchema && (
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
   )}
   {websiteSchema && (
-    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema).replace(/</g, '\\u003c')} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema).replace(/</g, '\\u003c')} />
   )}
   <ClientRouter fallback="animate" />
 </head>

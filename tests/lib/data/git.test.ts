@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getLastCommit, getCommitHistory, parseGitLogOutput } from '../../../src/lib/data/git';
+import { parseGitLogOutput } from '../../../src/lib/data/git';
 
 describe('parseGitLogOutput', () => {
   it('parses a single commit with stat line', () => {
@@ -119,19 +119,42 @@ describe('parseGitLogOutput', () => {
   });
 });
 
-describe('getLastCommit', () => {
-  it('returns a well-formed record from the current repo', () => {
-    const last = getLastCommit();
-    expect(last.sha).toMatch(/^[0-9a-f]{7,40}$/);
-    expect(last.timestamp).toBeInstanceOf(Date);
-    expect(typeof last.subject).toBe('string');
-  });
+describe('git log fixtures', () => {
+  it('covers the current git command format without live repository history', () => {
+    const raw = [
+      '---COMMIT---',
+      'sha:0112b3c4d5e6f7890',
+      'ts:1780000000',
+      'author:Dushyant Garg',
+      'email:dushyant@example.com',
+      'subject:Polish portfolio proof hierarchy',
+      '---BODY---',
+      'Body text',
+      '---ENDBODY---',
+      ' 26 files changed, 887 insertions(+), 63 deletions(-)',
+      '---COMMIT---',
+      'sha:48e18aa',
+      'ts:1779900000',
+      'author:Agent',
+      'email:agent@dushyant.ops',
+      'subject:Prior review pass',
+      '---BODY---',
+      'Co-Authored-By: ChatGPT <noreply@openai.com>',
+      '---ENDBODY---',
+      ' 1 file changed, 1 insertion(+)'
+    ].join('\n');
 
-  it('parses non-zero additions from a real commit with changes', () => {
-    // This commit (0.2: "add vitest") should have non-zero diff stats
-    const commits = getCommitHistory(30);
-    const withChanges = commits.find((c: any) => c.additions > 0 || c.deletions > 0);
-    expect(withChanges).toBeDefined();
-    expect((withChanges.additions + withChanges.deletions) > 0).toBe(true);
+    const commits = parseGitLogOutput(raw);
+
+    expect(commits).toHaveLength(2);
+    expect(commits[0]).toMatchObject({
+      sha: '0112b3c4d5e6f7890',
+      filesChanged: 26,
+      additions: 887,
+      deletions: 63,
+      subject: 'Polish portfolio proof hierarchy'
+    });
+    expect(commits[1].coAuthors).toEqual(['ChatGPT <noreply@openai.com>']);
+    expect(commits[1].isAgentAuthored).toBe(true);
   });
 });

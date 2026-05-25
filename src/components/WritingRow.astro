@@ -1,15 +1,17 @@
 ---
 import type { Essay } from '../lib/data';
+import { isSafeEssayLink } from '../lib/data/substack';
 
 interface Props { essay: Essay }
 const { essay } = Astro.props;
+const href = isSafeEssayLink(essay.link) ? essay.link : 'https://dushyantg.substack.com';
 
 function shortDate(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 ---
 
-<a class="w-row" href={essay.link} target="_blank" rel="noopener noreferrer">
+<a class="w-row" href={href} target="_blank" rel="noopener noreferrer">
   <span class="w-date">{shortDate(essay.publishedAt)}</span>
   <span class="w-title">{essay.title}</span>
   <span class="w-time">{essay.readTimeMinutes} min</span>

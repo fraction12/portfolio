@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-ui-flow-3aa2d6c051-5469_ae26d34cd6",
+  "featureId": "feat_ui-flow_3aa2d6c051",
+  "title": "Homepage renders a separate proof strip despite the one-surface homepage contract",
+  "category": "api-contract",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "contract-mismatch",
+  "evidence": [
+    {
+      "path": "src/pages/index.astro",
+      "startLine": 50,
+      "endLine": 75,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/pages/index.astro",
+      "startLine": 86,
+      "endLine": 104,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "openspec/specs/portfolio-site-redesign/spec.md",
+      "startLine": 92,
+      "endLine": 95,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-22-quiet-founder-index-implementation.md",
+      "startLine": 11,
+      "endLine": 17,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The homepage renders ProofStrip immediately before the selected Work list, while the current redesign contract says homepage projects should use one selected-work surface and the implementation notes state project proof appears once through the Work section. This creates a duplicated proof/navigation surface in the first scan path and weakens the edited-index requirement.",
+  "reproduction": "Open `/` and observe the proof strip links rendered before the Work section, followed by the selected build cards.",
+  "recommendation": "Remove ProofStrip from the homepage or fold its strongest proof into the Work section so project proof appears in one intentional surface.",
+  "whyTestsDoNotAlreadyCoverThis": "No linked tests are included, and there is no homepage DOM/spec assertion that prevents multiple selected-proof surfaces.",
+  "suggestedRegressionTest": "Add a homepage render test that asserts the route exposes one selected-work/proof surface and does not render `.proof-strip` before the Work section.",
+  "minimumFixScope": "Update `src/pages/index.astro` to remove or repurpose `ProofStrip` and the `proofSignals` data for the homepage.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:33.076Z"
+    }
+  ],
+  "signature": "sig_feat-ui-flow-3aa2d6c051_54691d6468",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:37:39.749Z",
+  "updatedAt": "2026-05-25T17:54:33.075Z"
+}

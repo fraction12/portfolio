@@ -9,16 +9,31 @@ import llmsTxtContent from '../data/llms.txt?raw';
 // invoking our code, defeating the purpose.
 export const prerender = false;
 
-// Cap the event-props we emit so a pathological user-agent can't blow
-// past Vercel Analytics' per-property size limit.
+// Cap the event-props we emit so a pathological header can't blow past
+// Vercel Analytics' per-property size limit.
 const MAX_PROP = 120;
 
+function boundedHeader(value: string | null, fallback = 'unknown'): string {
+  const cleaned = (value ?? fallback).replace(/\s+/g, ' ').trim();
+  return (cleaned || fallback).slice(0, MAX_PROP);
+}
+
+function sanitizedReferer(value: string | null): string {
+  if (!value) return 'none';
+  try {
+    const url = new URL(value);
+    return url.origin.slice(0, MAX_PROP);
+  } catch {
+    return 'invalid';
+  }
+}
+
 export const GET: APIRoute = async ({ request }) => {
-  const ua = request.headers.get('user-agent') ?? 'unknown';
-  const referer = request.headers.get('referer') ?? 'none';
+  const ua = boundedHeader(request.headers.get('user-agent'));
+  const referer = sanitizedReferer(request.headers.get('referer'));
   // Vercel injects this header at the edge — gives us a rough
   // geographic distribution of who's reading the file.
-  const country = request.headers.get('x-vercel-ip-country') ?? 'unknown';
+  const country = boundedHeader(request.headers.get('x-vercel-ip-country'));
 
   // Structured console log shows up in Vercel's function-log viewer.
   // Retention is short on Hobby (hours, not days) — this is for
@@ -34,8 +49,8 @@ export const GET: APIRoute = async ({ request }) => {
     await track(
       'llms.txt fetched',
       {
-        ua: ua.slice(0, MAX_PROP),
-        referer: referer.slice(0, MAX_PROP),
+        ua,
+        referer,
         country,
       },
       // Passing the request lets Vercel attribute the event to this

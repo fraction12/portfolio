@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-config-7528cb5b98-22bb6_cf0e58344c",
+  "featureId": "feat_config_7528cb5b98",
+  "title": "No package script exposes a dedicated type or lint quality gate",
+  "category": "build-release",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "package.json",
+      "startLine": 5,
+      "endLine": 12,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The package scripts provide dev, build, preview, Astro passthrough, and Vitest commands, but no explicit typecheck or lint script. In a TypeScript/Astro project this makes it easy for CI or release automation to run build and tests without a dedicated static analysis gate, allowing type and lint regressions that tests may not exercise.",
+  "reproduction": null,
+  "recommendation": "Add project-native quality scripts such as typecheck and lint, then wire them into the release or CI command path if this repository has one.",
+  "whyTestsDoNotAlreadyCoverThis": "The listed scripts only run Vitest tests; tests do not establish that static type or lint checks are available or enforced.",
+  "suggestedRegressionTest": null,
+  "minimumFixScope": "Update package.json scripts to expose the missing quality gate commands and add any required dev dependencies/configuration.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": "20260525T174519-fc33bc",
+      "kind": "revalidate",
+      "status": "fixed",
+      "note": null,
+      "reasoning": "The original evidence path still exists: package.json lines 5-12 are still the scripts block, but it now includes \"typecheck\": \"ASTRO_TELEMETRY_DISABLED=1 astro check\" and \"lint\": \"npm run typecheck\". package.json also now declares @astrojs/check and typescript devDependencies, and package-lock.json contains the corresponding added dependency graph. npm run confirms both scripts are exposed, and a Node assertion verified the expected scripts/dependencies. Running npm run lint showed lint invokes typecheck/astro check, but full execution could not complete in this read-only sandbox because Astro attempted to write .astro/content.d.ts. npm run test was also blocked by the read-only sandbox when Vite tried to write node_modules/.vite-temp. Those failures are sandbox write-permission failures, not evidence that the quality gate scripts are missing. The Clawpatch stored finding still says open, but it is stale relative to the current worktree.",
+      "commands": [
+        "sed -n '1,220p' /Users/dushyantgarg/.codex/skills/clawpatch/SKILL.md",
+        "git status -sb",
+        "nl -ba package.json | sed -n '1,80p'",
+        "rg -n '\"(typecheck|check|lint|test|build|ci|verify|validate)\"|astro check|eslint|biome|prettier|tsc' package.json .github .clawpatch astro.config.* tsconfig*.json . --glob '!node_modules/**' --glob '!dist/**' --glob '!build/**' --glob '!coverage/**'",
+        "rg -n \"fnd_sig-feat-config-7528cb5b98-22bb6_cf0e58344c|No package script exposes\" .clawpatch package.json docs tests --glob '!node_modules/**'",
+        "npm run",
+        "node -e \"const p=require('./package.json'); console.log(JSON.stringify({scripts:p.scripts,devDependencies:p.devDependencies},null,2))\"",
+        "npm run lint",
+        "npm run test",
+        "clawpatch show --finding fnd_sig-feat-config-7528cb5b98-22bb6_cf0e58344c",
+        "git diff -- package.json package-lock.json | sed -n '1,220p'",
+        "git diff -- package.json | sed -n '1,120p'",
+        "node -e \"const p=require('./package.json'); if (p.scripts?.typecheck !== 'ASTRO_TELEMETRY_DISABLED=1 astro check') throw new Error('missing expected typecheck'); if (p.scripts?.lint !== 'npm run typecheck') throw new Error('missing expected lint'); if (!p.devDependencies?.['@astrojs/check'] || !p.devDependencies?.typescript) throw new Error('missing typecheck deps'); console.log('quality scripts and deps present');\""
+      ],
+      "createdAt": "2026-05-25T17:48:24.201Z"
+    }
+  ],
+  "signature": "sig_feat-config-7528cb5b98_22bb652aa0",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093425-93b031",
+  "createdAt": "2026-05-24T09:34:49.994Z",
+  "updatedAt": "2026-05-25T17:48:24.201Z"
+}

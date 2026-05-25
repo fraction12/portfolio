@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-ui-flow-e4d8df2355-bf4e_910fec1b1e",
+  "featureId": "feat_ui-flow_e4d8df2355",
+  "title": "Newsletter form uses a fixed input id that breaks when the component is rendered more than once",
+  "category": "bug",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/components/NewsletterSignup.astro",
+      "startLine": 18,
+      "endLine": 27,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The component hardcodes `newsletter-email` for both the label target and input id. That is fine for the current writing page usage, but as a reusable component with a `className` prop it can be mounted multiple times on one page, producing duplicate DOM ids and ambiguous label associations. This is an accessibility and correctness issue for any future repeated placement such as footer plus page section.",
+  "reproduction": null,
+  "recommendation": "Generate or accept a unique id per instance, for example via an `id` prop with a safe default, and wire the label `for` and input `id` to that value.",
+  "whyTestsDoNotAlreadyCoverThis": "No linked tests were provided for this feature, and the included context only shows a single instance on the writing route.",
+  "suggestedRegressionTest": "Add a component/render test that mounts two NewsletterSignup instances and asserts that the generated input ids are unique and that each label points to its corresponding input.",
+  "minimumFixScope": "Update `src/components/NewsletterSignup.astro` to support a unique input id per instance and add focused coverage if the project has Astro component test support.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:33.418Z"
+    }
+  ],
+  "signature": "sig_feat-ui-flow-e4d8df2355_bf4e02f27a",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:36:47.465Z",
+  "updatedAt": "2026-05-25T17:54:33.418Z"
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_ui-flow_e4d8df2355",
+  "title": "Newsletter Signup",
+  "summary": "Newsletter signup component and form styling, including possible external subscription boundary.\n\nAgent mapper reason: Signup UI introduces input handling and likely an external subscription integration, so form structure, styling, and consuming routes should be reviewed together.",
+  "kind": "ui-flow",
+  "source": "agent-mapper",
+  "confidence": "medium",
+  "entrypoints": [
+    {
+      "path": "src/components/NewsletterSignup.astro",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/components/NewsletterSignup.astro",
+      "reason": "Newsletter capture UI component."
+    },
+    {
+      "path": "src/styles/components/field.css",
+      "reason": "Form field styling used by signup inputs."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/pages/writing.astro",
+      "reason": "Likely newsletter placement route."
+    },
+    {
+      "path": "src/components/Contact.astro",
+      "reason": "Nearby conversion/contact surface."
+    },
+    {
+      "path": "docs/seo-operations.md",
+      "reason": "May document signup/discoverability operations."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "newsletter",
+    "forms",
+    "conversion"
+  ],
+  "trustBoundaries": [
+    "user-input",
+    "network",
+    "external-api"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-ui-flow-e4d8df2355-bf4e_910fec1b1e"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=14387 bytes; approxTokens=3592; includedFiles=5; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:36:47.466Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:33.422Z"
+}

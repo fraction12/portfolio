@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseFeed, stripHtml, getReadTimeMinutes } from '../../../src/lib/data/substack';
+import { parseFeed, stripHtml, getReadTimeMinutes, isSafeEssayLink } from '../../../src/lib/data/substack';
 
 const SAMPLE = `<?xml version="1.0"?>
 <rss><channel>
@@ -18,6 +18,9 @@ describe('stripHtml', () => {
   });
   it('collapses whitespace', () => {
     expect(stripHtml('a\n\n\n b')).toBe('a b');
+  });
+  it('preserves malformed numeric entities without throwing', () => {
+    expect(stripHtml('<p>Bad &#9999999999; entity</p>')).toBe('Bad &#9999999999; entity');
   });
 });
 
@@ -40,5 +43,33 @@ describe('parseFeed', () => {
     expect(posts[0].description).toContain('opinionated');
     expect(posts[0].dateLabel).toMatch(/April 13, 2026/);
     expect(posts[0].readTimeMinutes).toBeGreaterThanOrEqual(1);
+  });
+
+  it('drops unsafe essay links', () => {
+    const feed = `<?xml version="1.0"?><rss><channel>
+      <item>
+        <title>Unsafe</title>
+        <link>javascript:alert(1)</link>
+        <description>Bad link</description>
+        <pubDate>Mon, 13 Apr 2026 10:00:00 +0000</pubDate>
+      </item>
+      <item>
+        <title>Safe</title>
+        <link>https://dushyantg.substack.com/p/safe</link>
+        <description>Good link</description>
+        <pubDate>Mon, 13 Apr 2026 10:00:00 +0000</pubDate>
+      </item>
+    </channel></rss>`;
+
+    expect(parseFeed(feed).map(post => post.title)).toEqual(['Safe']);
+  });
+});
+
+describe('isSafeEssayLink', () => {
+  it('allows http and https only', () => {
+    expect(isSafeEssayLink('https://dushyantg.substack.com/p/taste')).toBe(true);
+    expect(isSafeEssayLink('http://example.com/post')).toBe(true);
+    expect(isSafeEssayLink('javascript:alert(1)')).toBe(false);
+    expect(isSafeEssayLink('data:text/html;base64,abcd')).toBe(false);
   });
 });

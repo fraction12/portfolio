@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-route-ea46a259b5-a10025_2a8f2dc6c4",
+  "featureId": "feat_route_ea46a259b5",
+  "title": "Writing social preview uses an SVG image that many card consumers do not accept",
+  "category": "api-contract",
+  "severity": "low",
+  "confidence": "high",
+  "triage": "contract-mismatch",
+  "evidence": [
+    {
+      "path": "src/pages/writing.astro",
+      "startLine": 14,
+      "endLine": 19,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/layouts/Layout.astro",
+      "startLine": 121,
+      "endLine": 131,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "public/og/writing.svg",
+      "startLine": 1,
+      "endLine": 8,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The writing page passes /og/writing.svg as its Open Graph/Twitter image, and the layout publishes that URL through og:image and twitter:image. Several social card consumers expect raster image formats for these metadata fields, so the writing page can unfurl without the intended preview image even though the metadata is present.",
+  "reproduction": "Request /writing and inspect the generated metadata; og:image and twitter:image resolve to the SVG asset rather than a raster social-card image.",
+  "recommendation": "Generate a 1200x630 PNG, JPG, or WebP version of the writing social card and pass that raster path as ogImage while keeping the SVG only as a source asset if desired.",
+  "whyTestsDoNotAlreadyCoverThis": "No metadata or preview contract tests were included, so the route can publish an incompatible social image format without failing tests.",
+  "suggestedRegressionTest": "Add a metadata render test for /writing that asserts og:image and twitter:image point to a supported raster extension and preserve the declared 1200x630 dimensions.",
+  "minimumFixScope": "Add a raster writing OG asset and update the writing route's ogImage value to reference it.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.615Z"
+    }
+  ],
+  "signature": "sig_feat-route-ea46a259b5_a10025250d",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:36:32.100Z",
+  "updatedAt": "2026-05-25T17:54:32.614Z"
+}

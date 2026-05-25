@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-f6b7911ff6-d59b_fdfccd3aa4",
+  "featureId": "feat_library_f6b7911ff6",
+  "title": "IntersectionObservers persist across Astro page loads without cleanup",
+  "category": "performance",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "startLine": 15,
+      "endLine": 26,
+      "symbol": "initScrollReveal",
+      "quote": null
+    },
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "startLine": 29,
+      "endLine": 29,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "Each astro:page-load creates a new local IntersectionObserver and observes every .reveal element. The observer is only unregistered per element after that element intersects; elements that never intersect before an Astro navigation can remain observed, retaining detached DOM nodes and callback state across subsequent page loads. Over repeated client-side navigations this can accumulate observers and stale element references.",
+  "reproduction": null,
+  "recommendation": "Track the observer and pending timers at module scope and disconnect/clear them on the relevant Astro navigation cleanup event before initializing a new observer, or reuse a single observer and skip elements already initialized.",
+  "whyTestsDoNotAlreadyCoverThis": "No linked tests were included for this feature, so there is no coverage exercising repeated astro:page-load events with non-intersecting reveal elements.",
+  "suggestedRegressionTest": "In a DOM test, dispatch astro:page-load with a .reveal element that never intersects, then simulate a navigation cleanup/page-load cycle and assert the previous observer is disconnected or no stale element remains observed.",
+  "minimumFixScope": "src/scripts/scroll-reveal.js",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": "20260525T174519-fc33bc",
+      "kind": "revalidate",
+      "status": "fixed",
+      "note": null,
+      "reasoning": "The original evidence path still exists, but the cited evidence has changed. src/scripts/scroll-reveal.js now tracks activeObserver and pendingTimers at module scope, calls cleanupScrollReveal() at the start of every initScrollReveal(), disconnects the active observer, clears pending timers, and also registers cleanupScrollReveal for astro:before-swap. Current lines 4-13 define cleanup, lines 25-55 initialize/reuse state safely, and lines 57-58 wire Astro lifecycle events. A targeted DOM-stub reproduction dispatched astro:page-load twice with a non-intersecting .reveal element and verified the first observer was disconnected before the second page load; it also verified astro:before-swap disconnects the active observer. I found no committed scroll-reveal regression test. The repo-native npm test command could not run in this read-only sandbox because Vite/Vitest attempted to write node_modules/.vite-temp and failed with EPERM, so the conclusion is based on current code inspection plus the targeted executable reproduction.",
+      "commands": [
+        "sed -n '1,220p' /Users/dushyantgarg/.codex/skills/clawpatch/SKILL.md",
+        "git status -sb",
+        "rg --files | rg '(^|/)src/scripts/scroll-reveal\\.js$|(^|/)scroll-reveal\\.(js|ts)$|(^|/)package\\.json$|(^|/)vitest\\.config|(^|/)astro\\.config'",
+        "nl -ba src/scripts/scroll-reveal.js | sed -n '1,220p'",
+        "rg -n \"IntersectionObserver|astro:page-load|astro:before|astro:after|scroll-reveal|\\.reveal|initScrollReveal|disconnect\\(|unobserve\\(\" src test tests spec specs .clawpatch 2>/dev/null",
+        "node --input-type=module -e \"const listeners = new Map(); let currentReveals = []; const instances = []; class MockIntersectionObserver { constructor(callback, options) { this.callback = callback; this.options = options; this.observed = []; this.disconnectCount = 0; instances.push(this); } observe(el) { this.observed.push(el); } unobserve(el) { this.observed = this.observed.filter(item => item !== el); } disconnect() { this.disconnectCount += 1; this.observed = []; } } globalThis.IntersectionObserver = MockIntersectionObserver; globalThis.window = { IntersectionObserver: MockIntersectionObserver, matchMedia() { return { matches: false }; } }; globalThis.document = { addEventListener(type, handler) { listeners.set(type, handler); }, querySelectorAll(selector) { if (selector !== '.reveal') throw new Error('unexpected selector ' + selector); return currentReveals; } }; const makeReveal = name => ({ name, style: { getPropertyValue() { return '0'; } }, classList: { add() {} } }); await import('./src/scripts/scroll-reveal.js?observer-cleanup-revalidation=' + Date.now()); const load = listeners.get('astro:page-load'); const beforeSwap = listeners.get('astro:before-swap'); if (typeof load !== 'function') throw new Error('astro:page-load handler missing'); if (typeof beforeSwap !== 'function') throw new Error('astro:before-swap handler missing'); const first = makeReveal('first'); currentReveals = [first]; load(); if (instances.length !== 1 || instances[0].observed[0] !== first) throw new Error('first reveal was not observed'); const second = makeReveal('second'); currentReveals = [second]; load(); if (instances[0].disconnectCount !== 1 || instances[0].observed.length !== 0) throw new Error('previous observer was not disconnected before second page load'); if (instances.length !== 2 || instances[1].observed[0] !== second) throw new Error('second reveal was not observed by new observer'); beforeSwap(); if (instances[1].disconnectCount !== 1 || instances[1].observed.length !== 0) throw new Error('active observer was not disconnected before swap'); console.log('observer cleanup across Astro events passed');\"",
+        "node -p \"JSON.stringify(require('./package.json').scripts, null, 2)\"",
+        "rg -n \"scroll-reveal|reveal|IntersectionObserver|astro:page-load|astro:before-swap\" tests src --glob '*test*' --glob '*.test.*'",
+        "git diff -- src/scripts/scroll-reveal.js",
+        "npm test"
+      ],
+      "createdAt": "2026-05-25T17:53:32.003Z"
+    }
+  ],
+  "signature": "sig_feat-library-f6b7911ff6_d59b039ed9",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093527-16bb9c",
+  "createdAt": "2026-05-24T09:36:24.568Z",
+  "updatedAt": "2026-05-25T17:53:32.003Z"
+}

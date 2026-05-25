@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-30733ce202-36ba_874d2a2085",
+  "featureId": "feat_library_30733ce202",
+  "title": "Raw referrer values are written to server logs and analytics",
+  "category": "security",
+  "severity": "medium",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/pages/llms.txt.ts",
+      "startLine": 17,
+      "endLine": 28,
+      "symbol": "GET",
+      "quote": null
+    },
+    {
+      "path": "src/pages/llms.txt.ts",
+      "startLine": 33,
+      "endLine": 45,
+      "symbol": "GET",
+      "quote": null
+    }
+  ],
+  "reasoning": "The public endpoint copies the untrusted Referer header into a structured server log and into Vercel Analytics event properties. Referrer URLs commonly include paths and query strings, and can contain email addresses, one-time tokens, campaign identifiers, or other sensitive values from the linking page. Truncating the value limits size but does not remove sensitive query data, so requests to /llms.txt can persist private URL material in logs or analytics stores.",
+  "reproduction": null,
+  "recommendation": "Parse the referrer and emit only a minimized value such as origin or hostname, or redact query strings/fragments before logging and tracking. Apply the same sanitization to console logs and analytics properties.",
+  "whyTestsDoNotAlreadyCoverThis": "No tests are listed for this feature, and the code path directly handles request headers without a regression check for redaction or minimization.",
+  "suggestedRegressionTest": "Add a route test that sends a Referer containing a query token and verifies analytics/log payload construction only includes the sanitized origin or hostname.",
+  "minimumFixScope": "Sanitize the Referer header before the console log and track call in src/pages/llms.txt.ts.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": "20260525T174519-fc33bc",
+      "kind": "revalidate",
+      "status": "fixed",
+      "note": null,
+      "reasoning": "The original file still exists, but the evidence lines have changed. Current src/pages/llms.txt.ts defines sanitizedReferer, returns only URL.origin for valid referrers, and GET now assigns referer from sanitizedReferer(request.headers.get('referer')). The console log and Vercel track payload both use that sanitized referer value, and rg found no other raw referer/referrer logging or analytics path in src. git diff confirms the old raw request.headers.get('referer') plus slice-only analytics property was replaced. Full Vitest could not run because the read-only sandbox prevented Vite/Vitest temp writes, but a no-write Node check extracted and executed the current sanitizedReferer function and verified query/fragment stripping plus GET sanitized assignment.",
+      "commands": [
+        "git status -sb",
+        "test -f src/pages/llms.txt.ts && nl -ba src/pages/llms.txt.ts | sed -n '1,120p'",
+        "rg -n \"Referer|referer|referrer|track\\(|console\\.|llms\\.txt|sanitize|origin|hostname\" src tests . --glob '!node_modules' --glob '!dist' --glob '!build' --glob '!coverage'",
+        "node -e \"const p=require('./package.json'); console.log(JSON.stringify(p.scripts,null,2))\"",
+        "find tests -maxdepth 3 -type f | sort",
+        "npm test",
+        "./node_modules/.bin/vitest run --configLoader runner",
+        "node -e \"extract and execute sanitizedReferer from src/pages/llms.txt.ts; assert sensitive referer becomes https://example.com and GET uses sanitized assignment\"",
+        "git diff -- src/pages/llms.txt.ts",
+        "clawpatch show --finding fnd_sig-feat-library-30733ce202-36ba_874d2a2085"
+      ],
+      "createdAt": "2026-05-25T17:50:37.844Z"
+    }
+  ],
+  "signature": "sig_feat-library-30733ce202_36bacbc7c7",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093527-16bb9c",
+  "createdAt": "2026-05-24T09:36:00.454Z",
+  "updatedAt": "2026-05-25T17:50:37.844Z"
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-f7615c5a6c-fd06_c06397bc0f",
+  "featureId": "feat_library_f7615c5a6c",
+  "title": "GitHub GraphQL errors can overwrite a valid snapshot with empty contribution data",
+  "category": "data-loss",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "confirmed-bug",
+  "evidence": [
+    {
+      "path": "src/lib/data/github.ts",
+      "startLine": 30,
+      "endLine": 40,
+      "symbol": "loadGithub",
+      "quote": null
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "startLine": 69,
+      "endLine": 84,
+      "symbol": "fetchHeatmap",
+      "quote": null
+    }
+  ],
+  "reasoning": "GitHub GraphQL returns HTTP 200 for many query-level failures, but fetchHeatmap only checks res.ok and then treats a missing contribution calendar as an empty weeks array. loadGithub treats that as a successful fetch and writes the resulting empty heatmap plus zero commit counts to src/data/snapshots/github.json, replacing any previously valid snapshot with misleading data instead of falling back.",
+  "reproduction": null,
+  "recommendation": "After parsing the GraphQL response, check json.errors and validate that the expected weeks array exists before returning cells. Throw on GraphQL errors or missing required fields so loadGithub follows the existing catch path and preserves/falls back to the snapshot.",
+  "whyTestsDoNotAlreadyCoverThis": "The included tests cover git parsing, shifts, Substack parsing, and tool detail metadata, but none exercise loadGithub or GraphQL responses with HTTP 200 plus errors/missing data.",
+  "suggestedRegressionTest": "Mock fetchHeatmap's GraphQL fetch to return { errors: [...] } with status 200, seed a valid snapshot, and assert loadGithub returns the snapshot instead of writing/returning an empty heatmap.",
+  "minimumFixScope": "src/lib/data/github.ts response validation plus a focused test for GraphQL error handling.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:31.697Z"
+    }
+  ],
+  "signature": "sig_feat-library-f7615c5a6c_fd06be6768",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T111958-62a2be",
+  "createdAt": "2026-05-24T11:21:04.213Z",
+  "updatedAt": "2026-05-25T17:54:31.697Z"
+}

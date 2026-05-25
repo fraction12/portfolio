@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-route-8457fdd2c3-ba438e_a497d11b6d",
+  "featureId": "feat_route_8457fdd2c3",
+  "title": "llms.txt analytics logs unsanitized request headers",
+  "category": "security",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "confirmed-bug",
+  "evidence": [
+    {
+      "path": "src/pages/llms.txt.ts",
+      "startLine": 16,
+      "endLine": 28,
+      "symbol": "GET",
+      "quote": null
+    },
+    {
+      "path": "src/pages/llms.txt.ts",
+      "startLine": 33,
+      "endLine": 45,
+      "symbol": "GET",
+      "quote": null
+    }
+  ],
+  "reasoning": "The public /llms.txt route reads user-controlled user-agent and referer headers, logs them verbatim to Vercel function logs, and also forwards referer into analytics with only length truncation. Referer values can contain query strings, tokens, email addresses, or other sensitive data from upstream pages, and user-agent can be arbitrarily long or identifying. This creates an avoidable privacy/logging exposure on a public endpoint whose purpose is discoverability, not request forensics.",
+  "reproduction": "Request /llms.txt with a Referer such as https://example.com/callback?token=secret-value and a long User-Agent; the current handler records those values in function logs and sends the first 120 referer characters to analytics.",
+  "recommendation": "Sanitize before logging or tracking: drop referer query strings and fragments, record only origin or hostname, cap every logged field, and consider hashing or omitting user-agent. Keep raw headers out of console logs and analytics payloads.",
+  "whyTestsDoNotAlreadyCoverThis": "No linked tests are included for the route, and there is no evidence of a test asserting that analytics/log payloads strip sensitive referer data or bound all user-controlled header values.",
+  "suggestedRegressionTest": "Add a route-level test that sends Referer with query/fragment secrets and an oversized User-Agent, stubs console.log and track, and asserts only sanitized bounded values are emitted while the response body remains the static llms.txt content.",
+  "minimumFixScope": "Update src/pages/llms.txt.ts to sanitize and bound telemetry fields before both console logging and track().",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.269Z"
+    }
+  ],
+  "signature": "sig_feat-route-8457fdd2c3_ba438e9d74",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:35:28.873Z",
+  "updatedAt": "2026-05-25T17:54:32.268Z"
+}

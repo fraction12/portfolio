@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-ui-flow-3aa2d6c051-93e4_1a48b13cdb",
+  "featureId": "feat_ui-flow_3aa2d6c051",
+  "title": "Homepage Open Graph image uses SVG, risking blank social previews",
+  "category": "build-release",
+  "severity": "medium",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/pages/index.astro",
+      "startLine": 78,
+      "endLine": 83,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "public/og/home.svg",
+      "startLine": 1,
+      "endLine": 8,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "openspec/specs/portfolio-production-polish/spec.md",
+      "startLine": 92,
+      "endLine": 97,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The homepage explicitly opts into `/og/home.svg` as its social preview asset. Many Open Graph and social preview consumers do not reliably render SVG image assets, so the page-specific preview can fail or fall back even though the production polish spec requires a composed homepage preview image.",
+  "reproduction": "Run the homepage URL through a social preview validator or share target that rejects SVG `og:image` assets; the preview may render blank or fall back instead of showing the composed card.",
+  "recommendation": "Generate a raster `public/og/home.png` or JPG from the same composition and point the homepage `ogImage` at that asset; keep the SVG only as an editable source if desired.",
+  "whyTestsDoNotAlreadyCoverThis": "No metadata/share-card tests or preview validation artifacts are included.",
+  "suggestedRegressionTest": "Add a metadata/static assertion that high-value page `ogImage` values resolve to crawler-safe raster formats such as PNG or JPG.",
+  "minimumFixScope": "Add a raster homepage OG asset and change `src/pages/index.astro` to reference it.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:33.191Z"
+    }
+  ],
+  "signature": "sig_feat-ui-flow-3aa2d6c051_93e49110e9",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:37:39.749Z",
+  "updatedAt": "2026-05-25T17:54:33.190Z"
+}

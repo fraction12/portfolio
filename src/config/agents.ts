@@ -7,6 +7,8 @@ export const AGENT_NAME_PATTERNS: RegExp[] = [
   /\bjarvis\b/i,
   /\banthropic\b/i,
   /\bcodex\b/i,
+  /chatgpt/i,
+  /\bopenai[-\s]?gpt\b/i,
   /\bgpt\b/i,
   /\bgemini\b/i
 ];

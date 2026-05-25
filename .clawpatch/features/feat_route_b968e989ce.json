@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_route_b968e989ce",
+  "title": "Tools Directory",
+  "summary": "Tools index and shared card/component primitives used to list projects and packages.\n\nAgent mapper reason: The tools directory depends on static project metadata and shared listing components, so data shape, display behavior, and card controls should be reviewed together.",
+  "kind": "route",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/pages/tools.astro",
+      "symbol": null,
+      "route": "/tools",
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/pages/tools.astro",
+      "reason": "Tools directory route."
+    },
+    {
+      "path": "src/config/packages.ts",
+      "reason": "Package/project list data for tools surfaces."
+    },
+    {
+      "path": "src/config/agents.ts",
+      "reason": "Agent/project metadata used by tools surfaces."
+    },
+    {
+      "path": "src/components/Card.astro",
+      "reason": "Reusable card primitive for listings."
+    },
+    {
+      "path": "src/components/Button.astro",
+      "reason": "Reusable action control for listings and cards."
+    },
+    {
+      "path": "src/components/Pill.astro",
+      "reason": "Reusable metadata badge component."
+    },
+    {
+      "path": "src/styles/components/card.css",
+      "reason": "Card styling."
+    },
+    {
+      "path": "src/styles/components/btn.css",
+      "reason": "Button styling."
+    },
+    {
+      "path": "src/styles/components/pill.css",
+      "reason": "Pill styling."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "openspec/specs/tool-detail-pages/spec.md",
+      "reason": "Tool page capability requirements that also inform listing data."
+    },
+    {
+      "path": "public/og/work.svg",
+      "reason": "Work/tools social preview asset."
+    },
+    {
+      "path": "public/tool-media/agentplan/agentplan-preview.jpg",
+      "reason": "Tool listing media asset."
+    },
+    {
+      "path": "public/tool-media/agentrem/agentrem-preview.jpg",
+      "reason": "Tool listing media asset."
+    },
+    {
+      "path": "public/tool-media/eat/eat-preview.jpg",
+      "reason": "Tool listing media asset."
+    },
+    {
+      "path": "public/tool-media/openrank/openrank-preview.jpg",
+      "reason": "Tool listing media asset."
+    },
+    {
+      "path": "public/tool-media/tradespec/tradespec-preview.jpg",
+      "reason": "Tool listing media asset."
+    },
+    {
+      "path": "public/tool-media/wireflow/wireflow-preview.jpg",
+      "reason": "Tool listing media asset."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "tools",
+    "projects",
+    "cards",
+    "astro"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-route-b968e989ce-aa580b_dbeca44cf3"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=318131 bytes; approxTokens=48285; includedFiles=17; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:35:15.955Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:32.387Z"
+}

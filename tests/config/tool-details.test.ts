@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { artifacts } from '../../src/config/packages';
+import { isAgentAuthor } from '../../src/config/agents';
+import { artifacts, npmPackages } from '../../src/config/packages';
 import { getToolDetail, toolDetailSlugs, toolDetails } from '../../src/config/tool-details';
 
 describe('tool detail content', () => {
@@ -69,6 +70,29 @@ describe('tool detail content', () => {
       expect(detail?.demo.status).toBe('ready');
       expect(detail?.demo.src).toBe(src);
       expect(detail?.demo.alt).toBeTruthy();
+    }
+  });
+});
+
+describe('portfolio config metadata', () => {
+  it('detects ChatGPT-style agent authors', () => {
+    expect(isAgentAuthor('ChatGPT <noreply@openai.com>')).toBe(true);
+    expect(isAgentAuthor('OpenAI-GPT <agent@example.com>')).toBe(true);
+    expect(isAgentAuthor('Dushyant Garg <dushyant@example.com>')).toBe(false);
+  });
+
+  it('keeps npm install commands represented in npmPackages', () => {
+    const installableNpmArtifacts = artifacts.filter(artifact =>
+      /^npm install(?:\s+-g)?\s+[\w@./-]+$/.test(artifact.installCommand ?? '')
+    );
+
+    expect(installableNpmArtifacts.length).toBeGreaterThan(0);
+    for (const artifact of installableNpmArtifacts) {
+      const parts = artifact.installCommand?.trim().split(/\s+/) ?? [];
+      const installedName = parts[parts.length - 1];
+
+      expect(artifact.npmName).toBe(installedName);
+      expect(npmPackages).toContain(artifact.npmName);
     }
   });
 });

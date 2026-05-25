@@ -1,8 +1,10 @@
 # Portfolio redesign — The Signal Desk
 
+> **Superseded:** This document is retained as historical design context only. The canonical current direction is the quiet editorial portfolio defined in `openspec/specs/portfolio-site-redesign/spec.md`; do not use this Signal Desk/dashboard spec as implementation guidance.
+
 **Date:** 2026-04-16
 **Author:** Dushyant Garg (with Claude, brainstormed)
-**Status:** Approved design, ready for implementation planning
+**Status:** Superseded historical design context
 **Supersedes:** existing `src/` under `portfolio/`
 
 ---
@@ -284,7 +286,7 @@ Existing removals:
 - Adding a CMS or admin UI
 - Building a real-time update channel (WebSockets, SSE)
 - Blog engine — Substack remains the CMS for essays
-- OG image regeneration per page — keep existing static `og-default.svg`
+- OG image regeneration per page — historical note; current metadata should target crawler-safe raster assets such as `og-default.png`
 - SEO optimizations beyond the existing `<head>` in `Layout.astro`
 
 ## 13. Success criteria

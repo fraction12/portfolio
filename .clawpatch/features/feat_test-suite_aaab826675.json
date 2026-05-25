@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_test-suite_aaab826675",
+  "title": "Test Suite",
+  "summary": "Vitest tests covering configuration integrity and data transformation behavior.\n\nAgent mapper reason: The tests can be reviewed as their own slice to evaluate coverage quality, fixture assumptions, and whether assertions protect the intended behavior.",
+  "kind": "test-suite",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "vitest.config.ts",
+      "symbol": null,
+      "route": null,
+      "command": "npm run test"
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "reason": "Tool detail config test coverage."
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "reason": "Git data utility test coverage."
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "reason": "Shift transformation test coverage."
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "reason": "Substack data utility test coverage."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/config/tool-details.ts",
+      "reason": "Production code under test."
+    },
+    {
+      "path": "src/lib/data/git.ts",
+      "reason": "Production code under test."
+    },
+    {
+      "path": "src/lib/data/shifts.ts",
+      "reason": "Production code under test."
+    },
+    {
+      "path": "src/lib/data/substack.ts",
+      "reason": "Production code under test."
+    },
+    {
+      "path": "vitest.config.ts",
+      "reason": "Test runner configuration."
+    },
+    {
+      "path": "package.json",
+      "reason": "Test script definition."
+    },
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "reason": "nearby test"
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "reason": "nearby test"
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "reason": "nearby test"
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "reason": "nearby test"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "command": null
+    }
+  ],
+  "tags": [
+    "agent-mapped",
+    "vitest",
+    "coverage",
+    "tests"
+  ],
+  "trustBoundaries": [
+    "filesystem",
+    "serialization"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-test-suite-aaab826675-b_76545ccd9b"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=61842 bytes; approxTokens=15461; includedFiles=10; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:35:46.969Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:32.965Z"
+}

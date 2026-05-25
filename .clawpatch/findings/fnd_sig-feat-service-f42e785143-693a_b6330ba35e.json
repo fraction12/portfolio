@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-service-f42e785143-693a_b6330ba35e",
+  "featureId": "feat_service_f42e785143",
+  "title": "Agent detection misses ChatGPT-style author strings despite documented substring matching",
+  "category": "bug",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/config/agents.ts",
+      "startLine": 1,
+      "endLine": 3,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/config/agents.ts",
+      "startLine": 5,
+      "endLine": 12,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/config/agents.ts",
+      "startLine": 21,
+      "endLine": 22,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The file documents case-insensitive substring detection against the full author string, but the GPT matcher is bounded as a standalone word. That means common agent author labels such as ChatGPT will not match, so those commits can be attributed as human-authored even though the pattern list appears intended to catch GPT agents.",
+  "reproduction": null,
+  "recommendation": "Either update the documented contract to say only standalone tokens are matched, or add explicit aliases such as chatgpt/openai-gpt where those should count as agent authors.",
+  "whyTestsDoNotAlreadyCoverThis": "The included test file only exercises tool detail content and media/link invariants; there are no tests for isAgentAuthor or the configured agent patterns.",
+  "suggestedRegressionTest": "Add tests asserting isAgentAuthor detects expected real author strings such as 'ChatGPT <noreply@example.com>' and still rejects non-agent names.",
+  "minimumFixScope": "Update src/config/agents.ts patterns and add a focused config test for agent author detection.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.731Z"
+    }
+  ],
+  "signature": "sig_feat-service-f42e785143_693afb4571",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093527-16bb9c",
+  "createdAt": "2026-05-24T09:38:15.514Z",
+  "updatedAt": "2026-05-25T17:54:32.730Z"
+}

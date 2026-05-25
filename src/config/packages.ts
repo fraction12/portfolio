@@ -60,7 +60,7 @@ export const artifacts: Artifact[] = [
     name: 'AgentSense', emphasisWord: 'AgentSense',
     description: 'Knowledge-graph memory plugin for OpenClaw with entity extraction and relationship-aware context.',
     stack: 'typescript · sqlite · fts5', kind: 'typescript · mcp plugin', status: 'live',
-    repo: 'fraction12/agentsense', installCommand: 'npm install agentsense' },
+    repo: 'fraction12/agentsense', npmName: 'agentsense', installCommand: 'npm install agentsense' },
 
   { slug: 'agentrem', order: 2, category: 'memory',
     name: 'agentrem', emphasisWord: 'agentrem',
@@ -75,13 +75,13 @@ export const artifacts: Artifact[] = [
     name: 'AgentTK', emphasisWord: 'AgentTK',
     description: 'Typed command-line primitives for building safer, more discoverable agent-facing tools.',
     stack: 'typescript · cli', kind: 'typescript · cli primitives', status: 'live',
-    repo: 'fraction12/agenttk', installCommand: 'npm install agenttk' },
+    repo: 'fraction12/agenttk', npmName: 'agenttk', installCommand: 'npm install agenttk' },
 
   { slug: 'starglass', order: 2, category: 'libraries',
     name: 'Starglass', emphasisWord: 'Starglass',
     description: 'Observation layer for agent systems that combines stdout, events, and tool calls into one timeline.',
     stack: 'typescript · mcp · skill', kind: 'typescript · mcp skill', status: 'live',
-    repo: 'fraction12/starglass', installCommand: 'npm install starglass' },
+    repo: 'fraction12/starglass', npmName: 'starglass', installCommand: 'npm install starglass' },
 
 
   // ────────────── ORCHESTRATION ──────────────

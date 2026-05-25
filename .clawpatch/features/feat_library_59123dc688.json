@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_library_59123dc688",
+  "title": "Scroll Reveal Behavior",
+  "summary": "Client-side scroll reveal script for progressive animation behavior across pages.\n\nAgent mapper reason: The script is a cross-page client behavior tied to global animation CSS and layout inclusion; review should focus on DOM assumptions and graceful degradation.",
+  "kind": "library",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "reason": "Client-side reveal behavior."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/styles/animations.css",
+      "reason": "Animation classes and timing used by reveal behavior."
+    },
+    {
+      "path": "src/layouts/Layout.astro",
+      "reason": "Likely script inclusion point."
+    },
+    {
+      "path": "src/pages/index.astro",
+      "reason": "Primary animated page surface."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "client-script",
+    "animation",
+    "intersection-observer"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-library-59123dc688-c24c_1d0d39010a"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=19973 bytes; approxTokens=4991; includedFiles=4; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:34:17.568Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:52:21.552Z"
+}

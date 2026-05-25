@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-agent-tool-5410120634-9_30955b9b9d",
+  "featureId": "feat_agent-tool_5410120634",
+  "title": "Archive workflow moves user-supplied change paths without validation or quoting",
+  "category": "security",
+  "severity": "medium",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": ".claude/commands/opsx/archive.md",
+      "startLine": 71,
+      "endLine": 79,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": ".claude/skills/openspec-archive-change/SKILL.md",
+      "startLine": 75,
+      "endLine": 83,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": ".codex/skills/openspec-archive-change/SKILL.md",
+      "startLine": 75,
+      "endLine": 83,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The archive instructions build filesystem paths directly from the supplied change name and show an unquoted mv command. Because the workflow accepts an optional user-provided change name, a malicious or malformed name containing shell metacharacters, spaces, globs, or path traversal could cause the agent to execute an unintended shell operation or move the wrong directory. Even if typical OpenSpec names are kebab-case, the instructions do not require validating that the selected name comes from openspec list or that it matches a safe change-id pattern before process execution.",
+  "reproduction": null,
+  "recommendation": "Require archive implementations to resolve the change name from openspec list/status output, reject names that are not exact active change IDs, enforce a conservative pattern such as ^[a-z0-9][a-z0-9-]*$, and show shell-safe quoted commands like mv -- \"openspec/changes/$name\" \"openspec/changes/archive/$date-$name\".",
+  "whyTestsDoNotAlreadyCoverThis": "No tests are included for these workflow assets, and the issue is in agent command/skill documentation rather than executable application code.",
+  "suggestedRegressionTest": "Add a lightweight documentation or workflow validation test that scans OpenSpec archive instructions for safe quoting and explicit change-name validation before mv/process-exec examples.",
+  "minimumFixScope": "Update the Claude and Codex archive command/skill docs to add validation requirements and replace the raw mv examples with shell-safe quoted forms.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": "20260525T174519-fc33bc",
+      "kind": "revalidate",
+      "status": "fixed",
+      "note": null,
+      "reasoning": "The original evidence paths still exist. At the cited archive sections, all three files now require resolving the change name from `openspec list` / `openspec status`, rejecting non-exact active IDs and unsafe names, enforcing `^[a-z0-9][a-z0-9-]*$`, and using `mv -- \"openspec/changes/<name>\" \"openspec/changes/archive/YYYY-MM-DD-<name>\"`. `git diff` confirms these are the current worktree changes replacing the prior raw `mv openspec/changes/<name> ...` examples. A repository-wide search of `.claude`, `.codex`, and `openspec` found no remaining unsafe `mv` archive pattern. `npm test` could not run because the read-only sandbox blocked Vitest/Vite from writing `node_modules/.vite-temp/...`; a read-only Node validation script passed against the three affected docs.",
+      "commands": [
+        "sed -n '1,220p' /Users/dushyantgarg/.codex/skills/clawpatch/SKILL.md",
+        "git status -sb",
+        "nl -ba .claude/commands/opsx/archive.md | sed -n '60,95p'",
+        "nl -ba .claude/skills/openspec-archive-change/SKILL.md | sed -n '65,95p'",
+        "nl -ba .codex/skills/openspec-archive-change/SKILL.md | sed -n '65,95p'",
+        "rg -n \"mv .*openspec/changes|archive.*openspec/changes|change.*\\^\\[a-z0-9\\]|exact active change|openspec list|openspec status\" .claude .codex openspec 2>/dev/null",
+        "rg -n \"\\bmv\\b|openspec/changes/[^\\n]*<name>|openspec/changes/[^\\n]*\\$|archive/YYYY-MM-DD|path traversal|shell-metacharacter|glob|whitespace\" .claude/commands/opsx/archive.md .claude/skills/openspec-archive-change/SKILL.md .codex/skills/openspec-archive-change/SKILL.md",
+        "git diff -- .claude/commands/opsx/archive.md .claude/skills/openspec-archive-change/SKILL.md .codex/skills/openspec-archive-change/SKILL.md",
+        "rg -n \"mv\\s+(-[^-]|openspec/changes)|mv\\s+openspec|mv\\s+.*\\$\\{|mv\\s+.*\\$[A-Za-z_]|openspec/changes/\\$|openspec/changes/\\{\\{|openspec/changes/\\{[A-Za-z_]\" .claude .codex openspec 2>/dev/null",
+        "find .claude .codex -path '*openspec-archive-change*' -o -path '.claude/commands/opsx/archive.md'",
+        "sed -n '1,220p' package.json",
+        "rg -n \"archive.md|openspec-archive-change|openspec/changes/archive|mv --|shell-metacharacter|path traversal\" tests scripts src .claude .codex 2>/dev/null",
+        "rg --files tests .claude .codex | rg \"(test|spec|archive|openspec)\"",
+        "npm test",
+        "node -e 'const fs=require(\"node:fs\"); const files=[\".claude/commands/opsx/archive.md\",\".claude/skills/openspec-archive-change/SKILL.md\",\".codex/skills/openspec-archive-change/SKILL.md\"]; const bad=[]; for (const file of files) { const s=fs.readFileSync(file,\"utf8\"); if (!s.includes(\"Resolve the change name from `openspec list` / `openspec status` output\")) bad.push(`${file}: missing validation instruction`); if (!s.includes(\"Reject names that are not exact active change IDs or that do not match `^[a-z0-9][a-z0-9-]*$`\")) bad.push(`${file}: missing safe id pattern`); if (!s.includes(\"mv -- \\\"openspec/changes/<name>\\\" \\\"openspec/changes/archive/YYYY-MM-DD-<name>\\\"\")) bad.push(`${file}: missing quoted mv --`); if (/mv\\s+openspec\\/changes\\/<name>\\s+openspec\\/changes\\/archive\\/YYYY-MM-DD-<name>/.test(s)) bad.push(`${file}: raw unquoted mv remains`); } if (bad.length) { console.error(bad.join(\"\\n\")); process.exit(1); } console.log(\"archive docs validation ok\");'"
+      ],
+      "createdAt": "2026-05-25T17:46:55.329Z"
+    }
+  ],
+  "signature": "sig_feat-agent-tool-5410120634_9a8adc7539",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:33:52.857Z",
+  "updatedAt": "2026-05-25T17:46:55.329Z"
+}

@@ -7,7 +7,7 @@ interface Props {
   className?: string;
   style?: string;
 }
-const { variant, as = 'article', href, className = '', style = '' } = Astro.props;
+const { variant, as = 'article', href, className = '', style = '' } = Astro.props as Props;
 const classes = ['card', variant && `card--${variant}`, className].filter(Boolean).join(' ');
 ---
 {as === 'a' || href ? (

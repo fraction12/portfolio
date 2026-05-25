@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-fd49585146-83a2_18e9456a15",
+  "featureId": "feat_library_fd49585146",
+  "title": "GitHub GraphQL errors can overwrite a good snapshot with an empty heatmap",
+  "category": "data-loss",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "confirmed-bug",
+  "evidence": [
+    {
+      "path": "src/lib/data/github.ts",
+      "startLine": 30,
+      "endLine": 39,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "startLine": 75,
+      "endLine": 84,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "fetchHeatmap treats any HTTP 200 response as usable data and defaults missing contribution data to an empty array. GitHub GraphQL can return HTTP 200 with an errors payload and null or partial data. In that case loadGithub will still build a fresh snapshot with commits7d and commits30d as 0, heatmap as [], and then write it to src/data/snapshots/github.json, replacing the last known-good snapshot instead of falling back to it.",
+  "reproduction": "Stub the repos request to succeed and the GraphQL request to return HTTP 200 with {\"errors\":[{\"message\":\"rate limited\"}],\"data\":null}. loadGithub will construct and write a snapshot with an empty heatmap instead of throwing and reading the existing snapshot.",
+  "recommendation": "After parsing the GraphQL JSON, explicitly check json.errors and validate the expected weeks array before returning data. Throw on errors or malformed contribution data so loadGithub uses readSnapshot and does not write corrupted fresh data.",
+  "whyTestsDoNotAlreadyCoverThis": "No included tests exercise loadGithub or fetchHeatmap, and none simulate GraphQL error payloads with successful HTTP status codes.",
+  "suggestedRegressionTest": "Add a loadGithub test with global fetch mocked so the GraphQL call returns a 200 error payload, then assert that the snapshot fallback is used and no empty heatmap snapshot is written.",
+  "minimumFixScope": "Add GraphQL response validation in fetchHeatmap and a regression test for 200-with-errors fallback behavior.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:31.924Z"
+    }
+  ],
+  "signature": "sig_feat-library-fd49585146_83a2eb891e",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093527-16bb9c",
+  "createdAt": "2026-05-24T09:37:15.092Z",
+  "updatedAt": "2026-05-25T17:54:31.924Z"
+}

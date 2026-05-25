@@ -26,7 +26,7 @@ function readSnapshot(): Essay[] {
       title: decodeXml(e.title),
       description: decodeXml(e.description),
       publishedAt: new Date(e.publishedAt)
-    }));
+    })).filter(e => isSafeEssayLink(e.link));
   } catch { return []; }
 }
 
@@ -45,8 +45,19 @@ export function decodeXml(input = ''): string {
       const codePoint = value.toLowerCase().startsWith('x')
         ? Number.parseInt(value.slice(1), 16)
         : Number.parseInt(value, 10);
-      return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : _entity;
+      return Number.isInteger(codePoint) && codePoint >= 0 && codePoint <= 0x10ffff
+        ? String.fromCodePoint(codePoint)
+        : _entity;
     });
+}
+
+export function isSafeEssayLink(link: string): boolean {
+  try {
+    const url = new URL(link);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 export function stripHtml(input = ''): string {
@@ -96,7 +107,7 @@ export function parseFeed(xml: string): Essay[] {
         readTimeMinutes: getReadTimeMinutes(contentRaw)
       };
     })
-    .filter(p => p.title && p.link);
+    .filter(p => p.title && isSafeEssayLink(p.link));
 }
 
 export async function fetchEssays(): Promise<Essay[]> {

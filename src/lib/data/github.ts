@@ -17,9 +17,31 @@ export type GithubSnapshot = {
   heatmap: HeatmapCell[] | null;
 };
 
+export type GraphqlResponse<T> = {
+  data?: T;
+  errors?: Array<{ message?: string }>;
+};
+
+type HeatmapGraphqlData = {
+  user?: {
+    contributionsCollection?: {
+      contributionCalendar?: {
+        weeks?: Array<{ contributionDays?: Array<{ date: string; contributionCount: number }> }>;
+      };
+    };
+  };
+};
+
 function readSnapshot(): GithubSnapshot {
   try { return JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8')); }
   catch { return { fetchedAt: null, totalStars: null, commits7d: null, commits30d: null, heatmap: null }; }
+}
+
+function assertNoGraphqlErrors(json: GraphqlResponse<unknown>, label: string): void {
+  if (Array.isArray(json.errors) && json.errors.length > 0) {
+    const message = json.errors.map(err => err?.message).filter(Boolean).join('; ') || 'unknown GraphQL error';
+    throw new Error(`${label}: ${message}`);
+  }
 }
 
 export async function loadGithub(): Promise<GithubSnapshot> {
@@ -73,11 +95,21 @@ async function fetchHeatmap(): Promise<HeatmapCell[]> {
     signal: AbortSignal.timeout(5000)
   });
   if (!res.ok) throw new Error(`github graphql ${res.status}`);
-  const json = await res.json() as any;
-  const weeks = json?.data?.user?.contributionsCollection?.contributionCalendar?.weeks ?? [];
+  const json = await res.json() as GraphqlResponse<HeatmapGraphqlData>;
+  return parseHeatmapResponse(json);
+}
+
+export function parseHeatmapResponse(json: GraphqlResponse<HeatmapGraphqlData>): HeatmapCell[] {
+  assertNoGraphqlErrors(json, 'github heatmap graphql');
+  const weeks = json.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
+  if (!Array.isArray(weeks)) throw new Error('github heatmap missing contribution weeks');
   const cells: HeatmapCell[] = [];
   for (const w of weeks) {
+    if (!Array.isArray(w?.contributionDays)) throw new Error('github heatmap malformed contribution days');
     for (const d of w.contributionDays) {
+      if (typeof d?.date !== 'string' || typeof d?.contributionCount !== 'number') {
+        throw new Error('github heatmap malformed contribution day');
+      }
       cells.push({ date: d.date, count: d.contributionCount, level: bucketLevel(d.contributionCount) });
     }
   }
@@ -181,8 +213,9 @@ export async function fetchAllRepoCommits(limit = 12): Promise<CommitRecord[]> {
     return [];
   }
 
+  const historyLimit = Math.max(10, limit);
   const query = `
-    query {
+    query($historyLimit: Int!) {
       viewer {
         repositories(first: 20, orderBy: {field: PUSHED_AT, direction: DESC}, affiliations: [OWNER], isFork: false) {
           nodes {
@@ -191,7 +224,7 @@ export async function fetchAllRepoCommits(limit = 12): Promise<CommitRecord[]> {
             defaultBranchRef {
               target {
                 ... on Commit {
-                  history(first: 10) {
+                  history(first: $historyLimit) {
                     nodes {
                       oid
                       committedDate
@@ -216,17 +249,42 @@ export async function fetchAllRepoCommits(limit = 12): Promise<CommitRecord[]> {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query, variables: { historyLimit } }),
       signal: AbortSignal.timeout(5000)
     });
     if (!res.ok) throw new Error(`github graphql ${res.status}`);
-    const json = await res.json() as any;
-    const repos = json?.data?.viewer?.repositories?.nodes ?? [];
+    const json = await res.json() as GraphqlResponse<{
+      viewer?: {
+        repositories?: {
+          nodes?: Array<{
+            defaultBranchRef?: {
+              target?: {
+                history?: {
+                  nodes?: Array<{
+                    oid: string;
+                    committedDate: string;
+                    message?: string;
+                    author?: { name?: string; email?: string };
+                  }>;
+                };
+              };
+            };
+          }>;
+        };
+      };
+    }>;
+    assertNoGraphqlErrors(json, 'github commits graphql');
+    const repos = json.data?.viewer?.repositories?.nodes;
+    if (!Array.isArray(repos)) throw new Error('github commits missing repositories');
 
     const all: CommitRecord[] = [];
     for (const r of repos) {
       const history = r?.defaultBranchRef?.target?.history?.nodes ?? [];
+      if (!Array.isArray(history)) throw new Error('github commits malformed history');
       for (const c of history) {
+        if (typeof c?.oid !== 'string' || typeof c?.committedDate !== 'string') {
+          throw new Error('github commits malformed commit node');
+        }
         const { subject, body, coAuthors } = parseCommitMessage(c.message ?? '');
         const author = c.author?.name ?? '';
         const authorEmail = c.author?.email ?? '';

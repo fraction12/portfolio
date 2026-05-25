@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_library_126810ced5",
+  "title": "Static Data Aggregators",
+  "summary": "Shared data access modules for git, GitHub, npm, PyPI, Substack, shifts, and snapshot-backed exports.\n\nAgent mapper reason: These modules form a shared data layer around local snapshots and external-service metadata, with tests focused on transformation and parsing behavior.",
+  "kind": "library",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/lib/data/index.ts",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/lib/data/index.ts",
+      "reason": "Public barrel for data utilities."
+    },
+    {
+      "path": "src/lib/data/git.ts",
+      "reason": "Git repository metadata extraction."
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "reason": "GitHub data snapshot/access utilities."
+    },
+    {
+      "path": "src/lib/data/npm.ts",
+      "reason": "npm package data snapshot/access utilities."
+    },
+    {
+      "path": "src/lib/data/pypi.ts",
+      "reason": "PyPI package data snapshot/access utilities."
+    },
+    {
+      "path": "src/lib/data/shifts.ts",
+      "reason": "Shift/activity data transformation utilities."
+    },
+    {
+      "path": "src/lib/data/substack.ts",
+      "reason": "Substack data snapshot/access utilities."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/data/snapshots/github.json",
+      "reason": "Snapshot input consumed by GitHub data utilities."
+    },
+    {
+      "path": "src/data/snapshots/npm.json",
+      "reason": "Snapshot input consumed by npm data utilities."
+    },
+    {
+      "path": "src/data/snapshots/pypi.json",
+      "reason": "Snapshot input consumed by PyPI data utilities."
+    },
+    {
+      "path": "src/data/snapshots/substack.json",
+      "reason": "Snapshot input consumed by Substack data utilities."
+    },
+    {
+      "path": "src/config/packages.ts",
+      "reason": "Package metadata likely joins against external package snapshots."
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "reason": "nearby test"
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "reason": "nearby test"
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "reason": "nearby test"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "command": null
+    }
+  ],
+  "tags": [
+    "agent-mapped",
+    "data",
+    "snapshots",
+    "external-services",
+    "metrics"
+  ],
+  "trustBoundaries": [
+    "filesystem",
+    "external-api",
+    "serialization"
+  ],
+  "status": "pending",
+  "lock": null,
+  "findingIds": [],
+  "patchAttemptIds": [],
+  "analysisHistory": [],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-24T22:33:02.923Z"
+}

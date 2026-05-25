@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-f7615c5a6c-6478_fb8eddbd60",
+  "featureId": "feat_library_f7615c5a6c",
+  "title": "Malformed numeric XML entities can abort Substack feed parsing",
+  "category": "bug",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/lib/data/substack.ts",
+      "startLine": 40,
+      "endLine": 49,
+      "symbol": "decodeXml",
+      "quote": null
+    },
+    {
+      "path": "src/lib/data/substack.ts",
+      "startLine": 77,
+      "endLine": 99,
+      "symbol": "parseFeed",
+      "quote": null
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "startLine": 15,
+      "endLine": 22,
+      "symbol": "stripHtml tests",
+      "quote": null
+    }
+  ],
+  "reasoning": "decodeXml converts any finite numeric entity with String.fromCodePoint, but it does not ensure the code point is within Unicode's valid range. An entity like &#9999999999; is finite but out of range, so String.fromCodePoint throws. Because parseFeed applies stripHtml/decodeXml while mapping items, one malformed entity can abort parsing the whole feed and force fetchEssays to fall back to stale or empty snapshot data.",
+  "reproduction": null,
+  "recommendation": "Validate numeric entities with codePoint >= 0 && codePoint <= 0x10FFFF before calling String.fromCodePoint, returning the original entity for invalid values.",
+  "whyTestsDoNotAlreadyCoverThis": "The Substack tests cover ordinary named entities, whitespace, read time, and a well-formed feed, but do not include invalid numeric entities or malformed feed content.",
+  "suggestedRegressionTest": "Add a stripHtml/decodeXml test with an out-of-range numeric entity and assert it does not throw and preserves or safely drops the invalid entity.",
+  "minimumFixScope": "src/lib/data/substack.ts decodeXml guard plus one Substack parser regression test.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:31.582Z"
+    }
+  ],
+  "signature": "sig_feat-library-f7615c5a6c_6478a2ad51",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T111958-62a2be",
+  "createdAt": "2026-05-24T11:21:04.213Z",
+  "updatedAt": "2026-05-25T17:54:31.581Z"
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-route-564515f3c3-e8fd5d_0eb1a80aae",
+  "featureId": "feat_route_564515f3c3",
+  "title": "Screenshot previews are forced into a cropping frame",
+  "category": "bug",
+  "severity": "medium",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/pages/tools/[slug].astro",
+      "startLine": 114,
+      "endLine": 117,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/pages/tools/[slug].astro",
+      "startLine": 289,
+      "endLine": 295,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/specs/tool-detail-pages/spec.md",
+      "startLine": 16,
+      "endLine": 27,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "startLine": 55,
+      "endLine": 72,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The route renders image previews as inspectable proof, but the shared media CSS forces every image into a 16:9 box with object-fit: cover. That can crop screenshot UI, directly conflicting with the active requirement that screenshot previews preserve important headings, navigation, controls, and proof areas. The current tests only validate that preview metadata exists and has alt text; they do not render the route or assert non-cropping behavior.",
+  "reproduction": "Render a detail page with an image preview whose intrinsic ratio is not 16:9, such as a 1280x800 product screenshot. The CSS creates a 16:9 frame and cover-crops the image content.",
+  "recommendation": "Use a non-cropping image treatment for screenshot previews, such as object-fit: contain with a stable background, or add explicit media aspect/fit metadata and default screenshots to containment while keeping video frames stable.",
+  "whyTestsDoNotAlreadyCoverThis": "tests/config/tool-details.test.ts checks preview src/status/alt only; it never renders src/pages/tools/[slug].astro or inspects computed media styles.",
+  "suggestedRegressionTest": "Add a route rendering or browser-level test for an image-preview detail page that asserts screenshot media is not styled with object-fit: cover and preserves its configured/intrinsic aspect ratio.",
+  "minimumFixScope": "Update the image branch styling in src/pages/tools/[slug].astro and add a focused render/style regression for image preview media.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.154Z"
+    }
+  ],
+  "signature": "sig_feat-route-564515f3c3_e8fd5dd3ef",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:35:44.642Z",
+  "updatedAt": "2026-05-25T17:54:32.154Z"
+}

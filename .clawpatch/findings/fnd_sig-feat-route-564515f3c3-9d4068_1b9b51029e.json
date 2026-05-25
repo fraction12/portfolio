@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-route-564515f3c3-9d4068_1b9b51029e",
+  "featureId": "feat_route_564515f3c3",
+  "title": "Media placeholder requirements conflict with current omission behavior",
+  "category": "docs-gap",
+  "severity": "low",
+  "confidence": "high",
+  "triage": "docs-gap",
+  "evidence": [
+    {
+      "path": "openspec/specs/tool-detail-pages/spec.md",
+      "startLine": 44,
+      "endLine": 47,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/specs/tool-detail-pages/spec.md",
+      "startLine": 37,
+      "endLine": 39,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/pages/tools/[slug].astro",
+      "startLine": 28,
+      "endLine": 31,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/pages/tools/[slug].astro",
+      "startLine": 88,
+      "endLine": 122,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/config/tool-details.ts",
+      "startLine": 111,
+      "endLine": 118,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "startLine": 32,
+      "endLine": 37,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The archived spec says pages with no safe media must render a polished demo placeholder, while the active credibility change says supporting projects without proof media should omit the media section. The route currently omits the media section for every non-ready demo, even though the config still carries placeholder label/caption copy for status:none entries. This makes the intended behavior ambiguous and leaves no test that distinguishes placeholder rendering from omission.",
+  "reproduction": null,
+  "recommendation": "Resolve the spec contract: either amend the base requirement to allow omission for non-ready/supporting pages, or add explicit metadata to decide which pages get placeholders and render that branch accordingly.",
+  "whyTestsDoNotAlreadyCoverThis": "The existing missing-media test only asserts absent asset URLs; it does not assert whether a no-media detail page should render explanatory placeholder copy or omit the section.",
+  "suggestedRegressionTest": "Add one route-level test for a no-media detail page covering the chosen contract: either no media section is rendered, or the configured placeholder label/caption is rendered without fake assets.",
+  "minimumFixScope": "Clarify the OpenSpec requirement and update src/pages/tools/[slug].astro or tests to match the resolved contract.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.038Z"
+    }
+  ],
+  "signature": "sig_feat-route-564515f3c3_9d406848fa",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:35:44.642Z",
+  "updatedAt": "2026-05-25T17:54:32.038Z"
+}

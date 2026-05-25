@@ -68,6 +68,8 @@ Archive a completed change in the experimental workflow.
    mkdir -p openspec/changes/archive
    ```
 
+   Resolve the change name from `openspec list` / `openspec status` output before using it in a filesystem path. Reject names that are not exact active change IDs or that do not match `^[a-z0-9][a-z0-9-]*$`; never archive path traversal, glob, whitespace, or shell-metacharacter input.
+
    Generate target name using current date: `YYYY-MM-DD-<change-name>`
 
    **Check if target already exists:**
@@ -75,7 +77,7 @@ Archive a completed change in the experimental workflow.
    - If no: Move the change directory to archive
 
    ```bash
-   mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+   mv -- "openspec/changes/<name>" "openspec/changes/archive/YYYY-MM-DD-<name>"
    ```
 
 6. **Display summary**

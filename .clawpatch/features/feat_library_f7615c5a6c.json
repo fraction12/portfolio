@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_library_f7615c5a6c",
+  "title": "Node package portfolio",
+  "summary": "Node package portfolio with package metadata and review context rooted at ..",
+  "kind": "library",
+  "source": "node-package",
+  "confidence": "medium",
+  "entrypoints": [
+    {
+      "path": "package.json",
+      "symbol": "portfolio",
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "package.json",
+      "reason": "package manifest"
+    },
+    {
+      "path": "tsconfig.json",
+      "reason": "typescript configuration"
+    },
+    {
+      "path": "vitest.config.ts",
+      "reason": "test configuration"
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/config/agents.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/config/packages.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/config/stream-sources.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/config/tool-details.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/content.config.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/git.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/index.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/npm.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/pypi.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/shifts.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/lib/data/substack.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/pages/llms.txt.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/pages/robots.txt.ts",
+      "reason": "package source overview"
+    },
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "reason": "package source overview"
+    },
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "reason": "package test"
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "reason": "package test"
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "reason": "package test"
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "reason": "package test"
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "node",
+    "package",
+    "project:portfolio",
+    "project-root:."
+  ],
+  "trustBoundaries": [],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-library-f7615c5a6c-fd06_c06397bc0f",
+    "fnd_sig-feat-library-f7615c5a6c-2b81_f914a90e24",
+    "fnd_sig-feat-library-f7615c5a6c-6478_fb8eddbd60"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T111958-62a2be",
+      "kind": "review",
+      "summary": "3 finding(s); prompt=101520 bytes; approxTokens=25276; includedFiles=22; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T11:21:04.214Z"
+    }
+  ],
+  "createdAt": "2026-05-24T09:34:20.066Z",
+  "updatedAt": "2026-05-25T17:54:31.701Z"
+}

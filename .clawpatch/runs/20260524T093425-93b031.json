@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260524T093425-93b031",
+  "command": "review",
+  "args": [
+    "review",
+    "--limit",
+    "3",
+    "--jobs",
+    "3"
+  ],
+  "rootPath": "/Users/dushyantgarg/Documents/Projects/portfolio",
+  "headSha": "48e18aa1a7e847312dae9ba86c9dcca2830a8adb",
+  "startedAt": "2026-05-24T09:34:25.367Z",
+  "finishedAt": "2026-05-24T09:34:49.996Z",
+  "status": "completed",
+  "claimedFeatureIds": [
+    "feat_config_0c1c23856a",
+    "feat_config_57f59ddd1e",
+    "feat_config_7528cb5b98"
+  ],
+  "findingIds": [
+    "fnd_sig-feat-config-7528cb5b98-22bb6_cf0e58344c"
+  ],
+  "patchAttemptIds": [],
+  "errors": []
+}

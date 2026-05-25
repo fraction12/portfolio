@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_config_e637da564c",
+  "title": "Stream Sources Configuration",
+  "summary": "Configuration for stream/source links used by portfolio surfaces.\n\nAgent mapper reason: This config appears distinct from package/tool metadata but likely supports proof or activity source displays; reviewing it with likely consumers helps catch stale links or mismatched fields.",
+  "kind": "config",
+  "source": "agent-mapper",
+  "confidence": "medium",
+  "entrypoints": [
+    {
+      "path": "src/config/stream-sources.ts",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/config/stream-sources.ts",
+      "reason": "Primary stream/source configuration."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/pages/index.astro",
+      "reason": "Likely consumer of stream/source data."
+    },
+    {
+      "path": "src/components/ProofStrip.astro",
+      "reason": "Likely proof/source display component."
+    },
+    {
+      "path": "openspec/specs/portfolio-production-polish/spec.md",
+      "reason": "Production polish requirements may constrain proof/source presentation."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "config",
+    "sources",
+    "proof"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "reviewed",
+  "lock": null,
+  "findingIds": [],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "0 finding(s); prompt=24564 bytes; approxTokens=6141; includedFiles=4; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:33:46.410Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-24T22:33:46.410Z"
+}

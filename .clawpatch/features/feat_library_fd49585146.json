@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_library_fd49585146",
+  "title": "Node source src/lib",
+  "summary": "Node/TypeScript source group src/lib with 7 files.",
+  "kind": "library",
+  "source": "node-source-group",
+  "confidence": "medium",
+  "entrypoints": [
+    {
+      "path": "package.json",
+      "symbol": "src/lib",
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/lib/data/git.ts",
+      "reason": "source group src/lib"
+    },
+    {
+      "path": "src/lib/data/github.ts",
+      "reason": "source group src/lib"
+    },
+    {
+      "path": "src/lib/data/index.ts",
+      "reason": "source group src/lib"
+    },
+    {
+      "path": "src/lib/data/npm.ts",
+      "reason": "source group src/lib"
+    },
+    {
+      "path": "src/lib/data/pypi.ts",
+      "reason": "source group src/lib"
+    },
+    {
+      "path": "src/lib/data/shifts.ts",
+      "reason": "source group src/lib"
+    },
+    {
+      "path": "src/lib/data/substack.ts",
+      "reason": "source group src/lib"
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "package.json",
+      "reason": "package manifest"
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "reason": "associated test"
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "reason": "associated test"
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "reason": "associated test"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "command": "npm run test"
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "command": "npm run test"
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "command": "npm run test"
+    }
+  ],
+  "tags": [
+    "node",
+    "typescript",
+    "source-group",
+    "project:portfolio",
+    "project-root:."
+  ],
+  "trustBoundaries": [],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-library-fd49585146-130b_0337d9caa1",
+    "fnd_sig-feat-library-fd49585146-83a2_18e9456a15"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T093527-16bb9c",
+      "kind": "review",
+      "summary": "2 finding(s); prompt=48697 bytes; approxTokens=12173; includedFiles=11; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T09:37:15.093Z"
+    }
+  ],
+  "createdAt": "2026-05-24T09:34:20.066Z",
+  "updatedAt": "2026-05-25T17:54:31.928Z"
+}

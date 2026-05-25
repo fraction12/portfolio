@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-route-b968e989ce-aa580b_dbeca44cf3",
+  "featureId": "feat_route_b968e989ce",
+  "title": "Non-TradeSpec metric overrides are ignored on the tools catalog",
+  "category": "bug",
+  "severity": "low",
+  "confidence": "high",
+  "triage": "confirmed-bug",
+  "evidence": [
+    {
+      "path": "src/pages/tools.astro",
+      "startLine": 18,
+      "endLine": 29,
+      "symbol": "metricFor",
+      "quote": null
+    },
+    {
+      "path": "src/config/packages.ts",
+      "startLine": 145,
+      "endLine": 156,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/config/packages.ts",
+      "startLine": 175,
+      "endLine": 179,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The artifact model includes metricOverride for several non-registry/private/dev artifacts, but metricFor only returns metricOverride when the slug is tradespec. Agent Office, Hunt, and Vault Mind therefore lose their explicit catalog status text and render with null metric despite carrying display-ready override values.",
+  "reproduction": null,
+  "recommendation": "Return metricOverride for any artifact before registry lookups, or document and replace the non-TradeSpec overrides with a different field that the card actually renders.",
+  "whyTestsDoNotAlreadyCoverThis": "No linked tests are included for the tools route or metric selection behavior, so the regression can survive as a static-data/display mismatch.",
+  "suggestedRegressionTest": "Render the tools route with empty package-download data and assert that Agent Office, Hunt, and Vault Mind include their metricOverride text.",
+  "minimumFixScope": "Update src/pages/tools.astro metricFor and add a focused route/component regression test.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.382Z"
+    }
+  ],
+  "signature": "sig_feat-route-b968e989ce_aa580badf0",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:35:15.954Z",
+  "updatedAt": "2026-05-25T17:54:32.382Z"
+}

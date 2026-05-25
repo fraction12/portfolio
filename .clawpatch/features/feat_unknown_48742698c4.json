@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_unknown_48742698c4",
+  "title": "Design Planning Docs",
+  "summary": "Superpowers design plans and mockups that document intended portfolio design direction.\n\nAgent mapper reason: These docs are not runtime code, but they explain the design intent behind the portfolio surfaces and should be reviewed as a bounded documentation slice.",
+  "kind": "unknown",
+  "source": "agent-mapper",
+  "confidence": "medium",
+  "entrypoints": [
+    {
+      "path": "docs/superpowers/plans/2026-04-16-portfolio-signal-desk-home.md",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "docs/superpowers/mockups/2026-04-16-signal-desk-home.html",
+      "reason": "Static design mockup."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-04-16-portfolio-signal-desk-home.md",
+      "reason": "Design plan for signal-desk homepage."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-21-simplify-portfolio-homepage.md",
+      "reason": "Design plan for simplified homepage."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-22-quiet-founder-index-implementation.md",
+      "reason": "Implementation plan for quiet founder index."
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-16-portfolio-redesign-design.md",
+      "reason": "Design spec for earlier redesign direction."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "src/pages/index.astro",
+      "reason": "Implemented homepage surface that should reflect or intentionally diverge from plans."
+    },
+    {
+      "path": "src/styles/tokens.css",
+      "reason": "Design tokens implementing visual direction."
+    },
+    {
+      "path": "openspec/specs/portfolio-site-redesign/spec.md",
+      "reason": "Canonical implementation requirements."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "design-docs",
+    "mockups",
+    "planning"
+  ],
+  "trustBoundaries": [],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-unknown-48742698c4-9932_06b31c51f1",
+    "fnd_sig-feat-unknown-48742698c4-d613_d1d7e6ca39"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "2 finding(s); prompt=111139 bytes; approxTokens=27708; includedFiles=8; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:38:24.915Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:33.653Z"
+}

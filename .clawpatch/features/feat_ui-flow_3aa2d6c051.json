@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_ui-flow_3aa2d6c051",
+  "title": "Homepage Experience",
+  "summary": "Portfolio homepage composition, hero, flagship proof, build cards, writing previews, contact, and supporting homepage design docs/specs.\n\nAgent mapper reason: The homepage route and its bespoke section components form one user-facing flow whose copy hierarchy, proof, and calls to action should be reviewed as a unit.",
+  "kind": "ui-flow",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/pages/index.astro",
+      "symbol": null,
+      "route": "/",
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/pages/index.astro",
+      "reason": "Homepage route."
+    },
+    {
+      "path": "src/components/Hero.astro",
+      "reason": "Homepage hero section."
+    },
+    {
+      "path": "src/components/FlagshipWorkCard.astro",
+      "reason": "Featured work presentation."
+    },
+    {
+      "path": "src/components/BuildCard.astro",
+      "reason": "Reusable build/project card on homepage."
+    },
+    {
+      "path": "src/components/ProofStrip.astro",
+      "reason": "Homepage credibility/proof strip."
+    },
+    {
+      "path": "src/components/Contact.astro",
+      "reason": "Homepage contact conversion section."
+    },
+    {
+      "path": "src/components/Writing.astro",
+      "reason": "Homepage writing preview component."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "openspec/specs/portfolio-homepage-positioning/spec.md",
+      "reason": "Current homepage positioning requirements."
+    },
+    {
+      "path": "openspec/specs/portfolio-site-redesign/spec.md",
+      "reason": "Current portfolio redesign requirements."
+    },
+    {
+      "path": "openspec/specs/portfolio-production-polish/spec.md",
+      "reason": "Current production polish requirements."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-21-simplify-portfolio-homepage.md",
+      "reason": "Prior homepage simplification plan."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-22-quiet-founder-index-implementation.md",
+      "reason": "Implementation plan for current homepage direction."
+    },
+    {
+      "path": "public/og/home.svg",
+      "reason": "Homepage social preview asset."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "homepage",
+    "portfolio",
+    "proof",
+    "astro"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-ui-flow-3aa2d6c051-5469_ae26d34cd6",
+    "fnd_sig-feat-ui-flow-3aa2d6c051-93e4_1a48b13cdb"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "2 finding(s); prompt=62817 bytes; approxTokens=15704; includedFiles=13; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:37:39.750Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:33.195Z"
+}

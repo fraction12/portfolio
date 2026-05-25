@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-f7615c5a6c-2b81_f914a90e24",
+  "featureId": "feat_library_f7615c5a6c",
+  "title": "Test suite depends on live repository history and will fail based on checkout state or time",
+  "category": "build-release",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "package.json",
+      "startLine": 5,
+      "endLine": 11,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "vitest.config.ts",
+      "startLine": 3,
+      "endLine": 7,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "startLine": 122,
+      "endLine": 136,
+      "symbol": "getLastCommit integration tests",
+      "quote": null
+    }
+  ],
+  "reasoning": "npm run test always runs the git tests, and two tests call real git commands against the current checkout. One requires a .git directory, and the other assumes there is a commit with non-zero changes in the last 30 days. That makes the package test command non-hermetic and can break in package extraction, shallow/minimal CI checkouts, or after a quiet month even when the code is correct.",
+  "reproduction": null,
+  "recommendation": "Keep parser behavior tested with fixed git-log fixtures, and either mock the git command boundary or move live-repo integration checks behind an explicit opt-in environment flag.",
+  "whyTestsDoNotAlreadyCoverThis": "These lines are themselves the fragile tests; the rest of the suite uses deterministic fixtures and does not verify that npm run test remains independent of local git state.",
+  "suggestedRegressionTest": "Run the git data tests with the git command mocked to throw or return a fixed fixture, and assert the tested behavior does not require live repository history unless an integration-test flag is set.",
+  "minimumFixScope": "tests/lib/data/git.test.ts, with a small injectable seam or mock around the git command boundary if needed.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:31.469Z"
+    }
+  ],
+  "signature": "sig_feat-library-f7615c5a6c_2b81fa000b",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T111958-62a2be",
+  "createdAt": "2026-05-24T11:21:04.213Z",
+  "updatedAt": "2026-05-25T17:54:31.468Z"
+}

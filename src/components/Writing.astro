@@ -1,6 +1,6 @@
 ---
 import WritingRow from './WritingRow.astro';
-import { fetchEssays, type Essay } from '../lib/data/substack';
+import { fetchEssays, isSafeEssayLink, type Essay } from '../lib/data/substack';
 
 interface Props {
   limit?: number;
@@ -10,7 +10,8 @@ const { limit } = Astro.props;
 
 // Shared fetcher: 5s timeout, snapshot fallback on failure.
 const essays: Essay[] = await fetchEssays();
-const visiblePosts = typeof limit === 'number' ? essays.slice(0, limit) : essays;
+const safeEssays = essays.filter(essay => isSafeEssayLink(essay.link));
+const visiblePosts = typeof limit === 'number' ? safeEssays.slice(0, limit) : safeEssays;
 const hasError = essays.length === 0;
 ---
 

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_infra_d68e203c0f",
+  "title": "Build Test And Deployment Config",
+  "summary": "Package scripts, Vitest setup, TypeScript config, Vercel config, and git ignore policy.\n\nAgent mapper reason: Build, test, type, deployment, and ignore configuration jointly determine how code is validated and shipped; package-lock is intentionally excluded as a lock/generated artifact.",
+  "kind": "infra",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "package.json",
+      "symbol": null,
+      "route": null,
+      "command": "npm run test"
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "package.json",
+      "reason": "Scripts and dependency manifest."
+    },
+    {
+      "path": "vitest.config.ts",
+      "reason": "Vitest test runner configuration."
+    },
+    {
+      "path": "tsconfig.json",
+      "reason": "TypeScript project configuration."
+    },
+    {
+      "path": "vercel.json",
+      "reason": "Deployment configuration."
+    },
+    {
+      "path": ".gitignore",
+      "reason": "Repository ignore policy."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "astro.config.mjs",
+      "reason": "Build framework configuration."
+    },
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "reason": "Representative test exercising Vitest setup."
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "reason": "Representative test exercising Vitest setup."
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "reason": "Representative test exercising Vitest setup."
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "reason": "Representative test exercising Vitest setup."
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/shifts.test.ts",
+      "command": null
+    },
+    {
+      "path": "tests/lib/data/substack.test.ts",
+      "command": null
+    }
+  ],
+  "tags": [
+    "agent-mapped",
+    "build",
+    "test",
+    "deployment",
+    "config"
+  ],
+  "trustBoundaries": [
+    "filesystem",
+    "process-exec",
+    "network"
+  ],
+  "status": "pending",
+  "lock": null,
+  "findingIds": [],
+  "patchAttemptIds": [],
+  "analysisHistory": [],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-24T22:33:02.923Z"
+}

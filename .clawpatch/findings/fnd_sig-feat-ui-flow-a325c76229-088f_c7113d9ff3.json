@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-ui-flow-a325c76229-088f_c7113d9ff3",
+  "featureId": "feat_ui-flow_a325c76229",
+  "title": "Inline theme bootstrap accumulates global listeners during client-side navigation",
+  "category": "performance",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/layouts/Layout.astro",
+      "startLine": 76,
+      "endLine": 117,
+      "symbol": "inline theme bootstrap",
+      "quote": null
+    },
+    {
+      "path": "src/layouts/Layout.astro",
+      "startLine": 148,
+      "endLine": 148,
+      "symbol": "ClientRouter",
+      "quote": null
+    }
+  ],
+  "reasoning": "The layout enables Astro client-side navigation and includes an unconditional inline IIFE that registers document-level `astro:before-swap` and media-query `change` listeners every time the inline script executes. Inline scripts in swapped pages are not guarded here, so a long client-side browsing session can accumulate duplicate listeners that repeatedly read localStorage and rewrite theme attributes on each navigation or OS theme change.",
+  "reproduction": "Navigate between ClientRouter-managed pages several times, then trigger another navigation or a prefers-color-scheme change; the same theme handler work is performed once per prior inline-script execution.",
+  "recommendation": "Make listener installation idempotent with a window-level sentinel, or move the listener setup into a processed module that is executed once while keeping only the immediate pre-paint theme application inline.",
+  "whyTestsDoNotAlreadyCoverThis": "No tests are listed for this feature, and the included excerpts do not show any browser/view-transition regression coverage for listener registration counts.",
+  "suggestedRegressionTest": "Add a browser-level test or unit harness around the theme bootstrap that simulates repeated Astro page loads/swaps and asserts only one global `astro:before-swap` and one media-query change listener are installed.",
+  "minimumFixScope": "Update `src/layouts/Layout.astro` theme bootstrap to separate one-time listener setup from per-document theme application.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:33.305Z"
+    }
+  ],
+  "signature": "sig_feat-ui-flow-a325c76229_088f8d8785",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:37:33.662Z",
+  "updatedAt": "2026-05-25T17:54:33.304Z"
+}

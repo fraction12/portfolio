@@ -1,6 +1,11 @@
 ---
 import Button from './Button.astro';
-const { className = '' } = Astro.props;
+interface Props {
+  className?: string;
+  inputId?: string;
+}
+
+const { className = '', inputId = `newsletter-email-${Math.random().toString(36).slice(2, 10)}` } = Astro.props;
 ---
 
 <section class:list={["newsletter", className]} aria-label="Newsletter signup">
@@ -13,11 +18,10 @@ const { className = '' } = Astro.props;
     action="https://dushyantg.substack.com/api/v1/free"
     method="post"
     target="_blank"
-    rel="noopener noreferrer"
   >
-    <label class="sr-only" for="newsletter-email">Email address</label>
+    <label class="sr-only" for={inputId}>Email address</label>
     <input
-      id="newsletter-email"
+      id={inputId}
       class="field"
       name="email"
       type="email"

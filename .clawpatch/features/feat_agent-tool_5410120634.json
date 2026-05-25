@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_agent-tool_5410120634",
+  "title": "OpenSpec Workflow Assets",
+  "summary": "Repository-local OpenSpec command docs, Codex/Claude skills, active changes, archived changes, and canonical specs.\n\nAgent mapper reason: OpenSpec assets define the repository's planning and change-management workflow; command docs, skill instructions, active changes, and canonical specs should be reviewed together for consistency.",
+  "kind": "agent-tool",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": ".codex/skills/openspec-propose/SKILL.md",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": ".claude/commands/opsx/apply.md",
+      "reason": "Claude command documentation for applying OpenSpec changes."
+    },
+    {
+      "path": ".claude/commands/opsx/archive.md",
+      "reason": "Claude command documentation for archiving OpenSpec changes."
+    },
+    {
+      "path": ".claude/commands/opsx/explore.md",
+      "reason": "Claude command documentation for OpenSpec exploration."
+    },
+    {
+      "path": ".claude/commands/opsx/propose.md",
+      "reason": "Claude command documentation for proposing OpenSpec changes."
+    },
+    {
+      "path": ".claude/skills/openspec-apply-change/SKILL.md",
+      "reason": "Claude OpenSpec apply skill instructions."
+    },
+    {
+      "path": ".claude/skills/openspec-archive-change/SKILL.md",
+      "reason": "Claude OpenSpec archive skill instructions."
+    },
+    {
+      "path": ".claude/skills/openspec-explore/SKILL.md",
+      "reason": "Claude OpenSpec explore skill instructions."
+    },
+    {
+      "path": ".claude/skills/openspec-propose/SKILL.md",
+      "reason": "Claude OpenSpec propose skill instructions."
+    },
+    {
+      "path": ".codex/skills/openspec-apply-change/SKILL.md",
+      "reason": "Codex OpenSpec apply skill instructions."
+    },
+    {
+      "path": ".codex/skills/openspec-archive-change/SKILL.md",
+      "reason": "Codex OpenSpec archive skill instructions."
+    },
+    {
+      "path": ".codex/skills/openspec-explore/SKILL.md",
+      "reason": "Codex OpenSpec explore skill instructions."
+    },
+    {
+      "path": ".codex/skills/openspec-propose/SKILL.md",
+      "reason": "Codex OpenSpec propose skill instructions."
+    },
+    {
+      "path": "openspec/changes/polish-portfolio-proof-hierarchy/.openspec.yaml",
+      "reason": "Active OpenSpec change metadata."
+    },
+    {
+      "path": "openspec/changes/polish-portfolio-proof-hierarchy/design.md",
+      "reason": "Active change design."
+    },
+    {
+      "path": "openspec/changes/polish-portfolio-proof-hierarchy/proposal.md",
+      "reason": "Active change proposal."
+    },
+    {
+      "path": "openspec/changes/polish-portfolio-proof-hierarchy/tasks.md",
+      "reason": "Active change task list."
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/.openspec.yaml",
+      "reason": "Active OpenSpec change metadata."
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/design.md",
+      "reason": "Active change design."
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/proposal.md",
+      "reason": "Active change proposal."
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/tasks.md",
+      "reason": "Active change task list."
+    },
+    {
+      "path": "openspec/specs/portfolio-homepage-positioning/spec.md",
+      "reason": "Canonical homepage positioning spec."
+    },
+    {
+      "path": "openspec/specs/portfolio-production-polish/spec.md",
+      "reason": "Canonical production polish spec."
+    },
+    {
+      "path": "openspec/specs/portfolio-site-redesign/spec.md",
+      "reason": "Canonical site redesign spec."
+    },
+    {
+      "path": "openspec/specs/search-discoverability/spec.md",
+      "reason": "Canonical search discoverability spec."
+    },
+    {
+      "path": "openspec/specs/tool-detail-pages/spec.md",
+      "reason": "Canonical tool detail pages spec."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "openspec/changes/archive/2026-05-23-add-eat-website-preview/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-add-repo-website-previews/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-add-search-discoverability-foundation/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-add-tool-detail-pages/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-production-polish-pass/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-redesign-quiet-founder-index/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "openspec/changes/archive/2026-05-23-simplify-portfolio-homepage/proposal.md",
+      "reason": "Archived proposal for historical context."
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-16-portfolio-redesign-design.md",
+      "reason": "Earlier design spec context."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "openspec",
+    "agent-workflow",
+    "specs",
+    "docs"
+  ],
+  "trustBoundaries": [
+    "filesystem",
+    "process-exec"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-agent-tool-5410120634-9_30955b9b9d"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=134477 bytes; approxTokens=32710; includedFiles=20; omittedFiles=13",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:33:52.858Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:46:55.336Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_route_564515f3c3",
+  "title": "Tool Detail Pages",
+  "summary": "Dynamic tool detail route, detailed tool metadata, preview media, and tests validating tool-detail configuration.\n\nAgent mapper reason: The dynamic route is driven by tool-detail metadata and media references; bugs are most likely at the boundary between slug routing, config shape, and preview assets.",
+  "kind": "route",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/pages/tools/[slug].astro",
+      "symbol": null,
+      "route": "/tools/[slug]",
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/pages/tools/[slug].astro",
+      "reason": "Dynamic tool detail route."
+    },
+    {
+      "path": "src/config/tool-details.ts",
+      "reason": "Primary metadata, media, copy, and link model for tool detail pages."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "openspec/specs/tool-detail-pages/spec.md",
+      "reason": "Current requirements for detail pages."
+    },
+    {
+      "path": "openspec/changes/polish-portfolio-proof-hierarchy/specs/tool-detail-pages/spec.md",
+      "reason": "Active change touching tool detail page behavior."
+    },
+    {
+      "path": "openspec/changes/strengthen-portfolio-case-study-credibility/specs/tool-detail-pages/spec.md",
+      "reason": "Active change touching tool case-study credibility."
+    },
+    {
+      "path": "public/tool-media/microcanvas/microcanvas-demo-poster.jpg",
+      "reason": "Detail page media poster."
+    },
+    {
+      "path": "public/tool-media/microcanvas/microcanvas-demo.mp4",
+      "reason": "Detail page demo media."
+    },
+    {
+      "path": "public/tool-media/openspec-studio/openspec-studio-demo-poster.jpg",
+      "reason": "Detail page media poster."
+    },
+    {
+      "path": "public/tool-media/openspec-studio/openspec-studio-demo.mp4",
+      "reason": "Detail page demo media."
+    },
+    {
+      "path": "public/tool-media/spec-ui/spec-ui-demo-poster.jpg",
+      "reason": "Detail page media poster."
+    },
+    {
+      "path": "public/tool-media/spec-ui/spec-ui-demo.mp4",
+      "reason": "Detail page demo media."
+    },
+    {
+      "path": "public/og/microcanvas.svg",
+      "reason": "Tool-specific social preview asset."
+    },
+    {
+      "path": "public/og/openspec-studio.svg",
+      "reason": "Tool-specific social preview asset."
+    },
+    {
+      "path": "public/og/spec-ui.svg",
+      "reason": "Tool-specific social preview asset."
+    },
+    {
+      "path": "public/og/tradespec.svg",
+      "reason": "Tool-specific social preview asset."
+    },
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "reason": "nearby test"
+    }
+  ],
+  "tests": [
+    {
+      "path": "tests/config/tool-details.test.ts",
+      "command": null
+    }
+  ],
+  "tags": [
+    "agent-mapped",
+    "tool-detail",
+    "dynamic-route",
+    "media",
+    "metadata"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-route-564515f3c3-e8fd5d_0eb1a80aae",
+    "fnd_sig-feat-route-564515f3c3-9d4068_1b9b51029e"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "2 finding(s); prompt=316512 bytes; approxTokens=54656; includedFiles=16; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:35:44.642Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:32.158Z"
+}

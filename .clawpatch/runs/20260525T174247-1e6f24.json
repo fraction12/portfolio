@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260525T174247-1e6f24",
+  "command": "revalidate",
+  "args": [
+    "revalidate",
+    "--all",
+    "--include-dirty",
+    "--limit",
+    "25"
+  ],
+  "rootPath": "/Users/dushyantgarg/Documents/Projects/portfolio",
+  "headSha": "0112b3c5b8882bb761a2f007bb0cc6d51a3af8c0",
+  "startedAt": "2026-05-25T17:42:47.457Z",
+  "finishedAt": "2026-05-25T17:42:47.477Z",
+  "status": "failed",
+  "claimedFeatureIds": [],
+  "findingIds": [
+    "fnd_sig-feat-agent-tool-5410120634-9_30955b9b9d",
+    "fnd_sig-feat-config-7528cb5b98-22bb6_cf0e58344c",
+    "fnd_sig-feat-library-30733ce202-36ba_874d2a2085",
+    "fnd_sig-feat-library-59123dc688-c24c_1d0d39010a",
+    "fnd_sig-feat-library-f6b7911ff6-d59b_fdfccd3aa4",
+    "fnd_sig-feat-library-f7615c5a6c-2b81_f914a90e24",
+    "fnd_sig-feat-library-f7615c5a6c-6478_fb8eddbd60",
+    "fnd_sig-feat-library-f7615c5a6c-fd06_c06397bc0f",
+    "fnd_sig-feat-library-fd49585146-130b_0337d9caa1",
+    "fnd_sig-feat-library-fd49585146-83a2_18e9456a15",
+    "fnd_sig-feat-route-564515f3c3-9d4068_1b9b51029e",
+    "fnd_sig-feat-route-564515f3c3-e8fd5d_0eb1a80aae",
+    "fnd_sig-feat-route-8457fdd2c3-ba438e_a497d11b6d",
+    "fnd_sig-feat-route-b968e989ce-aa580b_dbeca44cf3",
+    "fnd_sig-feat-route-ea46a259b5-90890b_068dae97c3",
+    "fnd_sig-feat-route-ea46a259b5-a10025_2a8f2dc6c4",
+    "fnd_sig-feat-service-f42e785143-693a_b6330ba35e",
+    "fnd_sig-feat-service-f42e785143-e841_e7b3a40bed",
+    "fnd_sig-feat-test-suite-aaab826675-b_76545ccd9b",
+    "fnd_sig-feat-ui-flow-3aa2d6c051-5469_ae26d34cd6",
+    "fnd_sig-feat-ui-flow-3aa2d6c051-93e4_1a48b13cdb",
+    "fnd_sig-feat-ui-flow-a325c76229-088f_c7113d9ff3",
+    "fnd_sig-feat-ui-flow-e4d8df2355-bf4e_910fec1b1e",
+    "fnd_sig-feat-unknown-48742698c4-9932_06b31c51f1",
+    "fnd_sig-feat-unknown-48742698c4-d613_d1d7e6ca39"
+  ],
+  "patchAttemptIds": [],
+  "errors": [
+    {
+      "message": "codex provider failed: WARNING: proceeding, even though we could not update PATH: Operation not permitted (os error 1)\nError: failed to initialize in-process app-server client: Operation not permitted (os error 1)\n",
+      "code": "provider-failure"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "featureId": "feat_ui-flow_a325c76229",
+  "title": "Astro Site Shell",
+  "summary": "Shared Astro layout, navigation, footer, theme behavior, global styles, and app-level build configuration.\n\nAgent mapper reason: These files define the reusable shell every route inherits, so navigation, theme state, global styling, and Astro config should be reviewed together.",
+  "kind": "ui-flow",
+  "source": "agent-mapper",
+  "confidence": "high",
+  "entrypoints": [
+    {
+      "path": "src/layouts/Layout.astro",
+      "symbol": null,
+      "route": null,
+      "command": null
+    }
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/layouts/Layout.astro",
+      "reason": "Global page wrapper and site metadata surface."
+    },
+    {
+      "path": "src/components/Nav.astro",
+      "reason": "Primary site navigation."
+    },
+    {
+      "path": "src/components/NavLink.astro",
+      "reason": "Reusable navigation link behavior."
+    },
+    {
+      "path": "src/components/Footer.astro",
+      "reason": "Shared footer surface."
+    },
+    {
+      "path": "src/components/ThemeToggle.astro",
+      "reason": "Shared color-theme control."
+    },
+    {
+      "path": "src/styles/base.css",
+      "reason": "Global document and typography defaults."
+    },
+    {
+      "path": "src/styles/tokens.css",
+      "reason": "Shared design tokens."
+    },
+    {
+      "path": "src/styles/animations.css",
+      "reason": "Global animation primitives."
+    },
+    {
+      "path": "src/styles/components/nav.css",
+      "reason": "Navigation-specific styling."
+    },
+    {
+      "path": "src/styles/components/footer.css",
+      "reason": "Footer-specific styling."
+    },
+    {
+      "path": "astro.config.mjs",
+      "reason": "Astro application configuration."
+    }
+  ],
+  "contextFiles": [
+    {
+      "path": "package.json",
+      "reason": "Defines Astro and site runtime dependencies."
+    },
+    {
+      "path": "tsconfig.json",
+      "reason": "TypeScript compiler context for Astro integrations."
+    },
+    {
+      "path": "public/favicon.svg",
+      "reason": "Global browser icon asset."
+    },
+    {
+      "path": "public/dushyant-garg-avatar.jpg",
+      "reason": "Shared identity asset used by site surfaces."
+    }
+  ],
+  "tests": [],
+  "tags": [
+    "agent-mapped",
+    "astro",
+    "layout",
+    "navigation",
+    "theme",
+    "styles"
+  ],
+  "trustBoundaries": [
+    "user-input"
+  ],
+  "status": "fixed",
+  "lock": null,
+  "findingIds": [
+    "fnd_sig-feat-ui-flow-a325c76229-088f_c7113d9ff3"
+  ],
+  "patchAttemptIds": [],
+  "analysisHistory": [
+    {
+      "runId": "20260524T223334-c3b802",
+      "kind": "review",
+      "summary": "1 finding(s); prompt=86564 bytes; approxTokens=16391; includedFiles=15; omittedFiles=0",
+      "provider": "codex",
+      "model": null,
+      "reasoningEffort": null,
+      "createdAt": "2026-05-24T22:37:33.662Z"
+    }
+  ],
+  "createdAt": "2026-05-24T22:33:02.923Z",
+  "updatedAt": "2026-05-25T17:54:33.309Z"
+}

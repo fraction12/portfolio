@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-unknown-48742698c4-d613_d1d7e6ca39",
+  "featureId": "feat_unknown_48742698c4",
+  "title": "Mockup contains fabricated metrics that violate the truth-grounding contract",
+  "category": "docs-gap",
+  "severity": "low",
+  "confidence": "high",
+  "triage": "docs-gap",
+  "evidence": [
+    {
+      "path": "docs/superpowers/mockups/2026-04-16-signal-desk-home.html",
+      "startLine": 443,
+      "endLine": 448,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "docs/superpowers/mockups/2026-04-16-signal-desk-home.html",
+      "startLine": 494,
+      "endLine": 514,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-16-portfolio-redesign-design.md",
+      "startLine": 200,
+      "endLine": 208,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The static mockup displays concrete live-looking values such as recent commit age, shipped count, commit count, downloads, and stars even though the design spec says unwired data must be rendered as explicit placeholders and never as made-up numbers. Since this mockup is referenced as a visual source of truth by the owned plan, future implementation work could copy fabricated proof into the public site.",
+  "reproduction": null,
+  "recommendation": "Replace concrete unsourced metric values in the mockup with explicit placeholder states or annotate the mockup as illustrative-only and non-canonical for copy/data values.",
+  "whyTestsDoNotAlreadyCoverThis": "No linked test validates design docs or mockups against the no-fabricated-metrics rule.",
+  "suggestedRegressionTest": null,
+  "minimumFixScope": "Edit the mockup metric text and/or add a prominent note near the mockup reference that metric values are non-authoritative placeholders.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:33.649Z"
+    }
+  ],
+  "signature": "sig_feat-unknown-48742698c4_d61399a117",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:38:24.914Z",
+  "updatedAt": "2026-05-25T17:54:33.649Z"
+}

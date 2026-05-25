@@ -16,7 +16,7 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 const data = await loadSignalData();
 
 function metricFor(a: Artifact): string | null {
-  if (a.metricOverride && a.slug === 'tradespec') return a.metricOverride;
+  if (a.metricOverride) return a.metricOverride;
   if (a.npmName) {
     const d = data.npm.packages[a.npmName]?.downloadsLastMonth;
     if (typeof d === 'number') return `${d.toLocaleString()} npm downloads last month`;
@@ -83,7 +83,7 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
   current="tools"
   title="Work — Dushyant Garg"
   description="Selected product work, open-source systems, and experiments by Dushyant Garg."
-  ogImage="/og/work.svg"
+  ogImage="/og/work.png"
 >
   <div class="page-shell">
     <div class="page-split">

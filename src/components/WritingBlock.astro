@@ -1,10 +1,10 @@
 ---
 import WritingRow from './WritingRow.astro';
-import type { Essay } from '../lib/data';
+import { isSafeEssayLink, type Essay } from '../lib/data/substack';
 
 interface Props { essays: Essay[]; limit?: number }
 const { essays, limit = 6 } = Astro.props;
-const shown = essays.slice(0, limit);
+const shown = essays.filter(essay => isSafeEssayLink(essay.link)).slice(0, limit);
 ---
 
 {shown.length === 0

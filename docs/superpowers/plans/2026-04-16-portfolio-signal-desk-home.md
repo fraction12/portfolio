@@ -1,5 +1,7 @@
 # Portfolio Signal Desk — Home Page Implementation Plan
 
+> **Superseded:** This April Signal Desk dashboard direction is no longer canonical. Use `openspec/specs/portfolio-site-redesign/spec.md` and active OpenSpec changes as the source of truth for the current quiet editorial portfolio direction.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Rebuild the home page of the Astro portfolio as "The Signal Desk" — a dark-factory operator's dashboard, grounded in real `git log` / GitHub / npm / PyPI / Substack data, using Atkinson Hyperlegible + Fraunces typography.

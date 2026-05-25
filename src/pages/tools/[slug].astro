@@ -20,10 +20,10 @@ const { artifact } = detail;
 const pageTitle = `${artifact.name} - Work - Dushyant Garg`;
 const pageDescription = detail.summary;
 const detailOgImages: Record<string, string> = {
-  tradespec: '/og/tradespec.svg',
-  microcanvas: '/og/microcanvas.svg',
-  'openspec-studio': '/og/openspec-studio.svg',
-  'spec-ui': '/og/spec-ui.svg',
+  tradespec: '/og/tradespec.png',
+  microcanvas: '/og/microcanvas.png',
+  'openspec-studio': '/og/openspec-studio.png',
+  'spec-ui': '/og/spec-ui.png',
 };
 const hasReadyMedia = detail.demo.status === 'ready' && Boolean(detail.demo.src || detail.demo.embedUrl);
 const mediaHeading = detail.demo.type === 'image' ? 'Preview' : 'Demo';
@@ -34,7 +34,7 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
   current="tools"
   title={pageTitle}
   description={pageDescription}
-  ogImage={detailOgImages[artifact.slug] ?? '/og/work.svg'}
+  ogImage={detailOgImages[artifact.slug] ?? '/og/work.png'}
 >
   <div class="page-shell detail-shell">
     <a class="back-link" href="/tools">Back to work</a>
@@ -112,7 +112,7 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
           )}
 
           {detail.demo.type === 'image' && detail.demo.src && (
-            <figure class="media-frame">
+            <figure class="media-frame media-frame--image">
               <img src={detail.demo.src} alt={detail.demo.alt ?? detail.demo.label} width="1280" height="800" loading="lazy" decoding="async" />
               <figcaption>{detail.demo.caption}</figcaption>
             </figure>
@@ -294,6 +294,10 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
     object-fit: cover;
     object-position: center;
     background: var(--ink-1);
+  }
+
+  .media-frame--image img {
+    object-fit: contain;
   }
 
   .media-frame figcaption {

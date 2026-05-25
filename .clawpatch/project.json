@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "projectId": "prj_https-github-com-fraction12-port_fd8f1c644e",
+  "name": "portfolio",
+  "rootPath": "/Users/dushyantgarg/Documents/Projects/portfolio",
+  "git": {
+    "remoteUrl": "https://github.com/fraction12/portfolio.git",
+    "defaultBranch": "main",
+    "currentBranch": "main",
+    "headSha": "48e18aa1a7e847312dae9ba86c9dcca2830a8adb"
+  },
+  "detected": {
+    "languages": [
+      "typescript",
+      "javascript"
+    ],
+    "frameworks": [
+      "vitest"
+    ],
+    "packageManagers": [
+      "npm"
+    ],
+    "commands": {
+      "typecheck": null,
+      "lint": null,
+      "format": null,
+      "test": "npm run test"
+    }
+  },
+  "createdAt": "2026-05-24T09:34:18.419Z",
+  "updatedAt": "2026-05-24T09:34:18.419Z"
+}

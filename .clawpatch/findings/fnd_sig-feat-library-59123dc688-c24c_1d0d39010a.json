@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-library-59123dc688-c24c_1d0d39010a",
+  "featureId": "feat_library_59123dc688",
+  "title": "Scroll reveal hard-fails when IntersectionObserver is unavailable",
+  "category": "bug",
+  "severity": "low",
+  "confidence": "high",
+  "triage": "confirmed-bug",
+  "evidence": [
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "startLine": 8,
+      "endLine": 15,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/scripts/scroll-reveal.js",
+      "startLine": 26,
+      "endLine": 29,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The reveal script is loaded globally and only has a reduced-motion branch before constructing IntersectionObserver. In browsers, embedded webviews, or test environments without IntersectionObserver, initScrollReveal throws instead of gracefully marking reveal elements visible, so progressive enhancement can become a content/animation failure.",
+  "reproduction": "Run the page in an environment where window.IntersectionObserver is undefined and dispatch astro:page-load with at least one .reveal element present; the handler throws before adding visible or observing elements.",
+  "recommendation": "Feature-detect IntersectionObserver before constructing it. If unavailable, add visible to all reveal elements and return, matching the reduced-motion graceful-degradation behavior. Consider also guarding matchMedia for older/non-browser-like environments.",
+  "whyTestsDoNotAlreadyCoverThis": "No tests are listed for this feature, and the script has no exercised fallback path for missing browser APIs.",
+  "suggestedRegressionTest": "Add a DOM test that creates a .reveal element, temporarily removes window.IntersectionObserver, dispatches astro:page-load, and asserts the element receives visible without throwing.",
+  "minimumFixScope": "Update src/scripts/scroll-reveal.js to add browser API fallback handling around matchMedia and IntersectionObserver.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": "20260525T174519-fc33bc",
+      "kind": "revalidate",
+      "status": "fixed",
+      "note": null,
+      "reasoning": "The original path still exists. The old evidence ranges have moved/changed: src/scripts/scroll-reveal.js now guards matchMedia via prefersReducedMotion() at lines 20-23 and explicitly falls back when typeof window.IntersectionObserver !== 'function' at lines 33-36, calling revealAll() and returning before constructing IntersectionObserver. A targeted Node DOM-stub reproduction with window.IntersectionObserver absent and a .reveal element present dispatched astro:page-load successfully and marked the element visible without throwing. There is still no committed scroll-reveal regression test found under tests/src, and the full Vitest suite could not run in this read-only sandbox because Vitest/Vite attempted to create cache/temp files and failed with EPERM, but the current code and targeted reproduction are sufficient to mark this specific finding fixed.",
+      "commands": [
+        "git status -sb",
+        "nl -ba src/scripts/scroll-reveal.js | sed -n '1,80p'",
+        "rg -n \"IntersectionObserver|matchMedia|revealAll|prefersReducedMotion|astro:page-load|\\\\.reveal\" src tests -S",
+        "rg -n \"scroll-reveal|reveal\" tests src -g '*test*' -S",
+        "git diff -- src/scripts/scroll-reveal.js",
+        "node --input-type=module -e \"const listeners = new Map(); const reveal = { added: [], classList: { add(value) { reveal.added.push(value); } } }; globalThis.window = {}; globalThis.document = { addEventListener(type, handler) { listeners.set(type, handler); }, querySelectorAll(selector) { if (selector !== '.reveal') throw new Error('unexpected selector ' + selector); return [reveal]; } }; await import('./src/scripts/scroll-reveal.js?missing-io-revalidation'); const handler = listeners.get('astro:page-load'); if (typeof handler !== 'function') throw new Error('astro:page-load handler was not registered'); handler(); if (!reveal.added.includes('visible')) throw new Error('reveal element was not marked visible'); console.log('missing IntersectionObserver fallback passed');\"",
+        "npm test -- --reporter=dot",
+        "npm test -- --reporter=dot --configLoader runner"
+      ],
+      "createdAt": "2026-05-25T17:52:21.546Z"
+    }
+  ],
+  "signature": "sig_feat-library-59123dc688_c24c28bd7a",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:34:17.568Z",
+  "updatedAt": "2026-05-25T17:52:21.546Z"
+}

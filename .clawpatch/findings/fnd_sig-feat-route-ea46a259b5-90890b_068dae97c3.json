@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-route-ea46a259b5-90890b_068dae97c3",
+  "featureId": "feat_route_ea46a259b5",
+  "title": "Unvalidated essay URLs are rendered directly into external links",
+  "category": "security",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "risk",
+  "evidence": [
+    {
+      "path": "src/pages/writing.astro",
+      "startLine": 2,
+      "endLine": 3,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/components/WritingRow.astro",
+      "startLine": 12,
+      "endLine": 16,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The writing page is explicitly intended to update from Substack independently of deploys, and each essay link is rendered directly as an anchor href. If the upstream feed or parsing layer ever supplies a non-http(s) URL such as javascript: or data:, Astro will escape the attribute text but will not enforce a safe URL scheme. That can turn an external content item into a dangerous clickable link.",
+  "reproduction": "Return or parse an Essay with link set to javascript:alert(document.domain) or a data: URL, then render the writing list; the component emits that value directly in href.",
+  "recommendation": "Validate essay links before rendering, preferably in the data-fetching/parsing layer and defensively in the component. Allow only http: and https: URLs, and consider restricting hostnames to expected Substack or canonical domains. Drop or neutralize entries with invalid links.",
+  "whyTestsDoNotAlreadyCoverThis": "No tests were included for WritingRow, WritingBlock, or the external feed/content normalization path, so unsafe href schemes are not exercised.",
+  "suggestedRegressionTest": "Add a rendering or data-normalization test that feeds an essay with a javascript: URL and asserts the row is not rendered with that href, plus a positive case for a normal https URL.",
+  "minimumFixScope": "Add URL validation for Essay.link before it reaches WritingRow, with a small defensive helper or guard used by the writing list rendering path.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.502Z"
+    }
+  ],
+  "signature": "sig_feat-route-ea46a259b5_90890b0801",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:36:32.100Z",
+  "updatedAt": "2026-05-25T17:54:32.501Z"
+}

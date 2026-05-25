@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-unknown-48742698c4-9932_06b31c51f1",
+  "featureId": "feat_unknown_48742698c4",
+  "title": "Outdated Signal Desk plan contradicts the canonical homepage requirement",
+  "category": "docs-gap",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "docs-gap",
+  "evidence": [
+    {
+      "path": "docs/superpowers/plans/2026-04-16-portfolio-signal-desk-home.md",
+      "startLine": 5,
+      "endLine": 13,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-16-portfolio-redesign-design.md",
+      "startLine": 41,
+      "endLine": 49,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "openspec/specs/portfolio-site-redesign/spec.md",
+      "startLine": 47,
+      "endLine": 53,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/pages/index.astro",
+      "startLine": 85,
+      "endLine": 120,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The owned design plan and spec still present the dark Signal Desk dashboard as an approved or locked source of truth, while the canonical OpenSpec requirement now requires an editorial public default without terminal, dashboard, grid-overlay, glow-heavy, or agent-cockpit styling. The implemented homepage follows the quiet index shape with Hero, ProofStrip, Work, Writing, and Contact sections, so these docs are stale enough to direct future agents toward rebuilding the opposite experience.",
+  "reproduction": null,
+  "recommendation": "Mark the April Signal Desk plan/spec/mockup as superseded or archive it outside active planning docs, and add a pointer to the current portfolio-site-redesign OpenSpec as the canonical source.",
+  "whyTestsDoNotAlreadyCoverThis": "No tests are included for documentation freshness or for preventing stale design plans from being treated as active implementation guidance.",
+  "suggestedRegressionTest": null,
+  "minimumFixScope": "Update the owned April Signal Desk plan/spec docs with superseded status and canonical OpenSpec links, or move them into an archive path clearly excluded from active implementation planning.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:33.532Z"
+    }
+  ],
+  "signature": "sig_feat-unknown-48742698c4_9932f23c6d",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:38:24.914Z",
+  "updatedAt": "2026-05-25T17:54:33.531Z"
+}

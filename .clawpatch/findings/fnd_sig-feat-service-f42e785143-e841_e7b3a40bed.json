@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-service-f42e785143-e841_e7b3a40bed",
+  "featureId": "feat_service_f42e785143",
+  "title": "npmPackages omits several npm-installable artifacts",
+  "category": "api-contract",
+  "severity": "low",
+  "confidence": "medium",
+  "triage": "contract-mismatch",
+  "evidence": [
+    {
+      "path": "src/config/packages.ts",
+      "startLine": 59,
+      "endLine": 63,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/config/packages.ts",
+      "startLine": 74,
+      "endLine": 84,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/config/packages.ts",
+      "startLine": 183,
+      "endLine": 183,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "AgentSense, AgentTK, and Starglass present npm install commands, but none set npmName. The exported npmPackages list is derived only from npmName, so any registry/status consumer of that export will silently exclude these npm-installable tools.",
+  "reproduction": null,
+  "recommendation": "Add npmName for every artifact that should be represented as an npm package, or rename/narrow npmPackages so it is clear it only includes a hand-selected subset.",
+  "whyTestsDoNotAlreadyCoverThis": "The current tests validate tool detail generation, selected links, and demo media, but they do not assert package identity consistency between install commands and npmPackages.",
+  "suggestedRegressionTest": "Add a config test that every artifact with a real 'npm install <package>' command either has npmName set to that package or is explicitly excluded by a documented flag.",
+  "minimumFixScope": "Update src/config/packages.ts metadata and add a focused package identity consistency test.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.846Z"
+    }
+  ],
+  "signature": "sig_feat-service-f42e785143_e841c89cbf",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T093527-16bb9c",
+  "createdAt": "2026-05-24T09:38:15.514Z",
+  "updatedAt": "2026-05-25T17:54:32.845Z"
+}

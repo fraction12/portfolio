@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "findingId": "fnd_sig-feat-test-suite-aaab826675-b_76545ccd9b",
+  "featureId": "feat_test-suite_aaab826675",
+  "title": "Git tests depend on mutable local repository history",
+  "category": "test-gap",
+  "severity": "medium",
+  "confidence": "high",
+  "triage": "test-gap",
+  "evidence": [
+    {
+      "path": "tests/lib/data/git.test.ts",
+      "startLine": 122,
+      "endLine": 136,
+      "symbol": null,
+      "quote": null
+    },
+    {
+      "path": "src/lib/data/git.ts",
+      "startLine": 98,
+      "endLine": 105,
+      "symbol": null,
+      "quote": null
+    }
+  ],
+  "reasoning": "The test suite calls the real git executable against the current checkout and then asserts properties of whatever commits happen to exist, including requiring at least one changed commit in the last 30 days. That makes npm run test depend on wall-clock time and clone history rather than only on the parser contract. A correct implementation can fail once the repo has no qualifying recent commits, in shallow/non-git distributions, or in CI setups with unusual checkout depth.",
+  "reproduction": "Run the test suite from a checkout with no commits in the last 30 days, from an exported source archive without .git, or with git history filtered such that getCommitHistory(30) returns no changed commits.",
+  "recommendation": "Keep parser behavior covered with deterministic fixture strings and move real-repo smoke coverage behind a guarded integration test that skips when git history is unavailable or insufficient. If the smoke test stays, remove the fixed 30-day assumption and assert only that the function handles the observed repository state without throwing.",
+  "whyTestsDoNotAlreadyCoverThis": "These are the tests themselves; they validate against the live repository instead of pinning the expected git output fixture, so they cannot protect against environment-dependent failures.",
+  "suggestedRegressionTest": "Add a deterministic getCommitHistory-style parser fixture for a shortstat block, and add a guarded integration smoke test that skips when git log cannot provide at least one commit.",
+  "minimumFixScope": "Update tests/lib/data/git.test.ts to remove or guard live-repo history assumptions.",
+  "status": "fixed",
+  "history": [
+    {
+      "runId": null,
+      "kind": "triage",
+      "status": "fixed",
+      "note": "Implemented in working tree; native checks pass. Full Clawpatch provider revalidation was curtailed after confirming first five fixes because it was too slow.",
+      "reasoning": null,
+      "commands": [],
+      "createdAt": "2026-05-25T17:54:32.960Z"
+    }
+  ],
+  "signature": "sig_feat-test-suite-aaab826675_b0208e252d",
+  "linkedPatchAttemptIds": [],
+  "createdByRunId": "20260524T223334-c3b802",
+  "createdAt": "2026-05-24T22:35:46.969Z",
+  "updatedAt": "2026-05-25T17:54:32.960Z"
+}
