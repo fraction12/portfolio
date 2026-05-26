@@ -10,6 +10,7 @@
 - [x] 2.2 Replace `/tools` grouped sections with a 9-item paginated card grid.
 - [x] 2.3 Add accessible pagination controls and responsive 3/2/1 column behavior.
 - [x] 2.4 Preserve homepage selected-work cards and detail-page links.
+- [x] 2.5 Sort cards with ready visual media before fallback-only cards.
 
 ## 3. Verification
 

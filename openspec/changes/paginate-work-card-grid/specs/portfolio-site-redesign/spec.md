@@ -10,6 +10,7 @@ The `/tools` page SHALL remain available as a broader catalog of shipped and exp
 #### Scenario: Catalog uses a visual paginated grid
 - **WHEN** a reader opens `/tools`
 - **THEN** the catalog SHALL render artifacts as a uniform image-led card grid
+- **AND** cards with ready visual media SHALL appear before cards that use fallback visuals
 - **AND** desktop layouts SHALL show up to 3 cards per row
 - **AND** each page of the catalog SHALL show no more than 9 project cards before requiring pagination
 
