@@ -202,12 +202,13 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       'Watching external systems sounds simple until runs restart, sources churn, payloads duplicate, and downstream agents need stable event identity instead of raw snapshots.',
     statusNote: 'Public TypeScript runtime for observation-heavy agent systems.',
     demo: {
-      type: 'video',
-      status: 'none',
-      label: 'Starglass observation loop demo',
-      duration: '90 sec target',
+      type: 'image',
+      status: 'ready',
+      label: 'Starglass observation runtime banner',
+      src: '/tool-media/starglass/starglass-readme-banner.png',
+      alt: 'Starglass banner showing sources flowing through the observation runtime to downstream agents and commands.',
       caption:
-        'Show an HTTP/feed/filesystem source producing a normalized event, checkpointing compact state, and dispatching to a downstream handler.',
+        'The public Starglass README visualizes sources flowing through the runtime into downstream agents and commands.',
     },
     sections: sections(
       [
@@ -232,12 +233,14 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       'Multi-agent work quickly turns into too many terminals, copy-pasted context, unclear ownership, and no trustworthy view of who is doing what.',
     statusNote: 'Public Rust project; requires Rust and at least one installed agent CLI.',
     demo: {
-      type: 'video',
-      status: 'none',
+      type: 'image',
+      status: 'ready',
       label: 'Potato multi-agent cockpit demo',
-      duration: '90 sec target',
+      src: '/tool-media/potato/potato-demo-live.gif',
+      poster: '/tool-media/potato/potato-demo-poster.jpg',
+      alt: 'Potato terminal cockpit demo showing agent panes and coordination UI.',
       caption:
-        'Show role setup, side-by-side Codex/Claude panes, task claiming, agent messaging, and OpenSpec task visibility in one session.',
+        'The public Potato README demo shows the terminal cockpit for running agents with shared project coordination.',
     },
     sections: sections(
       [
@@ -391,12 +394,13 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       'Agent systems can be running, scheduled, and writing memory in the background, but the operator often lacks a compact live view of health, context, and activity.',
     statusNote: 'Public macOS app; requires macOS 14+ and a local OpenClaw gateway.',
     demo: {
-      type: 'video',
-      status: 'none',
+      type: 'image',
+      status: 'ready',
       label: 'ClawK mission-control demo',
-      duration: '90 sec target',
+      src: '/tool-media/clawk/clawk-mission-control.png',
+      alt: 'ClawK mission-control screen showing OpenClaw sessions, status, and operational cards in a macOS app.',
       caption:
-        'Show gateway setup, active sessions, heartbeat history, memory browsing, canvas controls, and sending a message from the menu bar.',
+        'The public ClawK repository screenshot shows the mission-control view for OpenClaw sessions, heartbeats, memory, and cron visibility.',
     },
     sections: sections(
       [

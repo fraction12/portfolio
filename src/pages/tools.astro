@@ -4,11 +4,10 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-import SectionHead from '../components/SectionHead.astro';
-import BuildCard from '../components/BuildCard.astro';
-import FlagshipWorkCard from '../components/FlagshipWorkCard.astro';
-import { artifacts, type Artifact } from '../config/packages';
-import { flagshipWorkDetails, flagshipWorkProof, flagshipWorkSlugs } from '../config/featured-work';
+import WorkGridCard from '../components/WorkGridCard.astro';
+import { CATEGORY_ORDER, type Artifact } from '../config/packages';
+import { flagshipWorkSlugs } from '../config/featured-work';
+import { toolDetails, type ToolDetail } from '../config/tool-details';
 import { loadSignalData } from '../lib/data';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
@@ -49,20 +48,30 @@ const catalogCopy: Record<string, string> = {
   'vault-mind': 'Parked local-model experiment for talking to a second brain through a CLI.',
 };
 
-const flagshipSet = new Set<string>(flagshipWorkSlugs);
+const flagshipOrder = new Map<string, number>(flagshipWorkSlugs.map((slug, index) => [slug, index]));
+const orderedDetails: ToolDetail[] = [...toolDetails].sort((a, b) => {
+  const aFlagship = flagshipOrder.get(a.slug);
+  const bFlagship = flagshipOrder.get(b.slug);
 
-const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
-  {
-    name: 'Supporting systems',
-    meta: 'Infrastructure, tools, and primitives that support the larger product thesis.',
-    items: artifacts.filter(a => a.category !== 'products' && a.category !== 'experiments' && !flagshipSet.has(a.slug)),
-  },
-  {
-    name: 'Experiments',
-    meta: 'Smaller builds and parked ideas that still produced useful lessons.',
-    items: artifacts.filter(a => a.category === 'experiments'),
-  },
-].filter(group => group.items.length > 0);
+  if (aFlagship !== undefined && bFlagship !== undefined) return aFlagship - bFlagship;
+  if (aFlagship !== undefined) return -1;
+  if (bFlagship !== undefined) return 1;
+
+  return CATEGORY_ORDER.indexOf(a.artifact.category) - CATEGORY_ORDER.indexOf(b.artifact.category)
+    || a.artifact.order - b.artifact.order;
+});
+
+const pageSize = 9;
+const requestedPage = Number(Astro.url.searchParams.get('page') ?? '1');
+const totalPages = Math.max(1, Math.ceil(orderedDetails.length / pageSize));
+const currentPage = Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= totalPages
+  ? requestedPage
+  : 1;
+const pageStart = (currentPage - 1) * pageSize;
+const visibleDetails = orderedDetails.slice(pageStart, pageStart + pageSize);
+const visibleRangeStart = pageStart + 1;
+const visibleRangeEnd = pageStart + visibleDetails.length;
+const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`;
 ---
 
 <Layout
@@ -80,57 +89,116 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
       />
     </div>
 
-    <section class="flagship-section" id="flagship-work" aria-label="Featured work">
-      <div class="flagship-grid">
-        {flagshipWorkDetails.map(detail => (
-          <FlagshipWorkCard
+    <section class="catalog-section" aria-label="Work catalog">
+      <div class="catalog-grid">
+        {visibleDetails.map(detail => (
+          <WorkGridCard
             detail={detail}
-            proof={flagshipWorkProof[detail.slug] ?? detail.summary}
+            description={catalogCopy[detail.slug] ?? detail.summary}
+            metric={metricFor(detail.artifact)}
           />
         ))}
       </div>
-    </section>
 
-    {groups.map((group, index) => (
-      <section class="section-split" id={`work-${group.name.toLowerCase().replaceAll(' ', '-')}`}>
-        {index > 0 && <SectionHead name={group.name} meta={group.meta} />}
-        <div class="section-split__content catalog-list">
-          {group.items.map(a => (
-            <BuildCard
-              artifact={a}
-              description={catalogCopy[a.slug] ?? a.description}
-              context={a.kind}
-              metric={metricFor(a)}
-            />
-          ))}
+      <nav class="pagination" aria-label="Work catalog pages">
+        <p>Showing {visibleRangeStart}-{visibleRangeEnd} of {orderedDetails.length}</p>
+        <div class="pagination__controls">
+          {currentPage > 1 ? (
+            <a href={pageHref(currentPage - 1)} rel="prev">Previous</a>
+          ) : (
+            <span aria-disabled="true">Previous</span>
+          )}
+
+          {Array.from({ length: totalPages }, (_, index) => {
+            const page = index + 1;
+            return page === currentPage ? (
+              <span class="pagination__page" aria-current="page">{page}</span>
+            ) : (
+              <a class="pagination__page" href={pageHref(page)}>{page}</a>
+            );
+          })}
+
+          {currentPage < totalPages ? (
+            <a href={pageHref(currentPage + 1)} rel="next">Next</a>
+          ) : (
+            <span aria-disabled="true">Next</span>
+          )}
         </div>
-      </section>
-    ))}
+      </nav>
+    </section>
   </div>
 </Layout>
 
 <style>
-  .flagship-section {
+  .catalog-section {
     padding: 0 0 var(--section-pad);
   }
 
-  .flagship-grid {
+  .catalog-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
+    min-width: 0;
   }
 
-  .section-split > .catalog-list:first-child {
-    grid-column: 1 / -1;
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    color: var(--dim);
+    font-size: var(--type-small-size);
   }
 
-  .catalog-list {
-    display: grid;
+  .pagination__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
   }
 
-  @media (max-width: 760px) {
-    .flagship-grid {
-      grid-template-columns: 1fr;
+  .pagination a,
+  .pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.2rem;
+    min-height: 2.2rem;
+    padding: 0 0.7rem;
+    border: 1px solid var(--line);
+    color: var(--ivory-2);
+    text-decoration: none;
+  }
+
+  .pagination a:hover,
+  .pagination a:focus-visible,
+  .pagination__page[aria-current='page'] {
+    border-color: color-mix(in srgb, var(--signal) 60%, var(--line));
+    color: var(--signal);
+  }
+
+  .pagination span[aria-disabled='true'] {
+    color: color-mix(in srgb, var(--dim) 55%, transparent);
+  }
+
+  @media (max-width: 980px) {
+    .catalog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .catalog-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pagination {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .pagination__controls {
+      flex-wrap: wrap;
     }
   }
 </style>

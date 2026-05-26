@@ -1,0 +1,177 @@
+---
+import type { ToolDetail } from '../config/tool-details';
+
+interface Props {
+  detail: ToolDetail;
+  description: string;
+  metric?: string | null;
+}
+
+const { detail, description, metric = null } = Astro.props;
+const { artifact } = detail;
+const hasReadyMedia = detail.demo.status === 'ready';
+const mediaSrc = hasReadyMedia
+  ? detail.demo.type === 'video'
+    ? detail.demo.poster
+    : detail.demo.poster ?? detail.demo.src
+  : undefined;
+const mediaAlt = detail.demo.alt ?? `${artifact.name} project preview`;
+const supportText = metric ?? artifact.kind;
+---
+
+<article class="work-grid-card">
+  <a class="work-grid-card__media" href={detail.detailPath} aria-label={`Open ${artifact.name} project`}>
+    {mediaSrc ? (
+      <img src={mediaSrc} alt={mediaAlt} loading="lazy" decoding="async" />
+    ) : (
+      <span class="work-grid-card__fallback" aria-hidden="true">
+        <span>{detail.categoryLabel}</span>
+        <strong>{artifact.name}</strong>
+      </span>
+    )}
+  </a>
+
+  <div class="work-grid-card__body">
+    <p class="work-grid-card__eyebrow">{detail.categoryLabel}</p>
+    <h3><a href={detail.detailPath}>{artifact.name}</a></h3>
+    <p class="work-grid-card__description">{description}</p>
+    <div class="work-grid-card__foot">
+      <span>{supportText}</span>
+      <a href={detail.detailPath}>Open project</a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .work-grid-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-width: 0;
+    border: 1px solid var(--line);
+    background: var(--surface-raised);
+  }
+
+  .work-grid-card__media {
+    display: grid;
+    aspect-ratio: 16 / 10;
+    min-width: 0;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--surface-raised) 88%, var(--signal) 12%), transparent 65%),
+      var(--ink-2);
+    color: var(--dim);
+    text-decoration: none;
+  }
+
+  .work-grid-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform var(--motion-slow) ease;
+  }
+
+  .work-grid-card:hover .work-grid-card__media img {
+    transform: scale(1.015);
+  }
+
+  .work-grid-card__fallback {
+    display: grid;
+    align-content: end;
+    gap: 0.35rem;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 1px),
+      linear-gradient(0deg, color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .work-grid-card__fallback span {
+    color: var(--dim);
+    font-size: var(--type-caption-size);
+    font-weight: 700;
+  }
+
+  .work-grid-card__fallback strong {
+    color: var(--ivory);
+    font-size: clamp(1.25rem, 2vw, 1.7rem);
+    line-height: 1.05;
+  }
+
+  .work-grid-card__body {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.55rem;
+    min-width: 0;
+    padding: 1rem;
+  }
+
+  .work-grid-card__eyebrow {
+    color: var(--dim);
+    font-size: var(--type-caption-size);
+    font-weight: 700;
+  }
+
+  .work-grid-card h3 {
+    font-size: 1.05rem;
+    line-height: 1.28;
+  }
+
+  .work-grid-card h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .work-grid-card__description {
+    color: var(--ivory-2);
+    font-size: var(--type-small-size);
+    line-height: 1.55;
+  }
+
+  .work-grid-card__foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.35rem;
+    color: var(--dim);
+    font-size: var(--type-caption-size);
+  }
+
+  .work-grid-card__foot span {
+    min-width: 0;
+  }
+
+  .work-grid-card__foot a {
+    flex: 0 0 auto;
+    color: var(--signal);
+    font-size: var(--type-small-size);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .work-grid-card h3 a:hover,
+  .work-grid-card__foot a:hover {
+    color: var(--signal-hov);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .work-grid-card__media:focus-visible,
+  .work-grid-card h3 a:focus-visible,
+  .work-grid-card__foot a:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 520px) {
+    .work-grid-card__foot {
+      display: grid;
+      gap: 0.45rem;
+    }
+  }
+</style>
