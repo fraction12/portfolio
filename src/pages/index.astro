@@ -4,40 +4,17 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import BuildCard from '../components/BuildCard.astro';
+import FlagshipWorkCard from '../components/FlagshipWorkCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Contact from '../components/Contact.astro';
-import { artifacts, type Artifact } from '../config/packages';
+import { flagshipWorkDetails, flagshipWorkProof } from '../config/featured-work';
 import { loadSignalData } from '../lib/data';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 
 const data = await loadSignalData();
 
-const selectedWorkCopy: Partial<Record<string, { description: string; context: string }>> = {
-  tradespec: {
-    description: 'AI bid-review workspace for construction estimators, built around plan evidence and customer feedback.',
-    context: 'Product',
-  },
-  'spec-ui': {
-    description: 'Spec-to-prototype compiler for turning product plans into deterministic, reviewable interfaces.',
-    context: 'Open source',
-  },
-  microcanvas: {
-    description: 'Small viewer/runtime for inspecting UI artifacts with real browser checks instead of static screenshots.',
-    context: 'Open source',
-  },
-  agenttk: {
-    description: 'Typed command primitives for safer agent-facing tools and clearer operating contracts.',
-    context: 'Open source',
-  },
-};
-
-const homeFeaturedSlugs = ['tradespec', 'spec-ui', 'microcanvas', 'agenttk'];
-const homeFeatured = homeFeaturedSlugs
-  .map(s => artifacts.find(a => a.slug === s))
-  .filter((a): a is Artifact => Boolean(a));
 ---
 
 <Layout
@@ -52,18 +29,15 @@ const homeFeatured = homeFeaturedSlugs
 
     <section id="work" class="section-split">
       <SectionHead name="Work" meta="Selected builds that show the range: product workflow, open-source infrastructure, and tools for evaluating what gets shipped." />
-      <div class="section-split__content work-list">
-        {homeFeatured.map(a => {
-          const copy = selectedWorkCopy[a.slug] ?? { description: a.description, context: a.kind };
-          return (
-            <BuildCard
-              artifact={a}
-              description={copy.description}
-              context={copy.context}
-              compact
+      <div class="section-split__content home-flagship">
+        <div class="home-flagship__grid">
+          {flagshipWorkDetails.map(detail => (
+            <FlagshipWorkCard
+              detail={detail}
+              proof={flagshipWorkProof[detail.slug] ?? detail.summary}
             />
-          );
-        })}
+          ))}
+        </div>
         <a class="text-link" href="/tools">See the broader work catalog</a>
       </div>
     </section>
@@ -90,8 +64,15 @@ const homeFeatured = homeFeaturedSlugs
     z-index: var(--z-content);
   }
 
-  .work-list {
+  .home-flagship {
     display: grid;
+    gap: 1rem;
+  }
+
+  .home-flagship__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
 
   .text-link {
@@ -108,5 +89,11 @@ const homeFeatured = homeFeaturedSlugs
     color: var(--signal-hov);
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  @media (max-width: 760px) {
+    .home-flagship__grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

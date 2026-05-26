@@ -8,7 +8,7 @@ import SectionHead from '../components/SectionHead.astro';
 import BuildCard from '../components/BuildCard.astro';
 import FlagshipWorkCard from '../components/FlagshipWorkCard.astro';
 import { artifacts, type Artifact } from '../config/packages';
-import { getToolDetail, type ToolDetail } from '../config/tool-details';
+import { flagshipWorkDetails, flagshipWorkProof, flagshipWorkSlugs } from '../config/featured-work';
 import { loadSignalData } from '../lib/data';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
@@ -49,21 +49,7 @@ const catalogCopy: Record<string, string> = {
   'vault-mind': 'Parked local-model experiment for talking to a second brain through a CLI.',
 };
 
-const flagshipSlugs = ['tradespec', 'openspec-studio', 'microcanvas', 'agentplan'];
-const flagshipSet = new Set(flagshipSlugs);
-const flagshipProof: Record<string, string> = {
-  tradespec:
-    'Customer-facing AI workflow for estimating teams, with evidence-linked outputs and a clear private-alpha boundary.',
-  'openspec-studio':
-    'A visual workbench for spec-driven development: changes, tasks, validation, archive readiness, and runner state in one place.',
-  microcanvas:
-    'A display surface for agent-created artifacts, built around real rendering, verification, and screenshot evidence.',
-  agentplan:
-    'A shared task board for AI-native teams, with local durable state and claimable work for multiple agents.',
-};
-const flagshipDetails = flagshipSlugs
-  .map(slug => getToolDetail(slug))
-  .filter((detail): detail is ToolDetail => Boolean(detail));
+const flagshipSet = new Set<string>(flagshipWorkSlugs);
 
 const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
   {
@@ -94,21 +80,20 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
       />
     </div>
 
-    <section class="section-split" id="flagship-work">
-      <SectionHead name="Flagship work" />
-      <div class="section-split__content flagship-grid">
-        {flagshipDetails.map(detail => (
+    <section class="flagship-section" id="flagship-work" aria-label="Featured work">
+      <div class="flagship-grid">
+        {flagshipWorkDetails.map(detail => (
           <FlagshipWorkCard
             detail={detail}
-            proof={flagshipProof[detail.slug] ?? detail.summary}
+            proof={flagshipWorkProof[detail.slug] ?? detail.summary}
           />
         ))}
       </div>
     </section>
 
-    {groups.map(group => (
+    {groups.map((group, index) => (
       <section class="section-split" id={`work-${group.name.toLowerCase().replaceAll(' ', '-')}`}>
-        <SectionHead name={group.name} meta={group.meta} />
+        {index > 0 && <SectionHead name={group.name} meta={group.meta} />}
         <div class="section-split__content catalog-list">
           {group.items.map(a => (
             <BuildCard
@@ -125,10 +110,18 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
 </Layout>
 
 <style>
+  .flagship-section {
+    padding: 0 0 var(--section-pad);
+  }
+
   .flagship-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
+  }
+
+  .section-split > .catalog-list:first-child {
+    grid-column: 1 / -1;
   }
 
   .catalog-list {

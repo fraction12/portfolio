@@ -4,7 +4,6 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-import SectionHead from '../components/SectionHead.astro';
 import Writing from '../components/Writing.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 
@@ -26,18 +25,26 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
       />
     </div>
 
-    <section class="section-split">
-      <SectionHead name="Essays" meta="Selected recent writing on product work and AI systems." />
-      <div class="section-split__content">
+    <section class="writing-section" aria-label="Essays">
+      <div>
         <Writing />
       </div>
     </section>
 
-    <section class="section-split">
-      <SectionHead name="Subscribe" meta="Get the next essay by email." />
-      <div class="section-split__content">
+    <section class="section-split" aria-label="Subscribe">
+      <div class="section-split__content writing-section__wide">
         <NewsletterSignup />
       </div>
     </section>
   </div>
 </Layout>
+
+<style>
+  .writing-section {
+    padding: 0 0 var(--section-pad);
+  }
+
+  .writing-section__wide {
+    grid-column: 1 / -1;
+  }
+</style>
