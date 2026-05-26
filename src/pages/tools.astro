@@ -90,12 +90,12 @@ const groups: Array<{ name: string; meta: string; items: Artifact[] }> = [
       <PageHeader
         kicker="Work"
         title="Builds, products, and systems"
-        lede="A broader catalog of product work and open-source systems. The homepage is edited; this page is for the people who want to inspect the range."
+        lede="Selected products, open-source systems, and experiments with context on what each does, where it stands, and why it matters."
       />
     </div>
 
     <section class="section-split" id="flagship-work">
-      <SectionHead name="Flagship work" meta="The strongest proof surfaces: product workflow, spec workbench, visual QA, and agent coordination." />
+      <SectionHead name="Flagship work" />
       <div class="section-split__content flagship-grid">
         {flagshipDetails.map(detail => (
           <FlagshipWorkCard
