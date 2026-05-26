@@ -11,6 +11,7 @@
 - [x] 2.3 Add accessible pagination controls and responsive 3/2/1 column behavior.
 - [x] 2.4 Preserve homepage selected-work cards and detail-page links.
 - [x] 2.5 Sort cards with ready visual media before fallback-only cards.
+- [x] 2.6 Point the home primary work CTA at `/tools`.
 
 ## 3. Verification
 

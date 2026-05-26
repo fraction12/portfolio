@@ -7,6 +7,10 @@ The `/tools` page SHALL remain available as a broader catalog of shipped and exp
 - **WHEN** a reader opens `/tools`
 - **THEN** artifact categories, cards, metadata, metrics, and external links are organized for scanning without repeated descriptions, excessive tags, command-line styling, or fake status cues
 
+#### Scenario: Home work CTA opens the catalog
+- **WHEN** a reader activates the primary work CTA on the home page
+- **THEN** the link SHALL navigate to `/tools`
+
 #### Scenario: Catalog uses a visual paginated grid
 - **WHEN** a reader opens `/tools`
 - **THEN** the catalog SHALL render artifacts as a uniform image-led card grid
