@@ -415,6 +415,44 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       ],
     ),
   },
+  deepclean: {
+    tagline: 'Local cleanup reports and agent-ready plans for evolving codebases.',
+    summary:
+      'Deepclean scans a repository, gathers local evidence, and writes structure reports, cleanup candidates, themes, plans, handoffs, and triage notes under `.deepclean/` without editing source code.',
+    audience:
+      'Builders and teams with working codebases that need clearer architecture boundaries, less duplication, safer refactors, stronger tests, and agent-sized cleanup plans.',
+    problem:
+      'AI-assisted projects can become working-but-sloppy fast: duplicated structure, unclear ownership, fragile boundaries, weak tests, and too many possible cleanup paths to hand to an agent safely.',
+    statusNote:
+      'Public alpha on GitHub and npm; TypeScript, JavaScript, and Python evidence are supported.',
+    demo: {
+      type: 'image',
+      status: 'ready',
+      label: 'Deepclean landing page preview',
+      src: '/tool-media/deepclean/deepclean-preview.png',
+      alt: 'Deepclean landing page showing local repo structure reports for fast-moving AI-assisted repositories.',
+      caption:
+        'The public Deepclean landing site introduces the cleanup-report workflow, install command, and no-source-edits boundary.',
+    },
+    links: [
+      { label: 'Website', href: 'https://fraction12.github.io/deepclean/', external: true },
+      { label: 'GitHub', href: 'https://github.com/fraction12/deepclean', external: true },
+      { label: 'npm', href: 'https://www.npmjs.com/package/@fraction12/deepclean', external: true },
+    ],
+    sections: sections(
+      [
+        'A local CLI for structure reports and cleanup planning after a codebase already works but needs disciplined follow-through.',
+        'It writes durable artifacts under `.deepclean/`: evidence, candidates, clusters, reports, plans, handoffs, and triage notes.',
+      ],
+      [
+        'Run `deepclean init`, scan local evidence, optionally ask Codex for bounded synthesis, generate a report, cluster related cleanup themes, and turn candidates or themes into focused plans.',
+        'The local evidence layer covers file metrics, duplication, source/import graphs, TS/JS function structure, Python import graph support, git churn, nearby tests, SARIF, Semgrep, and jscpd ingestion.',
+      ],
+      [
+        'The output is a reviewable cleanup queue with evidence IDs, stable candidate/theme identifiers, and agent-ready plans that make one focused improvement easier to hand off.',
+      ],
+    ),
+  },
   explain: {
     tagline: 'Architecture documentation generated from a TypeScript/JavaScript codebase.',
     summary:

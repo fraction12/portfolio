@@ -1,8 +1,10 @@
 import { getToolDetail, type ToolDetail } from './tool-details';
 
-export const flagshipWorkSlugs = ['tradespec', 'openspec-studio', 'microcanvas', 'agentplan'] as const;
+export const flagshipWorkSlugs = ['deepclean', 'tradespec', 'openspec-studio', 'microcanvas', 'agentplan'] as const;
 
 export const flagshipWorkProof: Record<string, string> = {
+  deepclean:
+    'A local cleanup-report CLI for fast-moving codebases: evidence first, no source edits, and agent-ready plans under `.deepclean/`.',
   tradespec:
     'Customer-facing AI workflow for estimating teams, with evidence-linked outputs and a clear private-alpha boundary.',
   'openspec-studio':
