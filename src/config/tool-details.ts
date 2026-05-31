@@ -286,6 +286,39 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       ],
     ),
   },
+  octocheck: {
+    tagline: 'Private local CI with a policy gate between GitHub and the workstation.',
+    summary:
+      'OctoCheck is a resident GitHub App controller that receives signed GitHub events, verifies repo and PR policy, queues trusted local work, runs CI or agent review lanes on local compute, and reports results back through GitHub Checks.',
+    audience:
+      'Solo builders and small teams that want GitHub-native status checks without giving hosted CI direct login access to a powerful local machine.',
+    problem:
+      'Self-hosted runners and SSH-from-Actions both blur the boundary between GitHub requesting work and a local workstation deciding what is safe to run.',
+    statusNote:
+      'Live private workstation controller with public source; dashboard is read-only and intended for private network access.',
+    demo: {
+      type: 'image',
+      status: 'ready',
+      label: 'OctoCheck dashboard',
+      src: '/tool-media/octocheck/octocheck-dashboard.png',
+      alt: 'OctoCheck dashboard showing queue state, recent GitHub check runs, selected run metadata, and a redacted log tail.',
+      caption:
+        'The OctoCheck dashboard shows active work, queue depth, recent runs, selected run metadata, policy lane, and log tail without exposing mutation controls.',
+    },
+    sections: sections(
+      [
+        'A local controller plus GitHub App that keeps the trust boundary explicit: GitHub can request work, but the workstation policy decides what actually runs.',
+        'The controller supports CI, deploy-style jobs, sandboxed agent review, DeepClean analysis, and narrow guarded fix lanes.',
+      ],
+      [
+        'GitHub sends a signed webhook, OctoCheck verifies the signature and repository policy, checks event, branch, PR, and fork rules, then queues accepted work by lane and resource class.',
+        'Runs execute in isolated worktrees or sandboxed workers, publish status back to GitHub Checks, and expose read-only run metadata through the local dashboard.',
+      ],
+      [
+        'The output is GitHub-native feedback backed by private local compute, with one controller enforcing queueing, policy, sandboxing, and auditability.',
+      ],
+    ),
+  },
   'spec-ui': {
     tagline: 'A compiler from product specs to deterministic HTML prototypes.',
     summary:
@@ -416,15 +449,15 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
     ),
   },
   deepclean: {
-    tagline: 'Local cleanup reports and agent-ready plans for evolving codebases.',
+    tagline: 'Local evidence, PR context, and guarded cleanup lanes for evolving codebases.',
     summary:
-      'Deepclean scans a repository, gathers local evidence, and writes structure reports, cleanup candidates, themes, plans, handoffs, and triage notes under `.deepclean/` without editing source code.',
+      'Deepclean scans a repository, gathers local evidence, runs validated Codex synthesis when allowed, and writes reports, PR review context, cleanup candidates, plans, handoffs, triage notes, and guarded fix proof under `.deepclean/`.',
     audience:
-      'Builders and teams with working codebases that need clearer architecture boundaries, less duplication, safer refactors, stronger tests, and agent-sized cleanup plans.',
+      'Builders and teams with working codebases that need clearer architecture boundaries, safer refactors, stronger tests, source-safe PR review context, and agent-sized cleanup or fix plans.',
     problem:
-      'AI-assisted projects can become working-but-sloppy fast: duplicated structure, unclear ownership, fragile boundaries, weak tests, and too many possible cleanup paths to hand to an agent safely.',
+      'AI-assisted projects can become working-but-sloppy fast: duplicated structure, unclear ownership, fragile boundaries, weak tests, and too many possible cleanup paths to hand to an agent or CI system safely.',
     statusNote:
-      'Public alpha on GitHub and npm; TypeScript, JavaScript, and Python evidence are supported.',
+      'Public beta on GitHub and npm with GA-candidate JSON contracts for PR review context and guarded fix lanes.',
     demo: {
       type: 'image',
       status: 'ready',
@@ -432,7 +465,7 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       src: '/tool-media/deepclean/deepclean-preview.png',
       alt: 'Deepclean landing page showing local repo structure reports for fast-moving AI-assisted repositories.',
       caption:
-        'The public Deepclean landing site introduces the cleanup-report workflow, install command, and no-source-edits boundary.',
+        'The refreshed Deepclean site introduces the local evidence workflow, install path, and agent-ready handoff positioning.',
     },
     links: [
       { label: 'Website', href: 'https://fraction12.github.io/deepclean/', external: true },
@@ -441,15 +474,16 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
     ],
     sections: sections(
       [
-        'A local CLI for structure reports and cleanup planning after a codebase already works but needs disciplined follow-through.',
-        'It writes durable artifacts under `.deepclean/`: evidence, candidates, clusters, reports, plans, handoffs, and triage notes.',
+        'A local-first maintainability system for codebases that already work but need disciplined follow-through before the next refactor.',
+        'It writes durable artifacts under `.deepclean/`: runs, feature maps, evidence, synthesis ledgers, candidates, clusters, reports, plans, handoffs, triage, lifecycle history, revalidations, and fix attempts.',
       ],
       [
-        'Run `deepclean init`, scan local evidence, optionally ask Codex for bounded synthesis, generate a report, cluster related cleanup themes, and turn candidates or themes into focused plans.',
-        'The local evidence layer covers file metrics, duplication, source/import graphs, TS/JS function structure, Python import graph support, git churn, nearby tests, SARIF, Semgrep, and jscpd ingestion.',
+        'Run `deepclean init`, `doctor`, `scan`, `report`, `status`, `cluster`, `next`, `show`, `plan`, and `handoff` to move from evidence to one bounded cleanup task.',
+        '`deepclean review-pr --json` gives controllers like OctoCheck source-safe PR context: changed files, related findings, architecture neighborhoods, risk summary, suggested verification, and prompt context.',
+        'The guarded fix lane requires one target, explicit mutation intent, current proof inputs, and verification before recording a fix attempt as useful.',
       ],
       [
-        'The output is a reviewable cleanup queue with evidence IDs, stable candidate/theme identifiers, and agent-ready plans that make one focused improvement easier to hand off.',
+        'The output is a reviewable cleanup queue with evidence IDs, stable candidate/theme identifiers, source-safe review packets, and proof-backed agent plans instead of vague smell lists.',
       ],
     ),
   },

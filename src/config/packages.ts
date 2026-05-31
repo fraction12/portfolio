@@ -98,6 +98,12 @@ export const artifacts: Artifact[] = [
     repo: 'fraction12/agentplan', pypiName: 'agentplan', url: 'https://fraction12.github.io/agentplan/',
     installCommand: 'pip install agentplan' },
 
+  { slug: 'octocheck', order: 3, category: 'orchestration',
+    name: 'OctoCheck', emphasisWord: 'OctoCheck',
+    description: 'Resident GitHub App controller that runs trusted CI, review, and fix lanes on local compute.',
+    stack: 'node · github app · sqlite', kind: 'node · local ci controller', status: 'live',
+    repo: 'fraction12/octocheck', installCommand: '# private workstation controller — source on GitHub' },
+
 
   // ────────────── HUMAN TOOLS ──────────────
   { slug: 'spec-ui', order: 1, category: 'human-tools',
@@ -126,7 +132,7 @@ export const artifacts: Artifact[] = [
 
   { slug: 'deepclean', order: 5, category: 'human-tools',
     name: 'Deepclean', emphasisWord: 'Deepclean',
-    description: 'Local repo structure reports and agent-ready cleanup plans for fast-moving codebases.',
+    description: 'Local repo evidence, PR review context, and guarded cleanup lanes for fast-moving codebases.',
     stack: 'typescript · cli · npm', kind: 'typescript · cleanup reports', status: 'live',
     repo: 'fraction12/deepclean', npmName: '@fraction12/deepclean', url: 'https://fraction12.github.io/deepclean/',
     installCommand: 'npm install -g @fraction12/deepclean' },

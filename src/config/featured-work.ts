@@ -1,10 +1,12 @@
 import { getToolDetail, type ToolDetail } from './tool-details';
 
-export const flagshipWorkSlugs = ['deepclean', 'tradespec', 'openspec-studio', 'microcanvas', 'agentplan'] as const;
+export const flagshipWorkSlugs = ['octocheck', 'deepclean', 'tradespec', 'openspec-studio', 'microcanvas', 'agentplan'] as const;
 
 export const flagshipWorkProof: Record<string, string> = {
+  octocheck:
+    'A resident GitHub App controller that lets GitHub request work while local policy decides what actually runs.',
   deepclean:
-    'A local cleanup-report CLI for fast-moving codebases: evidence first, no source edits, and agent-ready plans under `.deepclean/`.',
+    'A local maintainability system for fast-moving codebases: evidence first, source-safe PR context, and guarded cleanup lanes.',
   tradespec:
     'Customer-facing AI workflow for estimating teams, with evidence-linked outputs and a clear private-alpha boundary.',
   'openspec-studio':
