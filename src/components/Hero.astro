@@ -1,40 +1,48 @@
 ---
+import GithubActivity from './GithubActivity.astro';
+import type { GithubSnapshot } from '../lib/data';
+
 interface Props {
   primary?: { label: string; href: string };
   secondary?: { label: string; href: string };
+  github?: GithubSnapshot;
 }
 const {
   primary = { label: 'View the work', href: '/tools' },
   secondary = { label: 'Read the writing', href: '#writing' },
+  github,
 } = Astro.props;
 ---
 
-<header class="intro">
+<header class="intro" data-portfolio-motion-root>
   <div class="intro__content">
-    <p class="role">Product Manager / Builder</p>
-    <h1 class="name">Dushyant Garg</h1>
-    <p class="summary">
+    <p class="role" data-motion-item>Product Manager / Builder</p>
+    <h1 class="name" data-motion-item>Dushyant Garg</h1>
+    <p class="summary" data-motion-item>
       I build practical AI products and product systems for messy workflows,
       fast-moving teams, and users who need useful software more than impressive demos.
     </p>
 
-    <div class="ctas">
+    <div class="ctas" data-motion-item>
       <a class="btn btn--primary" href={primary.href}>{primary.label}</a>
       <a class="btn btn--ghost" href={secondary.href}>{secondary.label}</a>
     </div>
   </div>
 
-  <figure class="portrait">
-    <img src="/dushyant-garg-avatar.jpg" alt="Dushyant Garg" width="160" height="160" loading="eager" decoding="async" />
-  </figure>
+  <div class="intro__aside">
+    <figure class="portrait" data-motion-item>
+      <img src="/dushyant-garg-avatar.jpg" alt="Dushyant Garg" width="160" height="160" loading="eager" decoding="async" />
+    </figure>
+    <GithubActivity heatmap={github?.heatmap} commits30d={github?.commits30d} totalStars={github?.totalStars} />
+  </div>
 </header>
 
 <style>
   .intro {
     display: grid;
-    grid-template-columns: minmax(0, 760px) 144px;
-    gap: clamp(2rem, 7vw, 6rem);
-    align-items: start;
+    grid-template-columns: minmax(0, 590px) minmax(260px, 1fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
     padding: clamp(4.5rem, 10vw, 7rem) 0 clamp(3rem, 7vw, 5rem);
   }
   .intro__content { min-width: 0; }
@@ -69,9 +77,20 @@ const {
     gap: 10px;
     flex-wrap: wrap;
   }
+  .intro__aside {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
+    align-self: start;
+    z-index: 3;
+    display: grid;
+    gap: 1rem;
+    justify-items: end;
+    padding-top: clamp(0.25rem, 1.5vw, 1rem);
+  }
   .portrait {
-    margin-top: 4px;
-    width: 144px;
+    margin: 0;
+    width: 104px;
     aspect-ratio: 1;
     border-radius: 999px;
     overflow: hidden;
@@ -85,14 +104,30 @@ const {
     object-fit: cover;
   }
 
+  @media (max-width: 900px) {
+    .intro {
+      grid-template-columns: minmax(0, 1fr) minmax(112px, 260px);
+      align-items: start;
+    }
+    .intro__aside {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
   @media (max-width: 640px) {
     .intro {
       grid-template-columns: 1fr;
       gap: 1.2rem;
       padding: 3.25rem 0 2.5rem;
     }
+    .intro__aside {
+      order: 2;
+      justify-self: start;
+      justify-items: start;
+      width: 100%;
+    }
     .portrait {
-      order: -1;
       width: 78px;
       margin-top: 0;
     }

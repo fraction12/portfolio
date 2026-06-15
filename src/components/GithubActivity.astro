@@ -1,0 +1,130 @@
+---
+import type { HeatmapCell } from '../lib/data/github';
+
+interface Props {
+  heatmap?: HeatmapCell[] | null;
+  commits30d?: number | null;
+  totalStars?: number | null;
+}
+
+const { heatmap = null, commits30d = null, totalStars = null } = Astro.props;
+const weekCount = 28;
+const cells = heatmap?.length ? heatmap.slice(-(weekCount * 7)) : [];
+const total = cells.reduce((sum, cell) => sum + cell.count, 0);
+const hasData = cells.length > 0;
+const weeks = Array.from({ length: weekCount }, (_, index) => cells.slice(index * 7, index * 7 + 7));
+---
+
+<aside class="github-activity" data-github-activity data-motion-item aria-label="GitHub activity" style={`--github-activity-weeks: ${weekCount}`}>
+  <div class="github-activity__head">
+    <span>GitHub activity</span>
+    <strong>{hasData ? `${total} contributions` : 'Live data pending'}</strong>
+  </div>
+
+  <div class="github-activity__grid" aria-hidden="true">
+    {weeks.map(week => (
+      <div class="github-activity__week">
+        {Array.from({ length: 7 }, (_, dayIndex) => {
+          const cell = week[dayIndex];
+          return cell ? (
+            <span
+              class:list={['github-activity__day', `github-activity__day--${cell.level}`]}
+              title={`${cell.count} contribution${cell.count === 1 ? '' : 's'} on ${cell.date}`}
+              data-github-activity-day
+            />
+          ) : (
+            <span class="github-activity__day github-activity__day--0" data-github-activity-day />
+          );
+        })}
+      </div>
+    ))}
+  </div>
+
+  <div class="github-activity__meta">
+    <span>{commits30d == null ? 'Snapshot mode' : `${commits30d} commits in 30d`}</span>
+    <span>{totalStars == null ? 'fraction12' : `${totalStars} repo stars`}</span>
+  </div>
+</aside>
+
+<style>
+  .github-activity {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface-card);
+  }
+
+  .github-activity__head,
+  .github-activity__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: var(--type-mono-xs-size);
+    line-height: 1.2;
+    color: var(--dim);
+  }
+
+  .github-activity__head strong {
+    color: var(--ivory);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .github-activity__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--github-activity-weeks), minmax(7px, 1fr));
+    gap: 4px;
+    margin: 0.7rem 0;
+    overflow: hidden;
+  }
+
+  .github-activity__week {
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .github-activity__day {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--line-2) 72%, transparent);
+  }
+
+  .github-activity__day--1 {
+    background: color-mix(in srgb, var(--signal) 22%, var(--ink-2));
+  }
+
+  .github-activity__day--2 {
+    background: color-mix(in srgb, var(--signal) 42%, var(--ink-2));
+  }
+
+  .github-activity__day--3 {
+    background: color-mix(in srgb, var(--signal) 66%, var(--ink-2));
+  }
+
+  .github-activity__day--4 {
+    background: var(--signal);
+  }
+
+  .github-activity__meta {
+    color: var(--dim);
+  }
+
+  @media (max-width: 640px) {
+    .github-activity {
+      width: min(100%, 240px);
+      padding: 0.7rem;
+    }
+
+    .github-activity__grid {
+      gap: 3px;
+    }
+
+    .github-activity__week {
+      gap: 3px;
+    }
+  }
+</style>

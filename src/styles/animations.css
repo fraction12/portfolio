@@ -7,6 +7,42 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+[data-motion-ready="true"] {
+  will-change: transform, opacity;
+}
+
+.motion-card {
+  transform: translateY(0);
+  transition:
+    border-color var(--motion-card) ease,
+    background-color var(--motion-card) ease,
+    box-shadow var(--motion-card) ease,
+    transform var(--motion-card) ease;
+}
+
+.motion-card__proof {
+  transition:
+    color var(--motion-card) ease,
+    opacity var(--motion-card) ease,
+    transform var(--motion-card) ease;
+}
+
+.motion-card:hover,
+.motion-card:focus-within {
+  border-color: color-mix(in srgb, var(--signal) 44%, var(--line-2));
+  background: color-mix(in srgb, var(--surface-raised) 86%, var(--signal-dim));
+  box-shadow:
+    0 18px 44px color-mix(in srgb, var(--ink) 13%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--signal) 18%, transparent);
+}
+
+.motion-card:hover .motion-card__proof,
+.motion-card:focus-within .motion-card__proof {
+  color: var(--ivory);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -5,6 +5,7 @@ import { isAgentAuthor } from '../../config/agents';
 import type { CommitRecord } from './shifts';
 
 const TOKEN = process.env.GITHUB_TOKEN || '';
+const HEATMAP_WEEK_COUNT = 28;
 const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/github.json');
 
 export type HeatmapCell = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
@@ -113,7 +114,7 @@ export function parseHeatmapResponse(json: GraphqlResponse<HeatmapGraphqlData>):
       cells.push({ date: d.date, count: d.contributionCount, level: bucketLevel(d.contributionCount) });
     }
   }
-  return cells.slice(-182);
+  return cells.slice(-(HEATMAP_WEEK_COUNT * 7));
 }
 
 function bucketLevel(n: number): 0 | 1 | 2 | 3 | 4 {
