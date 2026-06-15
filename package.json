@@ -17,7 +17,8 @@
     "@astrojs/vercel": "^10.0.5",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^6.1.9"
+    "astro": "^6.1.9",
+    "motion": "^12.40.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

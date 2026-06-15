@@ -25,9 +25,9 @@ const data = await loadSignalData();
   includeIdentitySchema
 >
   <div class="page-shell home-shell">
-    <Hero />
+    <Hero github={data.github} />
 
-    <section id="work" class="section-split">
+    <section id="work" class="section-split" data-work-section>
       <SectionHead name="Work" meta="Selected builds that show the range: product workflow, open-source infrastructure, and tools for evaluating what gets shipped." />
       <div class="section-split__content home-flagship">
         <div class="home-flagship__grid">

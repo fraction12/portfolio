@@ -15,7 +15,7 @@ const mediaSrc = detail.demo.status === 'ready'
   : undefined;
 ---
 
-<article class="flagship-card">
+<article class="flagship-card motion-card" data-motion-card>
   <a class="flagship-card__media" href={detail.detailPath} aria-label={`Open ${artifact.name} case study`}>
     {mediaSrc ? (
       <img src={mediaSrc} alt={detail.demo.alt ?? `${artifact.name} product preview`} loading="lazy" decoding="async" />
@@ -27,7 +27,7 @@ const mediaSrc = detail.demo.status === 'ready'
   <div class="flagship-card__body">
     <p class="flagship-card__eyebrow">{detail.categoryLabel}</p>
     <h3><a href={detail.detailPath}>{artifact.name}</a></h3>
-    <p>{proof}</p>
+    <p class="motion-card__proof" data-motion-proof>{proof}</p>
     <a class="flagship-card__link" href={detail.detailPath}>Open case study</a>
   </div>
 </article>
@@ -59,7 +59,7 @@ const mediaSrc = detail.demo.status === 'ready'
   }
 
   .flagship-card:hover .flagship-card__media img {
-    transform: scale(1.015);
+    transform: scale(1.026) translateY(-0.35rem);
   }
 
   .flagship-card__media span {
