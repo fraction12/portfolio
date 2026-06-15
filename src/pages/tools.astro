@@ -5,7 +5,6 @@ export const prerender = false;
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import WorkGridCard from '../components/WorkGridCard.astro';
-import ProjectDetailSurface from '../components/ProjectDetailSurface.astro';
 import { CATEGORY_ORDER, type Artifact } from '../config/packages';
 import { flagshipWorkSlugs } from '../config/featured-work';
 import { toolDetails, type ToolDetail } from '../config/tool-details';
@@ -106,21 +105,14 @@ const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`
 
     <section class="catalog-section" aria-label="Work catalog">
       <div class="catalog-grid">
-        {visibleDetails.map((detail, index) => (
+        {visibleDetails.map(detail => (
           <WorkGridCard
             detail={detail}
             description={catalogCopy[detail.slug] ?? detail.summary}
             metric={metricFor(detail.artifact)}
-            selected={index === 0}
           />
         ))}
       </div>
-
-      <section class="project-reader" aria-live="polite" aria-label="Selected work details">
-        {visibleDetails.map((detail, index) => (
-          <ProjectDetailSurface detail={detail} selected={index === 0} />
-        ))}
-      </section>
 
       <nav class="pagination" aria-label="Work catalog pages">
         <p>Showing {visibleRangeStart}-{visibleRangeEnd} of {orderedDetails.length}</p>
@@ -149,47 +141,6 @@ const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`
       </nav>
     </section>
   </div>
-
-  <script>
-    function initProjectReader() {
-      const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-project-select]'));
-      const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-project-panel]'));
-      if (!buttons.length || !panels.length) return;
-
-      const reader = document.querySelector<HTMLElement>('.project-reader');
-      const select = (slug: string, shouldScroll: boolean) => {
-        buttons.forEach(button => {
-          const active = button.dataset.projectSelect === slug;
-          button.setAttribute('aria-pressed', String(active));
-          button.closest('[data-motion-card]')?.classList.toggle('work-grid-card--selected', active);
-        });
-
-        panels.forEach(panel => {
-          panel.hidden = panel.dataset.projectPanel !== slug;
-        });
-
-        if (shouldScroll) {
-          history.replaceState(null, '', `#project-${slug}`);
-          reader?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-        }
-      };
-
-      buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          const slug = button.dataset.projectSelect;
-          if (slug) select(slug, true);
-        });
-      });
-
-      const hashSlug = window.location.hash.replace(/^#project-/, '');
-      const initial = buttons.find(button => button.dataset.projectSelect === hashSlug)
-        ?? buttons.find(button => button.getAttribute('aria-pressed') === 'true')
-        ?? buttons[0];
-      if (initial.dataset.projectSelect) select(initial.dataset.projectSelect, false);
-    }
-
-    document.addEventListener('astro:page-load', initProjectReader);
-  </script>
 </Layout>
 
 <style>
@@ -202,15 +153,6 @@ const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
     min-width: 0;
-  }
-
-  .project-reader {
-    scroll-margin-top: calc(var(--layout-nav-h) + 1.5rem);
-  }
-
-  :global(.work-grid-card--selected) {
-    border-color: color-mix(in srgb, var(--signal) 52%, var(--line));
-    background: color-mix(in srgb, var(--surface-raised) 82%, var(--signal-dim));
   }
 
   .pagination {
