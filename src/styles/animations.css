@@ -11,6 +11,19 @@
   will-change: transform, opacity;
 }
 
+html[data-portfolio-motion="enhanced"] [data-motion-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(6px);
+}
+
+html[data-portfolio-motion="enhanced"] [data-motion-reveal="visible"],
+html[data-portfolio-motion="reduced"] [data-motion-reveal] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
 .motion-card {
   transform: translateY(0);
   transition:
@@ -51,5 +64,11 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+
+  [data-motion-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }

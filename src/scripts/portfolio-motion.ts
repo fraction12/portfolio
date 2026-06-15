@@ -8,6 +8,19 @@ type MotionControl = {
 type Cleanup = () => void;
 
 let cleanups: Cleanup[] = [];
+let revealObserver: IntersectionObserver | undefined;
+
+const REVEAL_SELECTOR = [
+  '.page-header',
+  '.page-split',
+  '.section-split',
+  '.catalog-section',
+  '.detail-hero',
+  '.detail-section',
+  '.not-found-shell',
+  '[data-motion-card]',
+  '[data-motion-reveal]',
+].join(',');
 
 export function prefersReducedMotion(win: Pick<Window, 'matchMedia'> = window): boolean {
   return typeof win.matchMedia === 'function'
@@ -33,10 +46,22 @@ function motionAnimate(target: unknown, keyframes: Record<string, unknown>, opti
 }
 
 function markReady(root: ParentNode) {
-  root.querySelectorAll<HTMLElement>('[data-motion-item], [data-motion-card]')
+  root.querySelectorAll<HTMLElement>('[data-motion-item], [data-motion-card], [data-motion-reveal]')
     .forEach(el => {
       el.dataset.motionReady = 'true';
     });
+}
+
+export function getRevealCandidates(root: ParentNode = document): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR))
+    .filter(el => !el.closest('[data-portfolio-motion-root]'));
+}
+
+function markRevealCandidates(root: ParentNode) {
+  getRevealCandidates(root).forEach((el, index) => {
+    el.dataset.motionReveal = 'pending';
+    el.style.setProperty('--motion-reveal-index', String(index));
+  });
 }
 
 function initHeroEntrance(root: ParentNode) {
@@ -124,22 +149,72 @@ function initCards(root: ParentNode) {
   });
 }
 
+function initScrollFade(root: ParentNode) {
+  const reveals = getRevealCandidates(root);
+  if (!reveals.length) return;
+
+  if (typeof window.IntersectionObserver !== 'function') {
+    reveals.forEach(el => {
+      el.dataset.motionReveal = 'visible';
+    });
+    return;
+  }
+
+  revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+
+      const el = entry.target as HTMLElement;
+      const index = Number.parseInt(el.style.getPropertyValue('--motion-reveal-index') || '0', 10);
+      revealObserver?.unobserve(el);
+      el.dataset.motionReveal = 'visible';
+
+      const reveal = motionAnimate(el, {
+        opacity: [0, 1],
+        y: [18, 0],
+        filter: ['blur(6px)', 'blur(0px)'],
+      }, {
+        duration: 0.52,
+        delay: Math.min(index % 4, 3) * 0.035,
+        easing: [0.22, 1, 0.36, 1],
+      });
+
+      addCleanup(() => stopControl(reveal));
+    });
+  }, {
+    rootMargin: '0px 0px -12% 0px',
+    threshold: 0.08,
+  });
+
+  reveals.forEach(el => revealObserver?.observe(el));
+  addCleanup(() => {
+    revealObserver?.disconnect();
+    revealObserver = undefined;
+  });
+}
+
 export function initPortfolioMotion(root: ParentNode = document) {
   cleanupPortfolioMotion();
 
   const hasMotionRoot = root.querySelector('[data-portfolio-motion-root]');
   const hasMotionCards = root.querySelector('[data-motion-card]');
-  if (!hasMotionRoot && !hasMotionCards) return;
+  const hasRevealCandidates = getRevealCandidates(root).length > 0;
+  if (!hasMotionRoot && !hasMotionCards && !hasRevealCandidates) return;
 
+  markRevealCandidates(root);
   markReady(root);
 
   if (prefersReducedMotion()) {
     document.documentElement.dataset.portfolioMotion = 'reduced';
+    getRevealCandidates(root).forEach(el => {
+      el.dataset.motionReveal = 'visible';
+    });
     return;
   }
 
   document.documentElement.dataset.portfolioMotion = 'enhanced';
   initHeroEntrance(root);
+  initScrollFade(root);
   initGithubActivityPulse(root);
   initCards(root);
 }
