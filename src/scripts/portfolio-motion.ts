@@ -10,6 +10,33 @@ type Cleanup = () => void;
 let cleanups: Cleanup[] = [];
 let revealObserver: IntersectionObserver | undefined;
 
+type DetailPreviewLayoutInput = {
+  viewportWidth: number;
+  viewportHeight: number;
+  copyRight: number;
+};
+
+export function getDetailPreviewLayout({
+  viewportWidth,
+  viewportHeight,
+  copyRight,
+}: DetailPreviewLayoutInput): { width: number; left: number } {
+  const rightMargin = Math.max(14, Math.min(48, viewportWidth * 0.03));
+  const copyGap = Math.max(36, Math.min(72, viewportWidth * 0.035));
+  const availableWidth = viewportWidth - rightMargin - copyRight - copyGap;
+  const width = Math.min(
+    viewportWidth * 0.54,
+    viewportHeight * 1.22,
+    920,
+    Math.max(280, availableWidth),
+  );
+
+  return {
+    width,
+    left: viewportWidth - rightMargin - width / 2,
+  };
+}
+
 const REVEAL_SELECTOR = [
   '.page-header',
   '.page-split',
@@ -242,8 +269,13 @@ function initDetailScrollStage(root: ParentNode) {
       const slotProgress = easeInOut((progress - slotStart) / (slotEnd - slotStart));
       const copyProgress = clamp((progress - slotEnd) / (1 - slotEnd));
       const initialWidth = Math.min(viewportWidth * 0.72, viewportHeight * 1.42, 1040);
-      const finalWidth = Math.min(viewportWidth * 0.54, viewportHeight * 1.22, 920);
-      const finalLeft = viewportWidth - 14 - finalWidth / 2;
+      const finalLayout = getDetailPreviewLayout({
+        viewportWidth,
+        viewportHeight,
+        copyRight: copyViewport.getBoundingClientRect().right,
+      });
+      const finalWidth = finalLayout.width;
+      const finalLeft = finalLayout.left;
       const left = mix(viewportWidth / 2, finalLeft, slotProgress);
       const width = mix(initialWidth, finalWidth, slotProgress);
 
