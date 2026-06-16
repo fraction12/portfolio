@@ -41,6 +41,7 @@ describe('tool detail content', () => {
     const readyMediaBySlug = {
       microcanvas: '/tool-media/microcanvas/microcanvas-demo.mp4',
       'openspec-studio': '/tool-media/openspec-studio/openspec-studio-demo.mp4',
+      'kv-capsules-pti': '/tool-media/kv-capsules-pti/kv-capsules-pti-explainer.mp4',
       'spec-ui': '/tool-media/spec-ui/spec-ui-demo.mp4',
     };
 
@@ -51,6 +52,31 @@ describe('tool detail content', () => {
       expect(detail?.demo.src).toBe(src);
       expect(detail?.demo.poster).toMatch(/poster\.jpg$/);
     }
+  });
+
+  it('keeps the KV Capsules + PTI research claim visible and bounded', () => {
+    const artifact = artifacts.find(candidate => candidate.slug === 'kv-capsules-pti');
+    const detail = getToolDetail('kv-capsules-pti');
+    const detailText = [
+      detail?.summary,
+      detail?.problem,
+      detail?.statusNote,
+      ...(detail?.sections.flatMap(section => section.body) ?? []),
+    ].join(' ');
+
+    expect(artifact?.metricOverride).toContain('13.8x');
+    expect(detail?.detailPath).toBe('/tools/kv-capsules-pti');
+    expect(detail?.demo.status).toBe('ready');
+    expect(detail?.demo.src).toBe('/tool-media/kv-capsules-pti/kv-capsules-pti-explainer.mp4');
+    expect(detail?.demo.poster).toBe('/tool-media/kv-capsules-pti/kv-capsules-pti-poster.jpg');
+    expect(detail?.links.some(link => link.label === 'Read paper' && link.href.endsWith('.pdf'))).toBe(true);
+    expect(detailText).toContain('13.8x faster');
+    expect(detailText).toContain('14.2 minutes');
+    expect(detailText).toContain('3.28 hours');
+    expect(detailText).toContain('100/100');
+    expect(detailText).toContain('0 leaks');
+    expect(detailText).toContain('selected repeated-work stream');
+    expect(detailText).toContain('not a prompt-identical');
   });
 
   it('attaches ready previews for tools that have public product surfaces', () => {
