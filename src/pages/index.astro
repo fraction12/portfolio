@@ -6,14 +6,25 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import FlagshipWorkCard from '../components/FlagshipWorkCard.astro';
 import WritingBlock from '../components/WritingBlock.astro';
-import SectionHead from '../components/SectionHead.astro';
 import Contact from '../components/Contact.astro';
-import { flagshipWorkDetails, flagshipWorkProof } from '../config/featured-work';
+import { getToolDetail, type ToolDetail } from '../config/tool-details';
 import { loadSignalData } from '../lib/data';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 
 const data = await loadSignalData();
+const homeWorkSlugs = ['openspec-studio', 'tradespec', 'potato'] as const;
+const homeWorkDetails = homeWorkSlugs
+  .map(slug => getToolDetail(slug))
+  .filter((detail): detail is ToolDetail => Boolean(detail));
+const homeWorkProof: Record<string, string> = {
+  'openspec-studio':
+    'A visual workbench for spec-driven development: changes, tasks, validation, archive readiness, and runner state in one place.',
+  tradespec:
+    'Customer-facing AI workflow for estimating teams, with evidence-linked outputs and a clear private-alpha boundary.',
+  potato:
+    'A local multi-agent cockpit for running Codex, Claude Code, and CLI agents with roles, shared task state, and project-aware panes.',
+};
 
 ---
 
@@ -27,32 +38,37 @@ const data = await loadSignalData();
   <div class="page-shell home-shell">
     <Hero github={data.github} />
 
-    <section id="work" class="section-split" data-work-section>
-      <SectionHead name="Work" meta="Selected builds that show the range: product workflow, open-source infrastructure, and tools for evaluating what gets shipped." />
-      <div class="section-split__content home-flagship">
+    <section id="work" class="home-work-section" data-work-section data-home-work-section>
+      <div class="home-flagship">
+        <h2 class="home-section-title" data-home-work-slot>Highlighted work</h2>
         <div class="home-flagship__grid">
-          {flagshipWorkDetails.map(detail => (
-            <FlagshipWorkCard
-              detail={detail}
-              proof={flagshipWorkProof[detail.slug] ?? detail.summary}
-            />
+          {homeWorkDetails.map(detail => (
+            <div class="home-flagship__slot" data-home-work-slot>
+              <FlagshipWorkCard
+                detail={detail}
+                proof={homeWorkProof[detail.slug] ?? detail.summary}
+              />
+            </div>
           ))}
         </div>
-        <a class="text-link" href="/tools">See the broader work catalog</a>
       </div>
     </section>
 
-    <section id="writing" class="section-split">
-      <SectionHead name="Writing" meta="Notes on product work, AI systems, and what becomes clearer after shipping." />
-      <div class="section-split__content">
-        <WritingBlock essays={data.essays} limit={3} />
+    <section id="writing" class="home-writing-section" data-home-scroll-section>
+      <div class="home-writing">
+        <h2 class="home-section-title" data-home-scroll-slot>Writing</h2>
+        <div data-home-scroll-slot>
+          <WritingBlock essays={data.essays} limit={3} />
+        </div>
       </div>
     </section>
 
-    <section id="contact" class="section-split">
-      <SectionHead name="Contact" meta="A direct way to reach me." />
-      <div class="section-split__content">
-        <Contact />
+    <section id="contact" class="home-contact-section" data-home-scroll-section>
+      <div class="home-contact">
+        <h2 class="home-section-title" data-home-scroll-slot>Contact</h2>
+        <div data-home-scroll-slot>
+          <Contact />
+        </div>
       </div>
     </section>
   </div>
@@ -64,36 +80,66 @@ const data = await loadSignalData();
     z-index: var(--z-content);
   }
 
+  .home-work-section {
+    padding: clamp(1.5rem, 4vw, 3rem) 0 var(--section-pad);
+  }
+
   .home-flagship {
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
+  }
+
+  .home-section-title {
+    font-size: clamp(0.95rem, 1.4vw, 1.12rem);
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-align: center;
   }
 
   .home-flagship__grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(16rem, 1fr));
     gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
   }
 
-  .text-link {
-    display: inline-flex;
-    justify-self: start;
-    margin-top: 1rem;
-    color: var(--signal);
-    font-size: var(--type-small-size);
-    font-weight: 700;
-    text-decoration: none;
+  .home-flagship__grid :global(.flagship-card) {
+    height: 100%;
   }
 
-  .text-link:hover {
-    color: var(--signal-hov);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  .home-flagship__slot {
+    display: grid;
+    scroll-snap-align: start;
   }
 
-  @media (max-width: 760px) {
-    .home-flagship__grid {
-      grid-template-columns: 1fr;
-    }
+  .home-writing-section {
+    padding: var(--section-pad) 0;
+  }
+
+  .home-writing {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .home-contact-section {
+    padding: var(--section-pad) 0;
+  }
+
+  .home-contact {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .home-contact :global(.contact) {
+    justify-items: center;
+  }
+
+  .home-contact :global(.contact .btn) {
+    justify-self: center;
   }
 </style>

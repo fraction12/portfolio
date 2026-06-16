@@ -3,29 +3,19 @@ import GithubActivity from './GithubActivity.astro';
 import type { GithubSnapshot } from '../lib/data';
 
 interface Props {
-  primary?: { label: string; href: string };
-  secondary?: { label: string; href: string };
   github?: GithubSnapshot;
 }
-const {
-  primary = { label: 'View the work', href: '/tools' },
-  secondary = { label: 'Read the writing', href: '#writing' },
-  github,
-} = Astro.props;
+const { github } = Astro.props;
 ---
 
 <header class="intro" data-portfolio-motion-root>
   <div class="intro__content">
-    <p class="role" data-motion-item>Product Manager / Builder</p>
     <h1 class="name" data-motion-item>Dushyant Garg</h1>
-    <p class="summary" data-motion-item>
-      I build practical AI products and product systems for messy workflows,
-      fast-moving teams, and users who need useful software more than impressive demos.
-    </p>
+    <p class="summary" data-motion-item>Product Manager and Builder</p>
 
     <div class="ctas" data-motion-item>
-      <a class="btn btn--primary" href={primary.href}>{primary.label}</a>
-      <a class="btn btn--ghost" href={secondary.href}>{secondary.label}</a>
+      <a class="btn btn--primary" href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="btn btn--ghost" href="https://github.com/fraction12" target="_blank" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
 
@@ -45,21 +35,15 @@ const {
     align-items: center;
     padding: clamp(4.5rem, 10vw, 7rem) 0 clamp(3rem, 7vw, 5rem);
   }
-  .intro__content { min-width: 0; }
-  .role {
-    font-family: var(--font-display);
-    font-size: var(--type-small-size);
-    font-weight: 600;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--dim);
-    margin-bottom: 16px;
+  .intro__content {
+    min-width: 0;
   }
   .name {
     font-family: var(--font-display);
     font-size: var(--type-hero-name-size);
     font-weight: 700;
     letter-spacing: 0;
+    word-spacing: -0.08em;
     line-height: 0.98;
     color: var(--ivory);
     margin-bottom: 24px;
@@ -77,7 +61,11 @@ const {
     gap: 10px;
     flex-wrap: wrap;
   }
+  .ctas .btn {
+    white-space: nowrap;
+  }
   .intro__aside {
+    position: relative;
     grid-column: 2;
     grid-row: 1;
     justify-self: stretch;
@@ -121,7 +109,12 @@ const {
       gap: 1.2rem;
       padding: 3.25rem 0 2.5rem;
     }
+    .intro__content {
+      order: 1;
+    }
     .intro__aside {
+      grid-column: 1;
+      grid-row: auto;
       order: 2;
       justify-self: start;
       justify-items: start;

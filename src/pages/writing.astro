@@ -19,9 +19,8 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
   <div class="page-shell">
     <div class="page-split">
       <PageHeader
-        kicker="Writing"
+        backButton
         title="Notes from the work"
-        lede="Essays on product work, AI systems, and what becomes clearer after shipping."
       />
     </div>
 
@@ -40,6 +39,11 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 </Layout>
 
 <style>
+  .page-split {
+    padding: clamp(1.6rem, 3.6vw, 2.8rem) 0 1.2rem;
+    border-bottom: 0;
+  }
+
   .writing-section {
     padding: 0 0 var(--section-pad);
   }

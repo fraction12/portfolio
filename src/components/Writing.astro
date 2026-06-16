@@ -17,7 +17,7 @@ const hasError = essays.length === 0;
 
 <div id="writing">
   {visiblePosts.length > 0 ? (
-    <div class="writing-list">
+    <div class="writing-list" data-writing-list>
       {visiblePosts.map(post => <WritingRow essay={post} />)}
     </div>
   ) : (

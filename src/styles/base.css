@@ -172,6 +172,23 @@ pre {
   margin-bottom: 0.85rem;
 }
 
+.page-header__back {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 0.85rem;
+  color: var(--dim);
+  font-size: var(--type-small-size);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.page-header__back:hover,
+.page-header__back:focus-visible {
+  color: var(--signal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .page-header__title {
   font-size: var(--type-page-title-size);
   font-weight: 700;

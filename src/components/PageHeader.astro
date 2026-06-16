@@ -1,10 +1,11 @@
 ---
 interface Props {
   kicker?: string;
+  backButton?: boolean;
   title: string;
   lede?: string;
 }
-const { kicker, title, lede } = Astro.props;
+const { kicker, backButton = false, title, lede } = Astro.props;
 
 function escapeHtml(s: string): string {
   return s
@@ -16,7 +17,15 @@ const ledeHtml = lede && escapeHtml(lede).replace(/\*(.+?)\*/g, '<em>$1</em>');
 ---
 
 <header class="page-header">
-  {kicker && <p class="page-header__kicker">{kicker}</p>}
+  {backButton ? (
+    <a
+      class="page-header__back"
+      href="/"
+      onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+    >Back</a>
+  ) : kicker && (
+    <p class="page-header__kicker">{kicker}</p>
+  )}
   <h1 class="page-header__title" set:html={titleHtml}></h1>
   {ledeHtml && <p class="page-header__lede" set:html={ledeHtml}></p>}
 </header>

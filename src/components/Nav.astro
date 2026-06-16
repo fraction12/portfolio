@@ -3,13 +3,41 @@ interface Props { current?: 'home' | 'tools' | 'writing' | 'contact' }
 const { current = 'home' } = Astro.props;
 
 const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
+  { href: '/', label: 'Home', key: 'home' },
   { href: '/tools', label: 'Work', key: 'tools' },
   { href: '/writing', label: 'Writing', key: 'writing' },
   { href: '/#contact', label: 'Contact', key: 'contact' }
 ];
+
+const fieldColumns = 54;
+const fieldRows = 5;
+const fieldMarks = Array.from({ length: fieldColumns * fieldRows }, (_, index) => {
+  const column = index % fieldColumns;
+  const row = Math.floor(index / fieldColumns);
+  const x = (column / (fieldColumns - 1)) * 100;
+  const y = (row / (fieldRows - 1)) * 100;
+  const size = 1.3 + ((index * 11) % 3) * 0.18;
+  const opacity = 0.08 + ((index * 7) % 5) * 0.008;
+  const tone = index % 41 === 0 ? 'signal' : index % 17 === 0 ? 'warm' : 'line';
+
+  return { index, x, y, size, opacity, tone };
+});
 ---
 
 <nav class="top-nav">
+  <div class="top-nav__field" aria-hidden="true" data-nav-field>
+    {fieldMarks.map(mark => (
+      <span
+        class={`top-nav__field-dot top-nav__field-dot--${mark.tone}`}
+        data-nav-field-dot
+        data-x={mark.x}
+        data-y={mark.y}
+        data-opacity={mark.opacity}
+        style={`--field-x: ${mark.x}%; --field-y: ${mark.y}%; --field-size: ${mark.size}px; --field-opacity: ${mark.opacity}; --field-index: ${mark.index};`}
+      />
+    ))}
+  </div>
+
   <div class="top-nav__inner">
     <a class="top-nav__brand" href="/">Dushyant Garg</a>
     <div class="top-nav__links">

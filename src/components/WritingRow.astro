@@ -11,7 +11,7 @@ function shortDate(d: Date): string {
 }
 ---
 
-<a class="w-row" href={href} target="_blank" rel="noopener noreferrer">
+<a class="w-row" href={href} target="_blank" rel="noopener noreferrer" data-writing-row>
   <span class="w-date">{shortDate(essay.publishedAt)}</span>
   <span class="w-title">{essay.title}</span>
   <span class="w-time">{essay.readTimeMinutes} min</span>
