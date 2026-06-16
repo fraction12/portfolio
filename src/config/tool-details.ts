@@ -487,6 +487,47 @@ const overrideBySlug: Record<string, ToolDetailOverride> = {
       ],
     ),
   },
+  'kv-capsules-pti': {
+    tagline: 'Quality-gated attention-state reuse for local tool-using agents.',
+    summary:
+      'KV Capsules + PTI is a research system showing that stable local-agent context can be preserved as reusable hidden attention state instead of repeatedly replayed or summarized as text.',
+    audience:
+      'Agent-system builders exploring faster local runtimes, stable tool contracts, and alternatives to text-threaded context replay.',
+    problem:
+      'Local agents repeatedly pay to reread stable context: tool schemas, runtime rules, interface contracts, and task protocols that often do not change between related runs.',
+    statusNote:
+      'Research artifact and paper, not an installable production tool. Results are from a selected repeated-work stream on a local Gemma 4 12B setup.',
+    demo: {
+      type: 'video',
+      status: 'ready',
+      label: 'KV Capsules + PTI research explainer',
+      duration: '65 sec',
+      src: '/tool-media/kv-capsules-pti/kv-capsules-pti-explainer.mp4',
+      poster: '/tool-media/kv-capsules-pti/kv-capsules-pti-poster.jpg',
+      caption:
+        'A short visual explainer for preserving stable local-agent context as reusable KV state, then appending fresh task tails through PTI.',
+    },
+    links: [
+      { label: 'Read paper', href: '/tool-media/kv-capsules-pti/quality-gated-attention-state-reuse.pdf' },
+    ],
+    sections: sections(
+      [
+        'A KV Capsule harness that validates a stable prefix once, restores the resulting attention state, and appends fresh task tails without replaying the whole tool context as text.',
+        'A Programmatic Tool Interface layer that keeps plans and tool calls structured, plus a control ladder for comparing native append, restored KV, fresh-tail, and wrong-capsule behavior.',
+        'A BFCL-derived repeated-work evaluation stream designed to test whether stable local-agent context can be reused without leaking the wrong task state.',
+      ],
+      [
+        'Stable tool and runtime context becomes a quality-gated capsule. When a related task arrives, the system restores that hidden KV state and appends only the fresh visible tail.',
+        'PTI constrains the model-side route through structured tool plans instead of leaving every call to free-form text.',
+        'The evaluation compares restored-state execution against a tested regular text-threaded local-agent harness using the same local model family, then checks negative controls for leakage.',
+      ],
+      [
+        'On the selected repeated-work stream, KV Capsules + PTI completed the 100-case run 13.8x faster: 14.2 minutes versus 3.28 hours for the tested regular text-threaded local-agent harness.',
+        'Restored KV + PTI completed 100/100 selected cases, while fresh-tail and wrong-capsule controls produced 0 leaks in the checked controls.',
+        'This is a practical runtime comparison, not a prompt-identical benchmark or official BFCL leaderboard claim. The result is intentionally scoped to the selected cohort, local Gemma 4 12B setup, and runtime contract tested in the paper.',
+      ],
+    ),
+  },
   explain: {
     tagline: 'Architecture documentation generated from a TypeScript/JavaScript codebase.',
     summary:
