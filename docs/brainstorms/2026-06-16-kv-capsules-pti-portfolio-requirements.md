@@ -54,7 +54,7 @@ Use the final explainer video first.
 
 Media:
 
-- Source video: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/renders/kv-pti-research-explainer-runway-assisted-final.mp4`
+- Source video: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/renders/kv-pti-research-explainer-v8d-timeline-fixed.mp4`
 - Poster candidate: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/snapshots/contact-sheet.jpg` or a single selected frame.
 - PDF: `research/02-quality-gated-stateful-kv-reuse/arxiv/main.pdf`
 

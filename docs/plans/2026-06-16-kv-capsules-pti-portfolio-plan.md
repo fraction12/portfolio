@@ -50,7 +50,7 @@ Files:
 
 Source assets:
 
-- Video source from the research repo: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/renders/kv-pti-research-explainer-runway-assisted-final.mp4`
+- Video source from the research repo: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/renders/kv-pti-research-explainer-v8d-timeline-fixed.mp4`
 - Poster source candidate from the research repo: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/snapshots/contact-sheet.jpg`
 - PDF source from the research repo: `research/02-quality-gated-stateful-kv-reuse/arxiv/main.pdf`
 
