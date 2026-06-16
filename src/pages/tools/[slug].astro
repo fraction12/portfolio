@@ -26,7 +26,6 @@ const detailOgImages: Record<string, string> = {
   'spec-ui': '/og/spec-ui.png',
 };
 const hasReadyMedia = detail.demo.status === 'ready' && Boolean(detail.demo.src || detail.demo.embedUrl);
-const mediaHeading = detail.demo.type === 'image' ? 'Preview' : 'Demo';
 const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch demo';
 ---
 
@@ -40,11 +39,22 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
     <a class="back-link" href="/tools">Back to work</a>
 
     <header class="detail-hero">
-      <div class="detail-hero__main">
-        <p class="kicker">{detail.categoryLabel}</p>
+      <div class="detail-hero__intro">
         <h1>{artifact.name}</h1>
         <p class="tagline">{detail.tagline}</p>
-        <p class="summary">{detail.summary}</p>
+        <div class="detail-link-tags" aria-label={`${artifact.name} links`}>
+          {hasReadyMedia && <a class="detail-link-tag" href="#media">{mediaCtaLabel}</a>}
+          {detail.links.map(link => (
+            <a
+              class="detail-link-tag"
+              href={link.href}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
       </div>
 
       <aside class="detail-facts" aria-label={`${artifact.name} project facts`}>
@@ -63,92 +73,96 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
       </aside>
     </header>
 
-    <section class="detail-section" aria-labelledby="links-heading">
-      <div class="section-label">
-        <h2 id="links-heading">Links</h2>
-      </div>
-      <div class="section-body link-row">
-        {hasReadyMedia && <a class="btn btn--primary" href="#media">{mediaCtaLabel}</a>}
-        {detail.links.map(link => (
-          <a
-            class="btn btn--ghost"
-            href={link.href}
-            target={link.external ? '_blank' : undefined}
-            rel={link.external ? 'noopener noreferrer' : undefined}
-          >
-            {link.label}
-          </a>
-        ))}
-        {detail.links.length === 0 && (
-          <p class="quiet-note">No public repository or product surface is attached yet.</p>
-        )}
-      </div>
-    </section>
+    {hasReadyMedia ? (
+      <section class="detail-scroll-stage" data-detail-scroll-stage>
+        <div class="detail-scroll-pin">
+          <div class="detail-copy-viewport">
+            <div class="detail-copy" data-detail-copy>
+              <section class="detail-section" aria-labelledby="problem-heading">
+                <div class="section-label">
+                  <h2 id="problem-heading">Problem</h2>
+                </div>
+                <div class="section-body prose-block">
+                  <p>{detail.problem}</p>
+                </div>
+              </section>
 
-    {hasReadyMedia && (
-      <section id="media" class="detail-section" aria-labelledby="media-heading">
-        <div class="section-label">
-          <h2 id="media-heading">{mediaHeading}</h2>
-        </div>
-        <div class="section-body">
-          {detail.demo.type === 'video' && detail.demo.embedUrl && (
-            <a class="media-frame media-frame--link" href={detail.demo.embedUrl} target="_blank" rel="noopener noreferrer">
-              <span class="play-mark" aria-hidden="true"></span>
-              <span>
-                <strong>{detail.demo.label}</strong>
-                <small>{detail.demo.caption}</small>
-              </span>
-            </a>
-          )}
+              <section class="detail-section" aria-labelledby="story-heading">
+                <div class="section-label">
+                  <h2 id="story-heading">Story</h2>
+                </div>
+                <div class="section-body story-grid">
+                  {detail.sections.map(section => (
+                    <article>
+                      <h3>{section.title}</h3>
+                      {section.body.map(paragraph => <p>{paragraph}</p>)}
+                    </article>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
 
-          {detail.demo.type === 'video' && detail.demo.src && (
-            <figure class="media-frame">
-              <video controls preload="none" playsinline poster={detail.demo.poster} aria-label={detail.demo.label}>
-                <source src={detail.demo.src} type="video/mp4" />
-                {detail.demo.transcript && <track kind="descriptions" srclang="en" label="Transcript" src={detail.demo.transcript} />}
-              </video>
-              <figcaption>{detail.demo.caption}</figcaption>
-            </figure>
-          )}
+          <aside id="media" class="detail-preview" aria-label={detail.demo.label} data-detail-preview>
+            {detail.demo.type === 'video' && detail.demo.embedUrl && (
+              <a class="media-frame media-frame--link" href={detail.demo.embedUrl} target="_blank" rel="noopener noreferrer" data-detail-preview-media>
+                <span class="play-mark" aria-hidden="true"></span>
+                <span>
+                  <strong>{detail.demo.label}</strong>
+                  <small>{detail.demo.caption}</small>
+                </span>
+              </a>
+            )}
 
-          {detail.demo.type === 'image' && detail.demo.src && (
-            <figure class="media-frame media-frame--image">
-              <img src={detail.demo.src} alt={detail.demo.alt ?? detail.demo.label} width="1280" height="800" loading="lazy" decoding="async" />
-              <figcaption>{detail.demo.caption}</figcaption>
-            </figure>
-          )}
+            {detail.demo.type === 'video' && detail.demo.src && (
+              <figure class="media-frame" data-detail-preview-media>
+                <video controls preload="none" playsinline poster={detail.demo.poster} aria-label={detail.demo.label}>
+                  <source src={detail.demo.src} type="video/mp4" />
+                  {detail.demo.transcript && <track kind="descriptions" srclang="en" label="Transcript" src={detail.demo.transcript} />}
+                </video>
+              </figure>
+            )}
+
+            {detail.demo.type === 'image' && detail.demo.src && (
+              <figure class="media-frame media-frame--image" data-detail-preview-media>
+                <img src={detail.demo.src} alt={detail.demo.alt ?? detail.demo.label} width="1280" height="800" loading="lazy" decoding="async" />
+              </figure>
+            )}
+          </aside>
         </div>
       </section>
+    ) : (
+      <>
+        <section class="detail-section" aria-labelledby="problem-heading">
+          <div class="section-label">
+            <h2 id="problem-heading">Problem</h2>
+          </div>
+          <div class="section-body prose-block">
+            <p>{detail.problem}</p>
+          </div>
+        </section>
+
+        <section class="detail-section" aria-labelledby="story-heading">
+          <div class="section-label">
+            <h2 id="story-heading">Story</h2>
+          </div>
+          <div class="section-body story-grid">
+            {detail.sections.map(section => (
+              <article>
+                <h3>{section.title}</h3>
+                {section.body.map(paragraph => <p>{paragraph}</p>)}
+              </article>
+            ))}
+          </div>
+        </section>
+      </>
     )}
-
-    <section class="detail-section" aria-labelledby="problem-heading">
-      <div class="section-label">
-        <h2 id="problem-heading">Problem</h2>
-      </div>
-      <div class="section-body prose-block">
-        <p>{detail.problem}</p>
-      </div>
-    </section>
-
-    <section class="detail-section" aria-labelledby="story-heading">
-      <div class="section-label">
-        <h2 id="story-heading">Story</h2>
-      </div>
-      <div class="section-body story-grid">
-        {detail.sections.map(section => (
-          <article>
-            <h3>{section.title}</h3>
-            {section.body.map(paragraph => <p>{paragraph}</p>)}
-          </article>
-        ))}
-      </div>
-    </section>
   </div>
 </Layout>
 
 <style>
   .detail-shell {
-    padding-bottom: clamp(4rem, 8vw, 7rem);
+    padding-bottom: 0;
   }
 
   .back-link {
@@ -168,38 +182,62 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
 
   .detail-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 360px);
-    gap: clamp(2rem, 6vw, 5rem);
+    gap: clamp(2.5rem, 5vw, 4rem);
     padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(3rem, 6vw, 4.5rem);
-    border-bottom: 1px solid var(--line);
   }
 
-  .detail-hero__main {
+  .detail-hero__intro {
     min-width: 0;
-  }
-
-  .kicker {
-    color: var(--dim);
-    font-size: var(--type-small-size);
-    font-weight: 700;
-    margin-bottom: 1rem;
+    text-align: center;
   }
 
   .detail-hero h1 {
     font-size: clamp(2.85rem, 7vw, 5.55rem);
     line-height: 0.98;
-    max-width: min(100%, 12ch);
-    margin-bottom: 1.4rem;
+    max-width: min(100%, 14ch);
+    margin: 0 auto 1.4rem;
     overflow-wrap: anywhere;
     text-wrap: balance;
   }
 
   .tagline {
-    color: var(--ivory);
+    color: var(--ivory-2);
     font-size: clamp(1.25rem, 2.2vw, 1.7rem);
     line-height: 1.45;
-    max-width: 34ch;
-    margin-bottom: 1.35rem;
+    max-width: 44ch;
+    margin: 0 auto;
+    text-wrap: balance;
+  }
+
+  .detail-link-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.55rem;
+    max-width: 48rem;
+    margin: 1.35rem auto 0;
+  }
+
+  .detail-link-tag {
+    display: inline-flex;
+    min-height: 2.1rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.42rem 0.72rem;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ivory) 6%, transparent);
+    color: var(--ivory-2);
+    font-size: var(--type-small-size);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .detail-link-tag:hover {
+    border-color: var(--signal);
+    color: var(--ivory);
+    background: color-mix(in srgb, var(--signal) 13%, transparent);
   }
 
   .summary {
@@ -211,6 +249,8 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
 
   .detail-facts {
     display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
     align-content: start;
     border-top: 1px solid var(--line);
   }
@@ -253,18 +293,6 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
     min-width: 0;
   }
 
-  .link-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
-  }
-
-  .quiet-note {
-    color: var(--dim);
-    font-size: var(--type-small-size);
-  }
-
   .prose-block p,
   .story-grid p {
     color: var(--ivory-2);
@@ -276,13 +304,105 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
     font-size: clamp(1.06rem, 1.7vw, 1.22rem);
   }
 
+  .detail-scroll-stage {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    min-height: var(--detail-stage-height, 320vh);
+    border-bottom: 0;
+    --detail-preview-left: 50vw;
+    --detail-preview-top: 50%;
+    --detail-preview-width: min(72vw, 1040px);
+    --detail-copy-y: 0px;
+    --detail-copy-opacity: 0;
+  }
+
+  :global(.page-main:has(.detail-shell)) {
+    padding-bottom: 0;
+  }
+
+  :global(.page-main:has(.detail-shell) + .site-footer) {
+    margin-top: 0;
+    border-top: 0;
+  }
+
+  .detail-scroll-pin {
+    position: sticky;
+    top: var(--layout-nav-h);
+    min-height: calc(100vh - var(--layout-nav-h));
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .detail-copy-viewport {
+    position: absolute;
+    top: 50%;
+    left: max(var(--gutter), calc((100vw - var(--layout-max-w)) / 2 + var(--gutter)));
+    z-index: 1;
+    width: min(30vw, 34rem);
+    min-width: 0;
+    max-height: min(74vh, 44rem);
+    overflow: hidden;
+    opacity: var(--detail-copy-opacity, 0);
+    transform: translateY(-50%);
+    pointer-events: var(--detail-copy-pointer, none);
+  }
+
+  .detail-copy {
+    min-width: 0;
+    transform: translateY(var(--detail-copy-y, 0px));
+    will-change: transform;
+  }
+
+  .detail-copy .detail-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: clamp(1.5rem, 4vw, 3rem) 0;
+  }
+
+  .detail-copy .detail-section:first-child {
+    padding-top: 0;
+  }
+
+  .detail-copy .section-label h2 {
+    color: var(--dim);
+    font-size: var(--type-small-size);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .detail-preview {
+    position: absolute;
+    top: var(--detail-preview-top);
+    left: var(--detail-preview-left);
+    z-index: 2;
+    width: var(--detail-preview-width);
+    min-width: 0;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    will-change: left, width;
+  }
+
+  .detail-scroll-stage[data-detail-preview-ready='true'] {
+    --detail-copy-opacity: 1;
+    --detail-copy-pointer: auto;
+  }
+
+  .detail-scroll-stage[data-detail-preview-ready='true'] .media-frame {
+    will-change: transform, opacity, filter;
+  }
+
+  html[data-portfolio-motion='enhanced'] .detail-scroll-stage:not([data-detail-preview-ready='true']) [data-detail-preview-media] {
+    opacity: 0.94;
+    filter: blur(0px);
+  }
+
   .media-frame {
     display: grid;
     overflow: hidden;
-    border: 1px solid var(--line);
-    background:
-      linear-gradient(135deg, color-mix(in srgb, var(--ink-2) 74%, transparent), var(--ink)),
-      var(--ink-2);
     color: var(--ivory);
   }
 
@@ -290,32 +410,29 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
   .media-frame img {
     display: block;
     width: 100%;
+    height: auto;
+    max-height: calc(100vh - var(--layout-nav-h) - 2rem);
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center;
-    background: var(--ink-1);
   }
 
   .media-frame--image img {
     object-fit: contain;
   }
 
-  .media-frame figcaption {
-    padding: 0.85rem 1rem 1rem;
-    color: var(--dim);
-    font-size: var(--type-small-size);
-  }
-
   .media-frame--link {
     grid-template-columns: 88px minmax(0, 1fr);
     gap: clamp(1rem, 4vw, 2rem);
     align-items: end;
-    padding: clamp(1.25rem, 4vw, 2rem);
+    max-width: 58rem;
+    margin: 0 auto;
+    padding: clamp(0.5rem, 2vw, 1rem) 0;
     text-decoration: none;
   }
 
   .media-frame--link:hover {
-    border-color: var(--signal);
+    color: var(--signal);
   }
 
   .media-frame h3,
@@ -381,14 +498,75 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
     margin-top: 0.6rem;
   }
 
-  @media (max-width: 800px) {
-    .detail-hero,
+  @media (max-width: 1100px), (max-height: 680px) {
+    .detail-scroll-stage {
+      width: auto;
+      margin-left: 0;
+      margin-right: 0;
+      min-height: auto;
+      --detail-copy-opacity: 1;
+      padding: clamp(2.25rem, 6vw, 4rem) 0 clamp(3rem, 7vw, 5rem);
+      border-bottom: 0;
+    }
+
+    .detail-scroll-pin {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(2rem, 8vw, 3rem);
+      min-height: auto;
+      overflow: visible;
+      padding: 0;
+    }
+
+    .detail-copy-viewport {
+      position: static;
+      width: auto;
+      max-height: none;
+      overflow: visible;
+      opacity: 1;
+      transform: none;
+      order: 2;
+    }
+
+    .detail-copy,
+    .detail-preview {
+      transform: none;
+    }
+
+    .detail-preview {
+      position: static;
+      width: auto;
+      order: 1;
+    }
+
+    .media-frame video,
+    .media-frame img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: min(62vh, 32rem);
+      margin: 0 auto;
+      aspect-ratio: auto;
+      object-fit: contain;
+    }
+
+    html[data-portfolio-motion='enhanced'] .detail-scroll-stage:not([data-detail-preview-ready='true']) [data-detail-preview-media] {
+      opacity: 1;
+      filter: none;
+    }
+
     .detail-section {
       grid-template-columns: 1fr;
     }
 
     .detail-hero {
       padding-top: 3rem;
+    }
+
+    .detail-facts {
+      grid-template-columns: 1fr;
+      gap: 0;
     }
 
     .detail-hero h1 {
@@ -401,10 +579,4 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
     }
   }
 
-  @media (max-width: 520px) {
-    .link-row .btn {
-      width: 100%;
-      justify-content: center;
-    }
-  }
 </style>

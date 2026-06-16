@@ -7,10 +7,10 @@
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  border: 1px solid var(--ivory);
+  border: 1px solid var(--line-3);
   border-radius: var(--radius-sm);
   background: var(--ivory);
-  color: var(--ink);
+  color: #080807;
   padding: 0.68rem 1rem;
   font-family: var(--font-display);
   font-size: var(--type-small-size);
@@ -27,7 +27,7 @@
 .btn:hover {
   background: var(--signal);
   border-color: var(--signal);
-  color: var(--ink-1);
+  color: #080807;
 }
 
 .btn:disabled,
@@ -40,20 +40,20 @@
 
 .btn--primary {
   background: var(--ivory);
-  color: var(--ink);
+  color: #080807;
   border-color: var(--ivory);
 }
 
 .btn--ghost {
   background: transparent;
   color: var(--ivory);
-  border-color: var(--line-3);
+  border-color: color-mix(in srgb, var(--ivory) 28%, transparent);
 }
 
 .btn--ghost:hover {
-  background: transparent;
-  border-color: var(--ivory);
-  color: var(--ivory);
+  background: var(--signal-dim);
+  border-color: var(--signal);
+  color: var(--signal-hov);
 }
 
 .btn--link {

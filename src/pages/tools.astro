@@ -99,7 +99,6 @@ const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`
       <PageHeader
         kicker="Work"
         title="Builds, products, and systems"
-        lede="Selected products, open-source systems, and experiments with context on what each does, where it stands, and why it matters."
       />
     </div>
 
@@ -144,6 +143,11 @@ const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`
 </Layout>
 
 <style>
+  .page-split {
+    padding: clamp(1.6rem, 3.6vw, 2.8rem) 0 1.2rem;
+    border-bottom: 0;
+  }
+
   .catalog-section {
     padding: 0 0 var(--section-pad);
   }

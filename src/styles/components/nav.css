@@ -3,11 +3,11 @@
    ============================================================ */
 .top-nav {
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
   position: sticky;
   top: 0;
   z-index: var(--z-nav);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
 }
 
 .top-nav__inner {

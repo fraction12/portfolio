@@ -1,42 +1,41 @@
 /* ============================================================
    QUIET INDEX TOKENS
-   Editorial, light-first portfolio system.
+   Dark luxury portfolio system.
 
    Theme model:
-     :root -> light editorial default
-     [data-theme="dark"] -> restrained dark mode
+     Dark only.
    ============================================================ */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
   /* Surfaces */
-  --ink:          #f7f4ed;
-  --ink-1:        #ffffff;
-  --ink-2:        #ede8dc;
+  --ink:          #080807;
+  --ink-1:        #0e0d0c;
+  --ink-2:        #171512;
 
   /* Text */
-  --ivory:        #171717;
-  --ivory-2:      #42403b;
-  --dim:          #706c63;
-  --dim-2:        #a7a094;
+  --ivory:        #f5efe5;
+  --ivory-2:      #d8d0c4;
+  --dim:          #9a9287;
+  --dim-2:        #6f675d;
 
   /* Accent */
-  --signal:       #8f4f24;
-  --signal-hov:   #6f3b18;
-  --signal-dim:   rgba(143, 79, 36, 0.10);
-  --signal-glow:  rgba(143, 79, 36, 0.26);
+  --signal:       #ff6a2a;
+  --signal-hov:   #ff9a68;
+  --signal-dim:   rgba(255, 106, 42, 0.12);
+  --signal-glow:  rgba(255, 106, 42, 0.30);
 
   /* Semantic colors, used sparingly */
-  --status-live:  #237a48;
-  --status-agent: #386f5e;
-  --status-hot:   #b23a35;
-  --status-cold:  #3f5f9a;
-  --status-warn:  #9f6c20;
+  --status-live:  #7fb58b;
+  --status-agent: #9fb8b0;
+  --status-hot:   #ff6a2a;
+  --status-cold:  #a2aecb;
+  --status-warn:  #d09a55;
 
   /* Lines */
-  --line:         rgba(23, 23, 23, 0.10);
-  --line-2:       rgba(23, 23, 23, 0.16);
-  --line-3:       rgba(23, 23, 23, 0.34);
+  --line:         rgba(245, 239, 229, 0.11);
+  --line-2:       rgba(245, 239, 229, 0.17);
+  --line-3:       rgba(245, 239, 229, 0.34);
 
   /* Typography */
   --font-display: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
@@ -86,10 +85,10 @@
   --layout-nav-h:        64px;
 
   /* Elevation */
-  --shadow-card-hover:    none;
-  --shadow-connect-hover: none;
-  --surface-card:         rgba(255, 255, 255, 0.44);
-  --surface-raised:       rgba(255, 255, 255, 0.72);
+  --shadow-card-hover:    0 20px 44px rgba(0, 0, 0, 0.32);
+  --shadow-connect-hover: 0 16px 34px rgba(0, 0, 0, 0.24);
+  --surface-card:         rgba(255, 255, 255, 0.035);
+  --surface-raised:       rgba(255, 255, 255, 0.055);
 
   /* Motion */
   --motion-fast: 0.16s;
@@ -102,37 +101,6 @@
   --z-nav:      100;
   --z-overlay:  200;
   --z-tooltip:  300;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --ink:          #191713;
-  --ink-1:        #211e19;
-  --ink-2:        #2b261f;
-
-  --ivory:        #f5efe5;
-  --ivory-2:      #d2cabd;
-  --dim:          #a0988c;
-  --dim-2:        #777064;
-
-  --signal:       #d19463;
-  --signal-hov:   #e0aa7d;
-  --signal-dim:   rgba(209, 148, 99, 0.13);
-  --signal-glow:  rgba(209, 148, 99, 0.25);
-
-  --status-live:  #72a783;
-  --status-agent: #81a99d;
-  --status-hot:   #d26a63;
-  --status-cold:  #8094c4;
-  --status-warn:  #c69a55;
-
-  --line:         rgba(243, 239, 230, 0.11);
-  --line-2:       rgba(243, 239, 230, 0.17);
-  --line-3:       rgba(243, 239, 230, 0.34);
-
-  --surface-card:   rgba(255, 255, 255, 0.025);
-  --surface-raised: rgba(255, 255, 255, 0.04);
 }
 
 @media (max-width: 768px) {

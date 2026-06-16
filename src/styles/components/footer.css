@@ -38,17 +38,9 @@
   flex-wrap: wrap;
 }
 
-.site-footer .theme-toggle {
-  margin-left: auto;
-}
-
 @media (max-width: 640px) {
   .site-footer__inner {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .site-footer .theme-toggle {
-    margin-left: 0;
   }
 }

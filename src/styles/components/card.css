@@ -3,7 +3,9 @@
    ============================================================ */
 .card {
   position: relative;
-  background: transparent;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.045), transparent 42%),
+    var(--surface-card);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: var(--space-6);
@@ -14,12 +16,16 @@
   text-decoration: none;
   transition:
     border-color var(--motion-card) ease,
-    background var(--motion-card) ease;
+    background var(--motion-card) ease,
+    box-shadow var(--motion-card) ease,
+    transform var(--motion-card) ease;
 }
 
 .card:hover {
-  border-color: var(--line-3);
+  border-color: color-mix(in srgb, var(--signal) 44%, var(--line-3));
   background: var(--surface-card);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
 
 .card--project,

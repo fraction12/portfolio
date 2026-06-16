@@ -38,7 +38,19 @@ const mediaSrc = detail.demo.status === 'ready'
     grid-template-rows: auto 1fr;
     min-width: 0;
     border: 1px solid var(--line);
-    background: var(--surface-raised);
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.045), transparent 42%),
+      var(--surface-raised);
+    transition:
+      border-color var(--motion-card) ease,
+      box-shadow var(--motion-card) ease,
+      transform var(--motion-card) ease;
+  }
+
+  .flagship-card:hover {
+    border-color: color-mix(in srgb, var(--signal) 42%, var(--line-3));
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
   }
 
   .flagship-card__media {
@@ -55,6 +67,8 @@ const mediaSrc = detail.demo.status === 'ready'
     height: 100%;
     object-fit: cover;
     object-position: top center;
+    filter: saturate(0.84) contrast(1.08);
+    opacity: 0.86;
     transition: transform var(--motion-slow) ease;
   }
 

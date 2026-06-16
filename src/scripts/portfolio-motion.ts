@@ -54,7 +54,7 @@ function markReady(root: ParentNode) {
 
 export function getRevealCandidates(root: ParentNode = document): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR))
-    .filter(el => !el.closest('[data-portfolio-motion-root]'));
+    .filter(el => !el.closest('[data-portfolio-motion-root], [data-detail-scroll-stage]'));
 }
 
 function markRevealCandidates(root: ParentNode) {
@@ -193,13 +193,93 @@ function initScrollFade(root: ParentNode) {
   });
 }
 
+function initDetailScrollStage(root: ParentNode) {
+  const stages = Array.from(root.querySelectorAll<HTMLElement>('[data-detail-scroll-stage]'));
+  if (!stages.length) return;
+
+  const cleanupsForStages: Cleanup[] = [];
+
+  stages.forEach(stage => {
+    const copyViewport = stage.querySelector<HTMLElement>('.detail-copy-viewport');
+    const copy = stage.querySelector<HTMLElement>('[data-detail-copy]');
+    const media = stage.querySelector<HTMLElement>('[data-detail-preview-media]');
+    if (!copyViewport || !copy || !media) return;
+
+    let frame = 0;
+
+    const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+    const easeInOut = (value: number) => {
+      const t = clamp(value);
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+    const mix = (from: number, to: number, progress: number) => from + (to - from) * progress;
+
+    const update = () => {
+      frame = 0;
+
+      if (window.matchMedia('(max-width: 1100px), (max-height: 680px)').matches) {
+        stage.style.removeProperty('--detail-stage-height');
+        stage.style.removeProperty('--detail-preview-left');
+        stage.style.removeProperty('--detail-preview-width');
+        stage.style.removeProperty('--detail-copy-y');
+        stage.dataset.detailPreviewReady = 'true';
+        return;
+      }
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const copyScrollDistance = Math.max(0, copy.scrollHeight - copyViewport.clientHeight);
+      const slotDistance = viewportHeight * 1.05;
+      const copyDistance = Math.max(copyScrollDistance, viewportHeight * 0.9);
+      const stageHeight = viewportHeight + slotDistance + copyDistance;
+      stage.style.setProperty('--detail-stage-height', `${Math.round(stageHeight)}px`);
+
+      const rect = stage.getBoundingClientRect();
+      const scrollDistance = Math.max(1, stageHeight - viewportHeight);
+      const progress = clamp(-rect.top / scrollDistance);
+      const slotStart = 0.18;
+      const slotEnd = 0.46;
+      const slotProgress = easeInOut((progress - slotStart) / (slotEnd - slotStart));
+      const copyProgress = clamp((progress - slotEnd) / (1 - slotEnd));
+      const initialWidth = Math.min(viewportWidth * 0.72, viewportHeight * 1.42, 1040);
+      const finalWidth = Math.min(viewportWidth * 0.54, viewportHeight * 1.22, 920);
+      const finalLeft = viewportWidth - 14 - finalWidth / 2;
+      const left = mix(viewportWidth / 2, finalLeft, slotProgress);
+      const width = mix(initialWidth, finalWidth, slotProgress);
+
+      stage.style.setProperty('--detail-preview-left', `${left.toFixed(1)}px`);
+      stage.style.setProperty('--detail-preview-width', `${width.toFixed(1)}px`);
+      stage.style.setProperty('--detail-copy-y', `${Math.round(-copyScrollDistance * copyProgress)}px`);
+      stage.style.setProperty('--detail-copy-opacity', String(clamp((slotProgress - 0.62) / 0.24)));
+      stage.dataset.detailPreviewReady = slotProgress > 0.7 ? 'true' : 'false';
+    };
+
+    const requestUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    cleanupsForStages.push(() => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+    });
+  });
+
+  addCleanup(() => cleanupsForStages.forEach(cleanup => cleanup()));
+}
+
 export function initPortfolioMotion(root: ParentNode = document) {
   cleanupPortfolioMotion();
 
   const hasMotionRoot = root.querySelector('[data-portfolio-motion-root]');
   const hasMotionCards = root.querySelector('[data-motion-card]');
+  const hasDetailScrollStage = root.querySelector('[data-detail-scroll-stage]');
   const hasRevealCandidates = getRevealCandidates(root).length > 0;
-  if (!hasMotionRoot && !hasMotionCards && !hasRevealCandidates) return;
+  if (!hasMotionRoot && !hasMotionCards && !hasDetailScrollStage && !hasRevealCandidates) return;
 
   markRevealCandidates(root);
   markReady(root);
@@ -217,6 +297,7 @@ export function initPortfolioMotion(root: ParentNode = document) {
   initScrollFade(root);
   initGithubActivityPulse(root);
   initCards(root);
+  initDetailScrollStage(root);
 }
 
 if (typeof document !== 'undefined') {
