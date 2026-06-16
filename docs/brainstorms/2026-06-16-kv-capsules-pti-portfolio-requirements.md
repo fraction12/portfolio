@@ -54,7 +54,7 @@ Use the final explainer video first.
 
 Media:
 
-- Source video: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/renders/kv-pti-research-explainer-v8d-timeline-fixed.mp4`
+- Source video: `/Volumes/MacSSD/Projects/kv-capsules-paper-video/renders/kv-capsules-paper-video-with-background-music-20pct-actual-high.mp4`
 - Poster candidate: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/snapshots/contact-sheet.jpg` or a single selected frame.
 - PDF: `research/02-quality-gated-stateful-kv-reuse/arxiv/main.pdf`
 
@@ -136,4 +136,3 @@ My recommendation: use `human-tools` with status `dev` or `private`. The work is
 - The 13.8x speed result is visible without scrolling far.
 - The copy preserves limitations and does not overclaim.
 - Build passes.
-

@@ -50,7 +50,7 @@ Files:
 
 Source assets:
 
-- Video source from the research repo: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/renders/kv-pti-research-explainer-v8d-timeline-fixed.mp4`
+- Video source from the KV Capsules paper video project: `/Volumes/MacSSD/Projects/kv-capsules-paper-video/renders/kv-capsules-paper-video-with-background-music-20pct-actual-high.mp4`
 - Poster source candidate from the research repo: `research/02-quality-gated-stateful-kv-reuse/kv-pti-research-video/snapshots/contact-sheet.jpg`
 - PDF source from the research repo: `research/02-quality-gated-stateful-kv-reuse/arxiv/main.pdf`
 
@@ -206,4 +206,3 @@ Manual check:
 
 - Should the artifact status be `private` or `dev`? Default to `private` if implementing without more input.
 - Should a separate static paper site be copied later? Defer; the PDF link is enough for this pass.
-
