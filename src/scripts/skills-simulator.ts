@@ -2,6 +2,7 @@
 
 const SLASH_RE = /^\/(\S+)(?:\s+(.*))?$/;
 const MAX_CLIENT_MESSAGES = 12;
+const ERROR_BODY_PREVIEW_CHARS = 180;
 
 function $(selector: string, root: ParentNode = document): HTMLElement | null {
   return root.querySelector(selector);
@@ -174,6 +175,38 @@ function setRunCounter(remaining: { daily: number; hourly: number; global: numbe
   counter.textContent = `${remaining.daily} / day · ${remaining.hourly} / hr · ${remaining.global} global today`;
 }
 
+function compactResponseText(text: string): string {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+function htmlToReadableText(html: string): string {
+  try {
+    return compactResponseText(new DOMParser().parseFromString(html, 'text/html').body.textContent ?? html);
+  } catch {
+    return compactResponseText(html.replace(/<[^>]*>/g, ' '));
+  }
+}
+
+async function getHttpErrorMessage(res: Response): Promise<string> {
+  const status = `HTTP ${res.status}${res.statusText ? ` ${res.statusText}` : ''}`;
+  const contentType = res.headers.get('content-type') ?? '';
+
+  if (contentType.includes('application/json')) {
+    try {
+      const payload = await res.json();
+      const error = typeof payload?.error === 'string' ? payload.error : typeof payload?.message === 'string' ? payload.message : '';
+      if (error) return `${status}: ${error}`;
+    } catch {
+      // Fall through to the generic fallback below.
+    }
+  }
+
+  const body = await res.text().catch(() => '');
+  const readable = contentType.includes('text/html') ? htmlToReadableText(body) : compactResponseText(body);
+  const preview = readable.slice(0, ERROR_BODY_PREVIEW_CHARS);
+  return preview ? `${status}: ${preview}` : `${status}: no response body`;
+}
+
 function trimMessageHistory() {
   if (state.messages.length > MAX_CLIENT_MESSAGES) {
     state.messages = state.messages.slice(-MAX_CLIENT_MESSAGES);
@@ -218,10 +251,10 @@ async function sendMessage(text: string) {
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Unknown error' }));
+      const error = await getHttpErrorMessage(res);
       rollbackUserMessage();
       thinkingEl.remove();
-      appendMessage('assistant', `Error: ${err.error}`);
+      appendMessage('assistant', `Error: ${error}`);
       return;
     }
 

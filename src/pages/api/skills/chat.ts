@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ error: 'Unknown skill' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
-  const apiKey = process.env.OLLAMA_TOKEN;
+  const apiKey = process.env.OLLAMA_API_KEY || process.env.OLLAMA_TOKEN;
   if (!apiKey) {
     return new Response(
       JSON.stringify({ error: 'LLM provider not configured' }),
