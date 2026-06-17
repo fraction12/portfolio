@@ -3,6 +3,7 @@ export const prerender = true;
 
 import Layout from '../../layouts/Layout.astro';
 import { toolDetails, type ToolDetail } from '../../config/tool-details';
+import BackButton from '../../components/BackButton.astro';
 
 export function getStaticPaths() {
   return toolDetails.map(detail => ({
@@ -36,8 +37,7 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
   ogImage={detailOgImages[artifact.slug] ?? '/og/work.png'}
 >
   <div class="page-shell detail-shell">
-    <a class="back-link" href="/tools">Back to work</a>
-
+    <BackButton href="/tools" label="Back" />
     <header class="detail-hero">
       <div class="detail-hero__intro">
         <h1>{artifact.name}</h1>
@@ -162,28 +162,14 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
 
 <style>
   .detail-shell {
+    padding-top: clamp(1.6rem, 3.6vw, 2.8rem);
     padding-bottom: 0;
-  }
-
-  .back-link {
-    display: inline-flex;
-    margin-top: 2rem;
-    color: var(--dim);
-    font-size: var(--type-small-size);
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .back-link:hover {
-    color: var(--signal);
-    text-decoration: underline;
-    text-underline-offset: 3px;
   }
 
   .detail-hero {
     display: grid;
     gap: clamp(2.5rem, 5vw, 4rem);
-    padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(3rem, 6vw, 4.5rem);
+    padding: 0 0 clamp(3rem, 6vw, 4.5rem);
   }
 
   .detail-hero__intro {

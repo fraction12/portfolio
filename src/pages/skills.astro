@@ -1,0 +1,677 @@
+---
+export const prerender = true;
+
+import Layout from '../layouts/Layout.astro';
+import { listSkills, AGENTS, getAgentLabel, normalizeDownloadUrl } from '../lib/skills';
+import BackButton from '../components/BackButton.astro';
+
+const skills = listSkills();
+---
+
+<Layout
+  current="skills"
+  title="Skills Simulator — Dushyant Garg"
+  description="Try agent skills for Codex, Claude Code, Hermes, OpenClaw, Cursor, and Gemini CLI in the browser."
+  ogImage="/og/skills.png"
+>
+  <div class="page-shell skills-shell">
+    <BackButton href="/tools" label="Back" />
+    <div class="simulator" data-simulator>
+      <aside class="simulator__panel simulator__panel--nav" aria-label="Skill navigation">
+        <h2 class="simulator__panel-title">Navigation</h2>
+        <ul class="nav-list" data-nav-list>
+          <li>
+            <button class="nav-button" type="button" data-view="details" data-selected="false">Details</button>
+          </li>
+          <li>
+            <button class="nav-button" type="button" data-view="playground" data-selected="true">Playground</button>
+          </li>
+        </ul>
+
+        <h2 class="simulator__panel-title simulator__panel-title--agents">Agents</h2>
+        <ul class="agent-list" data-agent-list>
+          {AGENTS.map(agent => (
+            <li>
+              <button
+                class="agent-button"
+                type="button"
+                data-agent={agent}
+                data-selected={agent === 'codex' ? 'true' : 'false'}
+              >
+                {getAgentLabel(agent)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      <section class="simulator__stage simulator__stage--details" aria-label="Skill details" data-view-panel="details" hidden>
+        <div class="stage-header">
+          <div class="stage-meta">
+            <span class="stage-badge" data-model-badge>qwen2.5-coder:32b</span>
+          </div>
+          <div class="stage-actions" data-stage-actions>
+            <a class="stage-action" href={skills[0]?.repo} target="_blank" rel="noopener noreferrer" data-repo-link>GitHub</a>
+            <button class="stage-action" type="button" data-download-skill>Download skill</button>
+          </div>
+        </div>
+
+        <div class="details-scroll" data-details-content>
+          {skills.map(skill => (
+            <article class="skill-details" data-skill-details={skill.slug} hidden>
+              <h1 class="skill-details__title">{skill.name}</h1>
+              <p class="skill-details__meta">
+                v{skill.version} · {skill.license} · {skill.author}
+              </p>
+              <p class="skill-details__desc">{skill.description}</p>
+              <pre class="skill-details__body">{skill.content}</pre>
+              <p class="skill-details__agents">
+                <strong>Works with:</strong> {skill.agents.map(getAgentLabel).join(' · ')}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="simulator__stage simulator__stage--playground" aria-label="Chat simulator" data-view-panel="playground">
+        <div class="stage-header">
+          <div class="stage-meta">
+            <span class="stage-badge" data-model-badge>qwen2.5-coder:32b</span>
+            <span class="stage-remaining" data-run-counter>5 / day left</span>
+          </div>
+          <div class="stage-actions" data-stage-actions>
+            <a class="stage-action" href={skills[0]?.repo} target="_blank" rel="noopener noreferrer" data-repo-link>GitHub</a>
+          </div>
+        </div>
+
+        <div class="chat-log" data-chat-log>
+          <div class="chat-welcome">
+            <p class="chat-welcome__title">Welcome to the skill simulator</p>
+            <p class="chat-welcome__hint">Pick a skill on the right, or type a slash command like <code>/html-diagrams</code>.</p>
+            <div class="skill-chips" data-skill-chips>
+              {skills.map(skill => (
+                <button class="skill-chip" type="button" data-skill={skill.slug}>
+                  /{skill.slug}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <form class="chat-form" data-chat-form>
+            <input
+              class="chat-input"
+              type="text"
+              name="message"
+              autocomplete="off"
+              placeholder="Ask the agent to use the selected skill..."
+              aria-label="Message"
+              data-chat-input
+            />
+            <button class="chat-send" type="submit" aria-label="Send" data-chat-send>Send</button>
+            <button class="chat-stop" type="button" aria-label="Stop" data-chat-stop hidden>Stop</button>
+          </form>
+        </div>
+      </section>
+
+      <aside class="simulator__panel simulator__panel--skills" aria-label="Skills">
+        <h2 class="simulator__panel-title">Skills</h2>
+        <ul class="skill-list" data-skill-list>
+          {skills.map(skill => (
+            <li>
+              <button
+                class="skill-card"
+                data-skill={skill.slug}
+                data-repo={skill.repo}
+                data-download-url={normalizeDownloadUrl(skill)}
+                data-selected={false}
+                type="button"
+              >
+                <span class="skill-card__name">{skill.name}</span>
+                <span class="skill-card__desc">{skill.description}</span>
+                <span class="skill-card__agents">{skill.agents.map(getAgentLabel).join(' · ')}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <template data-message-template>
+    <div class="chat-message">
+      <span class="chat-message__role"></span>
+      <div class="chat-message__body"></div>
+      <div class="chat-message__preview" hidden>
+        <iframe class="chat-message__iframe" sandbox="allow-same-origin"></iframe>
+        <details class="chat-message__source">
+          <summary>Source</summary>
+          <pre><code></code></pre>
+        </details>
+      </div>
+    </div>
+  </template>
+
+  <template data-agent-thinking-template>
+    <div class="chat-message chat-message--thinking">
+      <span class="chat-message__role"></span>
+      <div class="chat-message__thinking">
+        <span class="chat-message__spinner" aria-hidden="true"></span>
+        <span class="chat-message__thinking-text">Working...</span>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    import '../scripts/skills-simulator';
+  </script>
+</Layout>
+
+<style>
+  .skills-shell {
+    max-width: none;
+    margin: 0;
+    padding: var(--gutter);
+    height: calc(100vh - var(--layout-nav-h));
+    overflow: hidden;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .simulator {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 260px;
+    gap: 1rem;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .simulator__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem 0.5rem;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--ivory) 2%, transparent);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .simulator__panel-title {
+    flex: 0 0 auto;
+    font-size: var(--type-small-size);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin: 0;
+  }
+
+  .simulator__panel-title--agents {
+    margin-top: 0.75rem;
+  }
+
+  .agent-list,
+  .skill-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .agent-button,
+  .skill-card {
+    width: 100%;
+    text-align: left;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ivory-2);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .agent-button:hover,
+  .skill-card:hover {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--ivory) 4%, transparent);
+  }
+
+  .agent-button[data-selected='true'],
+  .skill-card[data-selected='true'] {
+    border-color: var(--signal);
+    background: color-mix(in srgb, var(--signal) 10%, transparent);
+    color: var(--ivory);
+  }
+
+  .skill-card {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .skill-card__name {
+    font-weight: 700;
+    color: var(--ivory);
+  }
+
+  .skill-card__desc {
+    font-size: var(--type-small-size);
+    line-height: 1.4;
+    color: var(--ivory-2);
+  }
+
+  .skill-card__agents {
+    font-size: 0.7rem;
+    color: var(--dim);
+  }
+
+  .simulator__panel--nav {
+    order: 0;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .nav-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ivory-2);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .nav-button:hover {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--ivory) 4%, transparent);
+  }
+
+  .nav-button[data-selected='true'] {
+    border-color: var(--signal);
+    background: color-mix(in srgb, var(--signal) 10%, transparent);
+    color: var(--ivory);
+  }
+
+  .simulator__stage--details,
+  .simulator__stage--playground {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--ivory) 1%, transparent);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .simulator__stage--details {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .simulator__stage[hidden] {
+    display: none;
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stage-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--type-small-size);
+  }
+
+  .stage-badge {
+    padding: 0.25rem 0.55rem;
+    border: 1px solid var(--line-2);
+    color: var(--dim);
+    font-family: var(--font-mono);
+  }
+
+  .stage-remaining {
+    color: var(--dim);
+  }
+
+  .stage-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .stage-action {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--ivory-2);
+    font-size: var(--type-small-size);
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .stage-action:hover {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .chat-log {
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .chat-log:has(.chat-welcome:only-child) {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .chat-welcome {
+    text-align: center;
+    max-width: 54ch;
+    padding: 2rem 1rem;
+    flex: 0 0 auto;
+  }
+
+  .chat-welcome__title {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    margin-bottom: 0.5rem;
+    color: var(--ivory);
+  }
+
+  .chat-welcome__hint {
+    color: var(--ivory-2);
+    margin-bottom: 1rem;
+  }
+
+  .skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .skill-chip {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--ivory-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-small-size);
+    cursor: pointer;
+  }
+
+  .skill-chip:hover {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .chat-input-area {
+    border-top: 1px solid var(--line);
+    padding: 1rem;
+  }
+
+  .chat-form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--ivory) 4%, transparent);
+    color: var(--ivory);
+    font-size: 1rem;
+  }
+
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--signal);
+  }
+
+  .chat-send {
+    padding: 0.75rem 1.2rem;
+    border: 1px solid var(--signal);
+    background: var(--signal);
+    color: var(--ink);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .chat-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .chat-stop {
+    padding: 0.75rem 1.2rem;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--ivory-2);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .chat-stop:hover {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .chat-message {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--ivory) 2%, transparent);
+    width: 100%;
+  }
+
+  .chat-message--thinking {
+    opacity: 0.75;
+  }
+
+  .chat-message__thinking {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ivory-2);
+  }
+
+  .chat-message__spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--line-2);
+    border-top-color: var(--signal);
+    border-radius: 50%;
+    animation: spinner 0.8s linear infinite;
+  }
+
+  @keyframes spinner {
+    to { transform: rotate(360deg); }
+  }
+
+  .chat-message__thinking-text {
+    font-size: var(--type-small-size);
+  }
+
+  .chat-message__role {
+    font-size: var(--type-small-size);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+  }
+
+  .chat-message__role--user {
+    color: var(--signal);
+  }
+
+  .chat-message__body {
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .chat-message__body code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: color-mix(in srgb, var(--ivory) 8%, transparent);
+    padding: 0.1em 0.3em;
+  }
+
+  .chat-message__preview {
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    padding-top: 0.75rem;
+    min-height: 0;
+  }
+
+  .chat-message__iframe {
+    width: 100%;
+    height: 420px;
+    max-height: 50vh;
+    border: 1px solid var(--line-2);
+    background: #fff;
+    display: block;
+  }
+
+  .details-scroll {
+    overflow-y: auto;
+    padding: 1rem 1.25rem;
+  }
+
+  .skill-details {
+    max-width: 72ch;
+  }
+
+  .skill-details__title {
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    margin-bottom: 0.35rem;
+    color: var(--ivory);
+  }
+
+  .skill-details__meta {
+    font-size: var(--type-small-size);
+    color: var(--dim);
+    margin-bottom: 1rem;
+  }
+
+  .skill-details__desc {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--ivory-2);
+    margin-bottom: 1.25rem;
+  }
+
+  .skill-details__body {
+    line-height: 1.7;
+    color: var(--ivory-2);
+    white-space: pre-wrap;
+    font-family: var(--font-mono);
+    font-size: var(--type-small-size);
+    margin: 0;
+  }
+
+  .skill-details__body p {
+    margin-bottom: 1rem;
+  }
+
+  .skill-details__body ul,
+  .skill-details__body ol {
+    margin: 0.75rem 0 1rem 1.25rem;
+  }
+
+  .skill-details__body li {
+    margin-bottom: 0.35rem;
+  }
+
+  .skill-details__agents {
+    margin-top: 1.5rem;
+    font-size: var(--type-small-size);
+    color: var(--dim);
+  }
+
+  .chat-message__source,
+  .chat-message__source-toggle {
+    margin-top: 0.5rem;
+    font-size: var(--type-small-size);
+    color: var(--dim);
+  }
+
+  .chat-message__source pre,
+  .chat-message__source-toggle pre {
+    margin-top: 0.5rem;
+    max-height: 200px;
+    overflow: auto;
+    background: color-mix(in srgb, var(--ivory) 4%, transparent);
+    padding: 0.75rem;
+  }
+
+  .chat-message__source code,
+  .chat-message__source-toggle code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ivory-2);
+    white-space: pre;
+  }
+
+  @media (max-width: 980px) {
+    .skills-shell {
+      height: auto;
+      overflow: visible;
+      min-height: calc(100vh - var(--layout-nav-h));
+    }
+
+    .simulator {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto minmax(0, 60vh) auto;
+      height: auto;
+    }
+
+    .simulator__panel--nav {
+      order: -1;
+    }
+
+    .simulator__panel--skills {
+      order: 3;
+    }
+
+    .nav-list {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      width: auto;
+    }
+  }
+</style>
