@@ -46,13 +46,16 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
   const r = getRedis();
   const keys = keySegments(ip);
 
-  const DAILY_IP_LIMIT = 50;
-  const HOURLY_IP_LIMIT = 20;
-  const GLOBAL_DAILY_LIMIT = 500;
+  const DAILY_IP_LIMIT = 5;
+  const HOURLY_IP_LIMIT = 2;
+  const GLOBAL_DAILY_LIMIT = 100;
 
   if (!r) {
     // Without Redis we can't enforce real limits across serverless invocations.
-    // Allow through but signal the operator to configure KV.
+    // Keep local development usable, but fail closed in production.
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+      return { allowed: false, reason: 'Rate limiter unavailable. Try again later.' };
+    }
     return { allowed: true, remaining: { daily: DAILY_IP_LIMIT, hourly: HOURLY_IP_LIMIT, global: GLOBAL_DAILY_LIMIT } };
   }
 

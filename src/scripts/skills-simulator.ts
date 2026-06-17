@@ -1,6 +1,7 @@
 // import { getAgentLabel } from '../lib/skills'; // available if needed
 
 const SLASH_RE = /^\/(\S+)(?:\s+(.*))?$/;
+const MAX_CLIENT_MESSAGES = 12;
 
 function $(selector: string, root: ParentNode = document): HTMLElement | null {
   return root.querySelector(selector);
@@ -29,6 +30,22 @@ function escapeHtml(s: string): string {
     .replaceAll("'", '&#39;');
 }
 
+function hardenPreviewHtml(html: string): string {
+  const csp = [
+    "default-src 'none'",
+    "style-src 'unsafe-inline'",
+    'img-src data: blob:',
+    'font-src data:',
+    "base-uri 'none'",
+    "form-action 'none'",
+  ].join('; ');
+  const meta = `<meta http-equiv="Content-Security-Policy" content="${csp}">`;
+  if (/<head[^>]*>/i.test(html)) {
+    return html.replace(/<head([^>]*)>/i, `<head$1>${meta}`);
+  }
+  return `${meta}\n${html}`;
+}
+
 function setView(view: 'details' | 'playground') {
   $$('[data-view-panel]').forEach(panel => {
     panel.hidden = panel.getAttribute('data-view-panel') !== view;
@@ -46,16 +63,20 @@ function setAgent(id: AgentId) {
 }
 
 function setSkill(slug: string | null) {
+  const changed = slug !== state.skill;
   state.skill = slug;
+  if (changed) state.messages = [];
   $$('[data-skill]').forEach(btn => {
     btn.setAttribute('data-selected', btn.getAttribute('data-skill') === slug ? 'true' : 'false');
   });
 
-  const repoLink = $('[data-repo-link]') as HTMLAnchorElement | null;
-  if (repoLink && slug) {
+  if (slug) {
     const skillCard = $(`.skill-card[data-skill="${slug}"]`);
-    const repo = skillCard?.getAttribute('data-repo') || repoLink.href;
-    repoLink.href = repo;
+    $$('[data-repo-link]').forEach(link => {
+      const repoLink = link as HTMLAnchorElement;
+      const repo = skillCard?.getAttribute('data-repo') || repoLink.href;
+      repoLink.href = repo;
+    });
   }
 }
 
@@ -77,12 +98,12 @@ function appendMessage(role: 'user' | 'assistant' | 'system', content: string): 
   return messageEl;
 }
 
-function showThinking(): HTMLElement {
+function showThinking(agent: AgentId): HTMLElement {
   const template = $('[data-agent-thinking-template]') as HTMLTemplateElement;
   const clone = template.content.cloneNode(true) as DocumentFragment;
   const messageEl = clone.querySelector('.chat-message') as HTMLElement;
   const roleEl = clone.querySelector('.chat-message__role') as HTMLElement;
-  roleEl.textContent = state.agent;
+  roleEl.textContent = agent;
   roleEl.classList.add('chat-message__role--agent');
 
   const log = $('[data-chat-log]');
@@ -92,7 +113,7 @@ function showThinking(): HTMLElement {
   return messageEl;
 }
 
-function replaceThinkingWithResult(messageEl: HTMLElement, content: string) {
+function replaceThinkingWithResult(messageEl: HTMLElement, content: string, agent: AgentId, skill: string) {
   // Swap the thinking bubble for the real message template.
   const template = $('[data-message-template]') as HTMLTemplateElement;
   const clone = template.content.cloneNode(true) as DocumentFragment;
@@ -100,14 +121,14 @@ function replaceThinkingWithResult(messageEl: HTMLElement, content: string) {
   const roleEl = clone.querySelector('.chat-message__role') as HTMLElement;
   const bodyEl = clone.querySelector('.chat-message__body') as HTMLElement;
 
-  roleEl.textContent = state.agent;
+  roleEl.textContent = agent;
   roleEl.classList.add('chat-message__role--agent');
   bodyEl.textContent = content;
 
   messageEl.replaceWith(newMessageEl);
 
   // For html-diagrams, try to extract an HTML artifact and render it.
-  if (state.skill === 'html-diagrams') {
+  if (skill === 'html-diagrams') {
     const htmlMatch = content.match(/```html\n?([\s\S]*?)\n?```/);
     const html = htmlMatch ? htmlMatch[1].trim() : content.includes('<!DOCTYPE html>') ? content : '';
     if (html) {
@@ -117,7 +138,7 @@ function replaceThinkingWithResult(messageEl: HTMLElement, content: string) {
       if (preview && iframe && code) {
         preview.hidden = false;
         code.textContent = html;
-        iframe.srcdoc = html;
+        iframe.srcdoc = hardenPreviewHtml(html);
       }
     }
   }
@@ -148,12 +169,27 @@ function setRunCounter(remaining: { daily: number; hourly: number; global: numbe
   counter.textContent = `${remaining.daily} / day · ${remaining.hourly} / hr · ${remaining.global} global today`;
 }
 
+function trimMessageHistory() {
+  if (state.messages.length > MAX_CLIENT_MESSAGES) {
+    state.messages = state.messages.slice(-MAX_CLIENT_MESSAGES);
+  }
+}
+
 async function sendMessage(text: string) {
   const input = $('[data-chat-input]') as HTMLInputElement | null;
   const sendBtn = $('[data-chat-send]') as HTMLButtonElement | null;
   const stopBtn = $('[data-chat-stop]') as HTMLButtonElement | null;
+  const requestAgent = state.agent;
+  const requestSkill = state.skill ?? 'html-diagrams';
 
-  state.messages.push({ role: 'user', content: text });
+  const userMessage = { role: 'user' as const, content: text };
+  const rollbackUserMessage = () => {
+    const index = state.messages.lastIndexOf(userMessage);
+    if (index >= 0) state.messages.splice(index, 1);
+  };
+
+  state.messages.push(userMessage);
+  trimMessageHistory();
   appendMessage('user', text);
   state.streaming = true;
   if (input) input.value = '';
@@ -162,7 +198,7 @@ async function sendMessage(text: string) {
 
   const abortController = new AbortController();
   state.abortController = abortController;
-  const thinkingEl = showThinking();
+  const thinkingEl = showThinking(requestAgent);
 
   try {
     const res = await fetch('/api/skills/chat', {
@@ -170,14 +206,15 @@ async function sendMessage(text: string) {
       signal: abortController.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        agent: state.agent,
-        skill: state.skill ?? 'html-diagrams',
+        agent: requestAgent,
+        skill: requestSkill,
         messages: state.messages,
       }),
     });
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: 'Unknown error' }));
+      rollbackUserMessage();
       thinkingEl.remove();
       appendMessage('assistant', `Error: ${err.error}`);
       return;
@@ -185,6 +222,7 @@ async function sendMessage(text: string) {
 
     const reader = res.body?.getReader();
     if (!reader) {
+      rollbackUserMessage();
       thinkingEl.remove();
       appendMessage('assistant', 'Error: no response stream.');
       return;
@@ -193,6 +231,7 @@ async function sendMessage(text: string) {
     const decoder = new TextDecoder();
     let buffer = '';
     let assistantText = '';
+    let streamError = '';
 
     while (true) {
       if (abortController.signal.aborted) {
@@ -216,25 +255,36 @@ async function sendMessage(text: string) {
           } else if (event.type === 'done' && event.remaining) {
             setRunCounter(event.remaining);
           } else if (event.type === 'error') {
-            assistantText += `\n[Error: ${event.error}]`;
+            streamError = event.error || 'Stream failed';
+            await reader.cancel();
+            break;
           }
         } catch {
           // Ignore malformed SSE lines.
         }
       }
+      if (streamError) break;
     }
 
-    if (assistantText) {
+    if (streamError) {
+      rollbackUserMessage();
+      thinkingEl.remove();
+      appendMessage('system', `Error: ${streamError}`);
+    } else if (assistantText) {
       state.messages.push({ role: 'assistant', content: assistantText });
-      replaceThinkingWithResult(thinkingEl, assistantText);
+      trimMessageHistory();
+      replaceThinkingWithResult(thinkingEl, assistantText, requestAgent, requestSkill);
     } else {
+      rollbackUserMessage();
       thinkingEl.remove();
     }
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
+      rollbackUserMessage();
       thinkingEl.remove();
       appendMessage('system', 'Stopped.');
     } else {
+      rollbackUserMessage();
       thinkingEl.remove();
       appendMessage('assistant', `Error: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -312,8 +362,8 @@ function init() {
     }
   });
 
-  const downloadBtn = $('[data-download-skill]');
-  downloadBtn?.addEventListener('click', () => {
+  $$('[data-download-skill]').forEach(downloadBtn => {
+    downloadBtn.addEventListener('click', () => {
     const slug = state.skill ?? 'html-diagrams';
     const skillCard = $(`.skill-card[data-skill="${slug}"]`);
     const repo = skillCard?.getAttribute('data-repo');
@@ -339,6 +389,7 @@ function init() {
     a.href = rawUrl;
     a.download = `${slug}-SKILL.md`;
     a.click();
+    });
   });
 
   // Initial selection.
