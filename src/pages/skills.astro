@@ -64,7 +64,7 @@ const skills = listSkills();
                 v{skill.version} · {skill.license} · {skill.author}
               </p>
               <p class="skill-details__desc">{skill.description}</p>
-              <div class="skill-details__body" set:html={skill.content} />
+              <pre class="skill-details__body">{skill.content}</pre>
               <p class="skill-details__agents">
                 <strong>Works with:</strong> {skill.agents.map(getAgentLabel).join(' · ')}
               </p>
@@ -596,6 +596,10 @@ const skills = listSkills();
   .skill-details__body {
     line-height: 1.7;
     color: var(--ivory-2);
+    white-space: pre-wrap;
+    font-family: var(--font-mono);
+    font-size: var(--type-small-size);
+    margin: 0;
   }
 
   .skill-details__body p {
