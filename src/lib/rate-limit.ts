@@ -42,6 +42,41 @@ export function isRateLimited(result: RateLimitResult): result is RateLimitFailu
   return !result.allowed;
 }
 
+const CHECK_AND_INCREMENT_SCRIPT = `
+local daily = tonumber(redis.call("GET", KEYS[1]) or "0")
+local hourly = tonumber(redis.call("GET", KEYS[2]) or "0")
+local global = tonumber(redis.call("GET", KEYS[3]) or "0")
+
+local dailyLimit = tonumber(ARGV[1])
+local hourlyLimit = tonumber(ARGV[2])
+local globalLimit = tonumber(ARGV[3])
+local ttlDay = tonumber(ARGV[4])
+local ttlHour = tonumber(ARGV[5])
+
+if global >= globalLimit then
+  return {0, daily, hourly, global, 1}
+end
+if daily >= dailyLimit then
+  return {0, daily, hourly, global, 2}
+end
+if hourly >= hourlyLimit then
+  return {0, daily, hourly, global, 3}
+end
+
+daily = redis.call("INCR", KEYS[1])
+if daily == 1 then redis.call("EXPIRE", KEYS[1], ttlDay) end
+
+hourly = redis.call("INCR", KEYS[2])
+if hourly == 1 then redis.call("EXPIRE", KEYS[2], ttlHour) end
+
+global = redis.call("INCR", KEYS[3])
+if global == 1 then redis.call("EXPIRE", KEYS[3], ttlDay) end
+
+return {1, daily, hourly, global, 0}
+`;
+
+type RateLimitScriptResult = [allowed: number, daily: number, hourly: number, global: number, reasonCode: number];
+
 export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
   const r = getRedis();
   const keys = keySegments(ip);
@@ -62,25 +97,35 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
   const ttlDay = 24 * 60 * 60;
   const ttlHour = 60 * 60;
 
-  const [dailyIp, hourlyIp, globalDaily] = await Promise.all([
-    r.incr(keys.dailyIp).then(n => r.expire(keys.dailyIp, ttlDay).then(() => n)),
-    r.incr(keys.hourlyIp).then(n => r.expire(keys.hourlyIp, ttlHour).then(() => n)),
-    r.incr(keys.globalDaily).then(n => r.expire(keys.globalDaily, ttlDay).then(() => n)),
-  ]);
+  const [allowed, dailyIp, hourlyIp, globalDaily, reasonCode] = await r.eval<string[], RateLimitScriptResult>(
+    CHECK_AND_INCREMENT_SCRIPT,
+    [keys.dailyIp, keys.hourlyIp, keys.globalDaily],
+    [
+      DAILY_IP_LIMIT.toString(),
+      HOURLY_IP_LIMIT.toString(),
+      GLOBAL_DAILY_LIMIT.toString(),
+      ttlDay.toString(),
+      ttlHour.toString(),
+    ]
+  );
 
   const remainingDaily = Math.max(0, DAILY_IP_LIMIT - dailyIp);
   const remainingHourly = Math.max(0, HOURLY_IP_LIMIT - hourlyIp);
   const remainingGlobal = Math.max(0, GLOBAL_DAILY_LIMIT - globalDaily);
 
-  if (globalDaily > GLOBAL_DAILY_LIMIT) {
+  if (allowed === 1) {
+    return { allowed: true, remaining: { daily: remainingDaily, hourly: remainingHourly, global: remainingGlobal } };
+  }
+
+  if (reasonCode === 1) {
     return { allowed: false, reason: 'Global daily capacity reached. Try again tomorrow.' };
   }
-  if (dailyIp > DAILY_IP_LIMIT) {
+  if (reasonCode === 2) {
     return { allowed: false, reason: 'Daily personal limit reached. Try again tomorrow.' };
   }
-  if (hourlyIp > HOURLY_IP_LIMIT) {
+  if (reasonCode === 3) {
     return { allowed: false, reason: 'Hourly personal limit reached. Try again in an hour.' };
   }
 
-  return { allowed: true, remaining: { daily: remainingDaily, hourly: remainingHourly, global: remainingGlobal } };
+  return { allowed: false, reason: 'Rate limit reached. Try again later.' };
 }

@@ -1,5 +1,3 @@
-import htmlDiagramsRaw from '../data/skills/html-diagrams.md?raw';
-
 export type AgentId = 'codex' | 'claude-code' | 'openclaw' | 'hermes' | 'cursor' | 'gemini-cli';
 
 export type Skill = {
@@ -17,6 +15,16 @@ export type Skill = {
 
 const AGENTS: AgentId[] = ['codex', 'claude-code', 'openclaw', 'hermes', 'cursor', 'gemini-cli'];
 export { AGENTS };
+
+const skillMarkdownModules = import.meta.glob<string>('../data/skills/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+function slugFromPath(path: string): string {
+  return path.split('/').pop()?.replace(/\.md$/, '') ?? path;
+}
 
 function parseSkillMarkdown(slug: string, raw: string): Skill {
   const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
@@ -67,16 +75,15 @@ export function normalizeDownloadUrl(skill: Skill): string | null {
 }
 
 export function loadSkill(slug: string): Skill {
-  switch (slug) {
-    case 'html-diagrams':
-      return parseSkillMarkdown(slug, htmlDiagramsRaw);
-    default:
-      throw new Error(`Unknown skill slug: ${slug}`);
-  }
+  const entry = Object.entries(skillMarkdownModules).find(([path]) => slugFromPath(path) === slug);
+  if (!entry) throw new Error(`Unknown skill slug: ${slug}`);
+  return parseSkillMarkdown(slug, entry[1]);
 }
 
 export function listSkills(): Skill[] {
-  return [loadSkill('html-diagrams')];
+  return Object.entries(skillMarkdownModules)
+    .map(([path, raw]) => parseSkillMarkdown(slugFromPath(path), raw))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function getSkill(slug: string): Skill | undefined {

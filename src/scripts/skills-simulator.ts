@@ -70,6 +70,11 @@ function setSkill(slug: string | null) {
     btn.setAttribute('data-selected', btn.getAttribute('data-skill') === slug ? 'true' : 'false');
   });
 
+  $$('[data-skill-details]').forEach(details => {
+    const matches = details.getAttribute('data-skill-details') === slug;
+    details.hidden = !matches;
+  });
+
   if (slug) {
     const skillCard = $(`.skill-card[data-skill="${slug}"]`);
     $$('[data-repo-link]').forEach(link => {
@@ -364,31 +369,31 @@ function init() {
 
   $$('[data-download-skill]').forEach(downloadBtn => {
     downloadBtn.addEventListener('click', () => {
-    const slug = state.skill ?? 'html-diagrams';
-    const skillCard = $(`.skill-card[data-skill="${slug}"]`);
-    const repo = skillCard?.getAttribute('data-repo');
-    const downloadUrl = skillCard?.getAttribute('data-download-url');
+      const slug = state.skill ?? 'html-diagrams';
+      const skillCard = $(`.skill-card[data-skill="${slug}"]`);
+      const repo = skillCard?.getAttribute('data-repo');
+      const downloadUrl = skillCard?.getAttribute('data-download-url');
 
-    let rawUrl = downloadUrl;
-    if (!rawUrl && repo) {
-      const githubMatch = repo.match(/https:\/\/github\.com\/([^/]+)\/([^/]+)\/(?:tree|blob)\/([^/]+)\/(.+)/);
-      if (githubMatch) {
-        const [, owner, repoName, branch, path] = githubMatch;
-        rawUrl = `https://github.com/${owner}/${repoName}/raw/${branch}/${path}/SKILL.md`;
-      } else {
-        rawUrl = `${repo.replace(/\/?$/, '')}/SKILL.md`;
+      let rawUrl = downloadUrl;
+      if (!rawUrl && repo) {
+        const githubMatch = repo.match(/https:\/\/github\.com\/([^/]+)\/([^/]+)\/(?:tree|blob)\/([^/]+)\/(.+)/);
+        if (githubMatch) {
+          const [, owner, repoName, branch, path] = githubMatch;
+          rawUrl = `https://github.com/${owner}/${repoName}/raw/${branch}/${path}/SKILL.md`;
+        } else {
+          rawUrl = `${repo.replace(/\/?$/, '')}/SKILL.md`;
+        }
       }
-    }
 
-    if (!rawUrl) {
-      appendMessage('system', `No download URL configured for /${slug}.`);
-      return;
-    }
+      if (!rawUrl) {
+        appendMessage('system', `No download URL configured for /${slug}.`);
+        return;
+      }
 
-    const a = document.createElement('a');
-    a.href = rawUrl;
-    a.download = `${slug}-SKILL.md`;
-    a.click();
+      const a = document.createElement('a');
+      a.href = rawUrl;
+      a.download = `${slug}-SKILL.md`;
+      a.click();
     });
   });
 

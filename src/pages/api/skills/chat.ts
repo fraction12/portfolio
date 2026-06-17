@@ -8,7 +8,7 @@ const MAX_BODY_BYTES = 24_000;
 const MAX_MESSAGES = 12;
 const MAX_MESSAGE_CHARS = 2_000;
 const MAX_TOTAL_CHARS = 8_000;
-const UPSTREAM_TIMEOUT_MS = 25_000;
+const UPSTREAM_TIMEOUT_MS = 60_000;
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
 function getClientIp(request: Request): string {
@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ error: 'Unknown skill' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
-  const apiKey = process.env.OLLAMA_API_KEY;
+  const apiKey = process.env.OLLAMA_TOKEN;
   if (!apiKey) {
     return new Response(
       JSON.stringify({ error: 'LLM provider not configured' }),
@@ -158,9 +158,10 @@ export const POST: APIRoute = async ({ request }) => {
       },
       { signal: upstreamAbort.signal }
     );
-  } catch {
+  } catch (err) {
+    const error = err instanceof Error ? err.message : 'LLM provider request failed';
     return new Response(
-      JSON.stringify({ error: 'LLM provider request failed' }),
+      JSON.stringify({ error }),
       { status: 502, headers: { 'Content-Type': 'application/json' } }
     );
   }

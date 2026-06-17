@@ -12,7 +12,7 @@ const skills = listSkills();
   current="skills"
   title="Skills Simulator — Dushyant Garg"
   description="Try agent skills for Codex, Claude Code, Hermes, OpenClaw, Cursor, and Gemini CLI in the browser."
-  ogImage="/og/work.png"
+  ogImage="/og/skills.png"
 >
   <div class="page-shell skills-shell">
     <BackButton href="/tools" label="Back" />
@@ -58,17 +58,13 @@ const skills = listSkills();
 
         <div class="details-scroll" data-details-content>
           {skills.map(skill => (
-            <article class="skill-details" data-skill-details={skill.slug}>
+            <article class="skill-details" data-skill-details={skill.slug} hidden>
               <h1 class="skill-details__title">{skill.name}</h1>
               <p class="skill-details__meta">
                 v{skill.version} · {skill.license} · {skill.author}
               </p>
               <p class="skill-details__desc">{skill.description}</p>
-              <div class="skill-details__body">
-                {skill.content.split('\n\n').map(paragraph => (
-                  <p>{paragraph}</p>
-                ))}
-              </div>
+              <div class="skill-details__body" set:html={skill.content} />
               <p class="skill-details__agents">
                 <strong>Works with:</strong> {skill.agents.map(getAgentLabel).join(' · ')}
               </p>
@@ -149,7 +145,7 @@ const skills = listSkills();
       <span class="chat-message__role"></span>
       <div class="chat-message__body"></div>
       <div class="chat-message__preview" hidden>
-        <iframe class="chat-message__iframe" sandbox=""></iframe>
+        <iframe class="chat-message__iframe" sandbox="allow-same-origin"></iframe>
         <details class="chat-message__source">
           <summary>Source</summary>
           <pre><code></code></pre>
