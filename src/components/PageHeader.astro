@@ -1,28 +1,24 @@
 ---
+import { escapeHtmlWithEm } from '../lib/escape-html';
+import BackButton from './BackButton.astro';
+
 interface Props {
   kicker?: string;
   backButton?: boolean;
+  backHref?: string;
+  backLabel?: string;
   title: string;
   lede?: string;
 }
-const { kicker, backButton = false, title, lede } = Astro.props;
+const { kicker, backButton = false, backHref = '/', backLabel = 'Back', title, lede } = Astro.props;
 
-function escapeHtml(s: string): string {
-  return s
-    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-}
-const titleHtml = escapeHtml(title).replace(/\*(.+?)\*/g, '<em>$1</em>');
-const ledeHtml = lede && escapeHtml(lede).replace(/\*(.+?)\*/g, '<em>$1</em>');
+const titleHtml = escapeHtmlWithEm(title);
+const ledeHtml = lede ? escapeHtmlWithEm(lede) : null;
 ---
 
 <header class="page-header">
   {backButton ? (
-    <a
-      class="page-header__back"
-      href="/"
-      onclick="if (window.history.length > 1) { window.history.back(); return false; }"
-    >Back</a>
+    <BackButton href={backHref} label={backLabel} />
   ) : kicker && (
     <p class="page-header__kicker">{kicker}</p>
   )}
