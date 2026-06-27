@@ -1,11 +1,10 @@
 ---
-interface Props { current?: 'home' | 'tools' | 'writing' | 'skills' | 'contact' }
+interface Props { current?: 'home' | 'tools' | 'writing' | 'contact' }
 const { current = 'home' } = Astro.props;
 
 const navLinks: Array<{ href: string; label: string; key: Props['current'] }> = [
   { href: '/', label: 'Home', key: 'home' },
   { href: '/tools', label: 'Work', key: 'tools' },
-  { href: '/skills', label: 'Skills', key: 'skills' },
   { href: '/writing', label: 'Writing', key: 'writing' },
   { href: '/#contact', label: 'Contact', key: 'contact' }
 ];
