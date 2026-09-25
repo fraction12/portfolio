@@ -520,6 +520,7 @@
   }
 
   function draw(now) {
+    if (!W || !H) { if (!reduce) requestAnimationFrame(draw); return; }
     var t = (now - t0) / 1000;
     px += (tpx - px) * .05; py += (tpy - py) * .05;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.clearRect(0, 0, W, H);
@@ -541,8 +542,21 @@
     if (!reduce) requestAnimationFrame(draw);
   }
 
-  if (build()) requestAnimationFrame(draw);
-  var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (build() && reduce) requestAnimationFrame(draw); }, 150); });
+  // Build once the window has a real size; rebuild when that size changes.
+  var running = false, lastW = 0, lastH = 0;
+  function ensure() {
+    var r = cv.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return;
+    if (Math.abs(r.width - lastW) < 1 && Math.abs(r.height - lastH) < 1) return;
+    lastW = r.width; lastH = r.height;
+    try { if (!build()) return; } catch (e) { console.error('garden', e); return; }
+    if (!running || reduce) { running = !reduce; requestAnimationFrame(draw); }
+  }
+  ensure();
+  if ('ResizeObserver' in window) new ResizeObserver(function () { ensure(); }).observe(cv);
+  window.addEventListener('resize', ensure);
+  window.addEventListener('load', ensure);
+  (function poll(n) { ensure(); if (!lastW && n < 120) setTimeout(function () { poll(n + 1); }, 250); })(0);
   window.addEventListener('pointermove', function (e) { tpx = (e.clientX / window.innerWidth - .5) * 2; tpy = (e.clientY / window.innerHeight - .5) * 2; });
 })();
 </script>
