@@ -26,16 +26,6 @@ const email = 'dushyantgarg3@gmail.com';
 
   <WorkReel entries={homeReel} />
 
-  <section id="about" class="home-block" aria-labelledby="about-heading">
-    <div class="home-block__inner about" data-motion-reveal>
-      <h2 id="about-heading" class="home-block__title">About</h2>
-      <p class="about__text">
-        I'm an AI product engineer at Surround Sound Media. Outside work I build tools for AI agents, mostly small and
-        local-first, and write about what I learn.
-      </p>
-    </div>
-  </section>
-
   {essays.length > 0 && (
     <section id="writing" class="home-block" aria-labelledby="writing-heading">
       <div class="home-block__inner">
@@ -108,26 +98,6 @@ const email = 'dushyantgarg3@gmail.com';
   .home-block__all:hover {
     color: var(--ivory);
     border-color: var(--ivory);
-  }
-
-  .about {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: clamp(20px, 5vw, 80px);
-    align-items: start;
-  }
-
-  .about .home-block__title {
-    font-size: clamp(2.2rem, 5vw, 4rem);
-    line-height: 0.95;
-  }
-
-  .about__text {
-    font-size: clamp(1.15rem, 2vw, 1.5rem);
-    line-height: 1.45;
-    color: var(--ivory-2);
-    max-width: 34ch;
-    text-wrap: pretty;
   }
 
   .essays {
@@ -207,7 +177,6 @@ const email = 'dushyantgarg3@gmail.com';
   }
 
   @media (max-width: 720px) {
-    .about { grid-template-columns: 1fr; }
     .essays a { grid-template-columns: 1fr; gap: 6px; }
   }
 

@@ -11,7 +11,7 @@
 - [x] 2.2 Paint the Flora-style night garden behind the window (layered canvases, parallax, reduced-motion support, pause when off screen)
 - [x] 2.3 Chrome balloon stars via on-demand three.js, with cleanup on page swap
 - [x] 2.4 Work screening room of film stills linking to project pages
-- [x] 2.5 About, Writing (titles and dates) and email-led contact
+- [x] 2.5 Writing (titles and dates) and email-led contact
 
 ## 3. Positioning and copy
 

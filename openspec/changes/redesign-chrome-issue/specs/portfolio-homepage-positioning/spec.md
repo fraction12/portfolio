@@ -10,4 +10,4 @@ The homepage SHALL communicate within the first viewport that Dushyant is an AI 
 
 #### Scenario: Visitor scans for credibility
 - **WHEN** a visitor scrolls past the cover
-- **THEN** the homepage SHALL present concrete selected work before about, writing or contact content.
+- **THEN** the homepage SHALL present concrete selected work before writing or contact content.

@@ -10,7 +10,7 @@ Dushyant is now an AI product engineer and builder at Surround Sound Media, not 
   - a plaster arched window onto a night garden painted in the manner of Accornero's Flora print (layered canvases with parallax and gentle sway)
   - two chrome balloon stars (three.js, loaded on demand)
   - a dark "Work" screening room of film stills with one plain subtitle each
-  - About, Writing (titles and dates) and an email-led contact
+  - Writing (titles and dates) and an email-led contact
 - Positioning updated everywhere it is stated: layout meta, JSON-LD (`jobTitle`, `worksFor`), `llms.txt`.
 - Restrained copy: no datelines, invented quotes, or magazine gimmicks; page titles are "Work" and "Writing".
 - Nav and footer simplified; the dot-field nav animation is removed.
