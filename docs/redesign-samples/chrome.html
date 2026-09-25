@@ -67,7 +67,8 @@
     box-shadow: inset 14px 0 26px -10px rgba(0,0,0,.22), inset -14px 0 26px -12px rgba(255,255,255,.7), inset 0 22px 40px -18px rgba(0,0,0,.25);
     outline: 10px solid var(--plaster); outline-offset: -1px;
   }
-  .niche img { position: absolute; inset: 14% 12% 0; width: 76%; height: 86%; object-fit: cover; object-position: 50% 30%; filter: grayscale(1) contrast(1.15) brightness(1.05); border-radius: 999px 999px 0 0; mix-blend-mode: multiply; }
+  .niche .floor-shadow { position: absolute; left: 22%; right: 22%; bottom: 7%; height: 7%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.28), transparent); filter: blur(4px); animation: breathe 7s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform: scaleX(.86); opacity: .7; } }
   .niche::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(13,13,15,.08); }
   .lines { display: grid; gap: clamp(18px, 2.6vw, 30px); }
   .lines.r { text-align: right; justify-items: end; }
@@ -169,7 +170,7 @@
   }
   @media (max-width: 600px) {
     .top nav a:nth-child(3) { display: none; }
-    .cover-body { grid-template-columns: 1fr; }
+    .cover-body { grid-template-columns: 1fr; margin-top: 18px; }
     .lines.r { text-align: left; justify-items: start; }
     .frame { aspect-ratio: 16 / 9; }
     .subtitle { font-size: 12.5px; bottom: 5%; }
@@ -202,7 +203,7 @@
         <div class="line"><a href="#looks"><span class="num">13.8×</span><span class="big">Faster, same model</span><span class="sm">Inside KV Capsules, the research that stops agents rereading their own rules.</span></a></div>
         <div class="line"><a href="#looks"><span class="big">Local CI with a bouncer</span><span class="sm">OctoCheck and the policy gate between GitHub and my desk.</span></a></div>
       </div>
-      <div class="niche"><img src="media/avatar.jpg" alt="Portrait of Dushyant Garg" width="460" height="460"></div>
+      <div class="niche" aria-hidden="true"><span class="floor-shadow"></span></div>
       <div class="lines r">
         <div class="line"><a href="#contents"><span class="big">“I am not middleware”</span><span class="sm">25 tickets shipped overnight, and what that did to my job.</span></a></div>
         <div class="line"><a href="#looks"><span class="big">Now showing: five tools</span><span class="sm">Research, local CI, a product and two developer tools.</span></a></div>
@@ -352,23 +353,31 @@
     grp.add(new THREE.Mesh(new THREE.SphereGeometry(.62, 32, 24), mat));
     return grp;
   }
-  var spots = [ [-.45, .24, .95], [.46, -.3, 1.0], [.22, .44, .4] ];
+  var spots = [ [0, 0, 1], [-.45, .26, .7], [.46, -.3, .75] ];
   var stars = spots.map(function (s, k) { var st = makeStar(); st.userData = { sx: s[0], sy: s[1], sc: s[2], ph: k * 1.7, rs: (k % 2 ? 1 : -1) * (.12 + k * .03) }; st.rotation.set(k, k * 2, k * .5); scene.add(st); return st; });
 
-  var W = 0, H = 0, mx = 0, my = 0, tmx = 0, tmy = 0, scrollY = 0;
+  var W = 0, H = 0, mx = 0, my = 0, tmx = 0, tmy = 0, scrollY = 0, niche = document.querySelector('.niche'), N = { x: 0, y: 0, w: 1 };
   function size() {
     var r = cover.getBoundingClientRect(); W = r.width; H = r.height;
     renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix();
+    var n = niche.getBoundingClientRect();
+    N.x = (n.left - r.left + n.width / 2) / W - .5; N.y = .5 - (n.top - r.top + n.height * .56) / H; N.w = n.width / W;
   }
   function place(t) {
     var vh = 2 * Math.tan(camera.fov * Math.PI / 360) * camera.position.z, vw = vh * camera.aspect;
     var narrow = W < 700;
     stars.forEach(function (st, k) {
-      var u = st.userData, sc = u.sc * (narrow ? .4 : Math.min(.75, W / 1900));
-      st.scale.setScalar(sc);
-      st.position.x = u.sx * vw + mx * (k + 1) * .15;
-      st.position.y = u.sy * vh + Math.sin(t * .35 + u.ph) * .2 - my * (k + 1) * .1 + scrollY * .004 * (k + 1);
-      st.position.z = k === 2 ? -3 : 0;
+      var u = st.userData;
+      if (k === 0) {
+        // the hero star lives inside the plaster arch
+        st.scale.setScalar(N.w * vw * .86 / 5.1);
+        st.position.set(N.x * vw + mx * .08, N.y * vh + Math.sin(t * .35) * .12 - my * .05, 0);
+      } else {
+        st.scale.setScalar(u.sc * (narrow ? .35 : Math.min(.6, W / 2300)));
+        st.position.x = u.sx * vw + mx * (k + 1) * .15;
+        st.position.y = u.sy * vh + Math.sin(t * .35 + u.ph) * .2 - my * (k + 1) * .1 + scrollY * .004 * (k + 1);
+        st.position.z = -2;
+      }
       if (!reduce) { st.rotation.y += u.rs * .004; st.rotation.x += u.rs * .0015; }
     });
   }
