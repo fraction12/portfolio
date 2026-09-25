@@ -22,3 +22,37 @@ export const flagshipWorkProof: Record<string, string> = {
 export const flagshipWorkDetails: ToolDetail[] = flagshipWorkSlugs
   .map(slug => getToolDetail(slug))
   .filter((detail): detail is ToolDetail => Boolean(detail));
+
+/** The homepage screening room: one plain subtitle and one label per still. */
+export type HomeReelEntry = {
+  detail: ToolDetail;
+  subtitle: string;
+  label: string;
+  image: string;
+};
+
+const homeReelCopy: Array<{ slug: string; subtitle: string; label: string }> = [
+  {
+    slug: 'kv-capsules-pti',
+    subtitle: 'Reuses what the agent already read instead of reading it again. 13.8× faster on repeated work.',
+    label: 'Research',
+  },
+  { slug: 'octocheck', subtitle: 'GitHub asks for the work. My machine decides what runs.', label: 'GitHub App' },
+  {
+    slug: 'tradespec',
+    subtitle: 'Bid review for lightning protection estimators, traced to the drawings.',
+    label: 'Private alpha',
+  },
+  { slug: 'openspec-studio', subtitle: 'A desktop workbench for spec-driven development.', label: 'Public alpha' },
+  {
+    slug: 'microcanvas',
+    subtitle: 'A place for agents to show what they made, and check it looks right.',
+    label: 'macOS',
+  },
+];
+
+export const homeReel: HomeReelEntry[] = homeReelCopy.flatMap(({ slug, subtitle, label }) => {
+  const detail = getToolDetail(slug);
+  const image = detail?.demo.poster ?? detail?.demo.src;
+  return detail && image ? [{ detail, subtitle, label, image }] : [];
+});

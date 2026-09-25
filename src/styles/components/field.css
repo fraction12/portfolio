@@ -11,7 +11,7 @@
   color: var(--ivory);
   border-radius: var(--radius-sm);
   padding: 0.66rem 0.78rem;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-small-size);
   line-height: 1.45;
   transition: border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;

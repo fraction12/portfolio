@@ -3,143 +3,184 @@
 export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import FlagshipWorkCard from '../components/FlagshipWorkCard.astro';
-import WritingBlock from '../components/WritingBlock.astro';
-import Contact from '../components/Contact.astro';
-import { getToolDetail, type ToolDetail } from '../config/tool-details';
+import CoverHero from '../components/CoverHero.astro';
+import WorkReel from '../components/WorkReel.astro';
+import { homeReel } from '../config/featured-work';
 import { loadSignalData } from '../lib/data';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 
 const data = await loadSignalData();
-const homeWorkSlugs = ['openspec-studio', 'tradespec', 'potato'] as const;
-const homeWorkDetails = homeWorkSlugs
-  .map(slug => getToolDetail(slug))
-  .filter((detail): detail is ToolDetail => Boolean(detail));
-const homeWorkProof: Record<string, string> = {
-  'openspec-studio':
-    'A visual workbench for spec-driven development: changes, tasks, validation, archive readiness, and runner state in one place.',
-  tradespec:
-    'Customer-facing AI workflow for estimating teams, with evidence-linked outputs and a clear private-alpha boundary.',
-  potato:
-    'A local multi-agent cockpit for running Codex, Claude Code, and CLI agents with roles, shared task state, and project-aware panes.',
-};
-
+const essays = data.essays.slice(0, 4);
+const email = 'dushyantgarg3@gmail.com';
 ---
 
 <Layout
   current="home"
   title="Dushyant Garg"
-  description="Dushyant Garg — Product Manager and builder working on practical AI products, product systems, and open-source tools."
+  description="Dushyant Garg — AI product engineer at Surround Sound Media. Tools for AI agents, research, and writing."
   ogImage="/og/home.png"
   includeIdentitySchema
 >
-  <div class="page-shell home-shell">
-    <Hero github={data.github} />
+  <CoverHero />
 
-    <section id="work" class="home-work-section" data-work-section data-home-work-section>
-      <div class="home-flagship">
-        <h2 class="home-section-title" data-home-work-slot>Highlighted work</h2>
-        <div class="home-flagship__grid">
-          {homeWorkDetails.map(detail => (
-            <div class="home-flagship__slot" data-home-work-slot>
-              <FlagshipWorkCard
-                detail={detail}
-                proof={homeWorkProof[detail.slug] ?? detail.summary}
-              />
-            </div>
+  <WorkReel entries={homeReel} />
+
+  {essays.length > 0 && (
+    <section id="writing" class="home-block" aria-labelledby="writing-heading">
+      <div class="home-block__inner">
+        <div class="home-block__head" data-motion-reveal>
+          <h2 id="writing-heading" class="home-block__title">Writing</h2>
+          <a class="home-block__all mono-label" href="/writing">All writing</a>
+        </div>
+        <ul class="essays" data-motion-reveal>
+          {essays.map(essay => (
+            <li>
+              <a href={essay.link} target="_blank" rel="noopener noreferrer">
+                <time class="mono-label" datetime={essay.publishedAt.toISOString()}>{essay.dateLabel}</time>
+                <span class="essays__title">{essay.title}</span>
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
+  )}
 
-    <section id="writing" class="home-writing-section" data-home-scroll-section>
-      <div class="home-writing">
-        <h2 class="home-section-title" data-home-scroll-slot>Writing</h2>
-        <div data-home-scroll-slot>
-          <WritingBlock essays={data.essays} limit={3} />
-        </div>
+  <section id="contact" class="home-block contact" aria-label="Contact">
+    <div class="home-block__inner contact__inner" data-motion-reveal>
+      <a class="contact__mail" href={`mailto:${email}`}>{email}</a>
+      <div class="contact__links">
+        <a class="btn" href="https://github.com/fraction12" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn" href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
-    </section>
-
-    <section id="contact" class="home-contact-section" data-home-scroll-section>
-      <div class="home-contact">
-        <h2 class="home-section-title" data-home-scroll-slot>Contact</h2>
-        <div data-home-scroll-slot>
-          <Contact />
-        </div>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </Layout>
 
 <style>
-  .home-shell {
+  .home-block {
     position: relative;
     z-index: var(--z-content);
+    padding-block: clamp(70px, 10vw, 130px);
+    border-top: 1px solid var(--line);
   }
 
-  .home-work-section {
-    padding: clamp(1.5rem, 4vw, 3rem) 0 var(--section-pad);
+  .home-block__inner {
+    max-width: var(--layout-max-w);
+    margin: 0 auto;
+    padding-inline: var(--gutter);
   }
 
-  .home-flagship {
+  .home-block__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: clamp(36px, 5vw, 60px);
+  }
+
+  .home-block__title {
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .home-block__all {
+    color: var(--ivory-2);
+    text-decoration: none;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line-3);
+    white-space: nowrap;
+  }
+
+  .home-block__all:hover {
+    color: var(--ivory);
+    border-color: var(--ivory);
+  }
+
+  .essays {
+    list-style: none;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .essays li { border-top: 1px solid var(--line); }
+  .essays li:last-child { border-bottom: 1px solid var(--line); }
+
+  .essays a {
+    position: relative;
     display: grid;
-    gap: 1.25rem;
+    grid-template-columns: 130px 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 8px;
+    overflow: hidden;
+    color: var(--ivory);
+    text-decoration: none;
   }
 
-  .home-section-title {
-    font-size: clamp(0.95rem, 1.4vw, 1.12rem);
-    line-height: 1.2;
-    letter-spacing: 0;
+  .essays a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--ivory);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.5s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  .essays a:hover,
+  .essays a:focus-visible { color: var(--ink); }
+
+  .essays a:hover::before,
+  .essays a:focus-visible::before { transform: scaleY(1); }
+
+  .essays time { color: var(--dim); }
+  .essays a:hover time { color: var(--ink-2); }
+
+  .essays__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  .contact__inner {
+    display: grid;
+    justify-items: center;
+    gap: 26px;
     text-align: center;
   }
 
-  .home-flagship__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(16rem, 1fr));
-    gap: 1rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
+  .contact__mail {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.3rem, 4vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    color: var(--ivory);
   }
 
-  .home-flagship__grid :global(.flagship-card) {
-    height: 100%;
+  .contact__mail:hover { text-decoration: underline; text-decoration-color: var(--line-3); text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
+
+  .contact__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
   }
 
-  .home-flagship__slot {
-    display: grid;
-    scroll-snap-align: start;
+  @media (max-width: 720px) {
+    .essays a { grid-template-columns: 1fr; gap: 6px; }
   }
 
-  .home-writing-section {
-    padding: var(--section-pad) 0;
-  }
-
-  .home-writing {
-    display: grid;
-    gap: 1.25rem;
-  }
-
-  .home-contact-section {
-    padding: var(--section-pad) 0;
-  }
-
-  .home-contact {
-    display: grid;
-    gap: 1.25rem;
-    justify-items: center;
-    text-align: center;
-  }
-
-  .home-contact :global(.contact) {
-    justify-items: center;
-  }
-
-  .home-contact :global(.contact .btn) {
-    justify-self: center;
+  @media (prefers-reduced-motion: reduce) {
+    .essays a::before { transition: none; }
   }
 </style>

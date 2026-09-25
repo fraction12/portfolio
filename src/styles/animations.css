@@ -13,16 +13,14 @@
 
 html[data-portfolio-motion="enhanced"] [data-motion-reveal="pending"] {
   opacity: 0;
-  transform: translateX(-34px);
-  filter: blur(5px);
+  transform: translateY(10px);
 }
 
 html[data-portfolio-motion="enhanced"] [data-home-work-slot="pending"],
 html[data-portfolio-motion="enhanced"] [data-home-scroll-slot="pending"],
 html[data-portfolio-motion="enhanced"] [data-writing-motion="pending"] {
   opacity: 0;
-  transform: translateX(-34px);
-  filter: blur(5px);
+  transform: translateY(10px);
 }
 
 html[data-portfolio-motion="enhanced"] [data-motion-reveal="visible"],

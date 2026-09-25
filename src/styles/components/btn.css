@@ -3,18 +3,18 @@
    ============================================================ */
 .btn {
   display: inline-flex;
-  min-height: 40px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  border: 1px solid var(--line-3);
-  border-radius: var(--radius-sm);
-  background: var(--ivory);
-  color: #080807;
-  padding: 0.68rem 1rem;
-  font-family: var(--font-display);
-  font-size: var(--type-small-size);
-  font-weight: 700;
+  border: 1.5px solid var(--ivory);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ivory);
+  padding: 0.8rem 1.4rem;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
   line-height: 1;
   cursor: pointer;
   text-decoration: none;
@@ -25,35 +25,30 @@
 }
 
 .btn:hover {
-  background: var(--signal);
-  border-color: var(--signal);
-  color: #080807;
+  background: var(--ivory);
+  color: var(--ink);
 }
 
 .btn:disabled,
 .btn[aria-disabled="true"] {
-  background: var(--line-2);
-  border-color: transparent;
+  background: transparent;
+  border-color: var(--line-2);
   color: var(--dim-2);
   cursor: not-allowed;
 }
 
 .btn--primary {
   background: var(--ivory);
-  color: #080807;
-  border-color: var(--ivory);
+  color: var(--ink);
+}
+
+.btn--primary:hover {
+  background: transparent;
+  color: var(--ivory);
 }
 
 .btn--ghost {
   background: transparent;
-  color: var(--ivory);
-  border-color: color-mix(in srgb, var(--ivory) 28%, transparent);
-}
-
-.btn--ghost:hover {
-  background: var(--signal-dim);
-  border-color: var(--signal);
-  color: var(--signal-hov);
 }
 
 .btn--link {

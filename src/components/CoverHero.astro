@@ -1,0 +1,218 @@
+---
+// The homepage cover: who this is, then a plaster window onto a painted night
+// garden. The garden and stars are
+// drawn client-side; the markup renders complete without them.
+---
+
+<header class="cover" data-cover>
+  <canvas class="cover__stars" aria-hidden="true" data-cover-stars></canvas>
+  <div class="cover__inner">
+    <p class="cover__kicker mono-label">AI product engineer · Surround Sound Media</p>
+    <h1 class="cover__name">Dushyant Garg</h1>
+    <p class="cover__line">I build tools for AI agents, and write about what I learn.</p>
+
+    <div class="window" aria-hidden="true">
+      <div class="niche">
+        <div class="pane" data-cover-pane>
+          <canvas class="g-sky"></canvas>
+          <canvas class="g-far"></canvas>
+          <canvas class="g-lawn"></canvas>
+          <canvas class="g-mid"></canvas>
+          <canvas class="g-near"></canvas>
+          <span class="glass"></span>
+          <span class="bar bar--h"></span>
+          <span class="bar bar--v"></span>
+        </div>
+      </div>
+      <div class="sill"></div>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { initGarden } from '../scripts/garden.js';
+
+  let stops: Array<() => void> = [];
+
+  function start() {
+    const cover = document.querySelector<HTMLElement>('[data-cover]');
+    if (!cover) return;
+    const pane = cover.querySelector<HTMLElement>('[data-cover-pane]');
+    const stars = cover.querySelector<HTMLCanvasElement>('[data-cover-stars]');
+    if (pane) stops.push(initGarden(pane));
+    if (stars) {
+      import('../scripts/chrome-stars.js')
+        .then(({ initChromeStars }) => initChromeStars(cover, stars))
+        .then(stop => { if (document.contains(cover)) stops.push(stop); else stop(); })
+        .catch(() => {});
+    }
+  }
+
+  function stop() {
+    stops.forEach(fn => fn());
+    stops = [];
+  }
+
+  document.addEventListener('astro:page-load', start);
+  document.addEventListener('astro:before-swap', stop);
+</script>
+
+<style>
+  .cover {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(18px, 3vw, 30px) clamp(48px, 7vw, 96px);
+  }
+
+  .cover__stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .cover__inner {
+    position: relative;
+    max-width: var(--layout-max-w);
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+    display: grid;
+    justify-items: center;
+  }
+
+  .cover__kicker {
+    margin-top: clamp(20px, 4vw, 48px);
+    font-size: 12.5px;
+    color: var(--ivory-2);
+    text-align: center;
+  }
+
+  .cover__name {
+    margin-top: 12px;
+    font-weight: 700;
+    font-size: var(--type-hero-name-size);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    text-align: center;
+  }
+
+  .cover__line {
+    margin-top: 14px;
+    max-width: 40ch;
+    text-align: center;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--dim);
+    text-wrap: balance;
+  }
+
+  /* Fade and settle, one piece after another. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cover__kicker,
+    .cover__name,
+    .cover__line,
+    .window {
+      animation: settle 0.9s cubic-bezier(.2, .7, .2, 1) both;
+    }
+    .cover__name { animation-delay: 0.1s; }
+    .cover__line { animation-delay: 0.23s; }
+    .window { animation-delay: 0.35s; }
+  }
+
+  @keyframes settle {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ---- the window ---- */
+  .window {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    width: min(380px, 78vw);
+    margin-top: clamp(28px, 4vw, 44px);
+  }
+
+  .niche {
+    position: relative;
+    aspect-ratio: 3 / 4.3;
+    border-radius: 999px 999px 6px 6px;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--ink-2), var(--ink-1));
+    box-shadow:
+      inset 14px 0 26px -10px rgba(0, 0, 0, 0.22),
+      inset -14px 0 26px -12px rgba(255, 255, 255, 0.7),
+      inset 0 22px 40px -18px rgba(0, 0, 0, 0.25);
+    outline: 10px solid var(--ink);
+    outline-offset: -1px;
+  }
+
+  .niche::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(13, 13, 15, 0.08);
+  }
+
+  .pane {
+    position: absolute;
+    inset: 16px 16px 0;
+    border-radius: 999px 999px 0 0;
+    overflow: hidden;
+    background: radial-gradient(ellipse 90% 70% at 50% 60%, #0f0b0d 0%, #030203 80%);
+    box-shadow: 0 0 0 1px rgba(13, 13, 15, 0.25);
+  }
+
+  .pane canvas {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: calc(100% + 60px);
+    height: calc(100% + 60px);
+    display: block;
+    will-change: transform;
+  }
+
+  .pane .g-far { filter: blur(1.1px) saturate(.8); }
+  .pane .g-lawn { filter: blur(.3px); }
+  .pane .g-mid { filter: blur(.4px) brightness(.9); }
+
+  .glass {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(118deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 22%, transparent 40%, rgba(255, 255, 255, 0.04) 70%, transparent 80%);
+    box-shadow:
+      inset 18px 0 24px -14px rgba(0, 0, 0, 0.85),
+      inset 0 22px 30px -18px rgba(0, 0, 0, 0.8),
+      inset -10px 0 20px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  .bar {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(180deg, #f3efe8, #d8d1c5);
+    box-shadow: 0 8px 12px -4px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(13, 13, 15, 0.12);
+  }
+
+  .bar--h { left: 0; right: 0; top: 34%; height: 8px; }
+  .bar--v { top: 0; height: 34%; left: 50%; width: 8px; margin-left: -4px; background: linear-gradient(90deg, #f3efe8, #d8d1c5); }
+
+  .sill {
+    position: relative;
+    z-index: 3;
+    height: 18px;
+    margin: 0 -18px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #f4f1eb 0%, #e2ddd3 55%, #cbc4b8 100%);
+    box-shadow: 0 16px 20px -10px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  }
+
+  @media (max-width: 600px) {
+    .window { width: min(300px, 76vw); }
+  }
+</style>

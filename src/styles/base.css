@@ -23,30 +23,16 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(circle at 72% -10%, rgba(255, 106, 42, 0.11), transparent 24rem),
-    linear-gradient(180deg, rgba(255, 106, 42, 0.035), transparent 18rem),
-    var(--ink);
+  background-color: var(--ink);
+  /* Plaster grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4  0 0 0 0 .38  0 0 0 0 .34  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   color: var(--ivory);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-body-size);
-  line-height: 1.7;
+  line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(245, 239, 229, 0.035) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(245, 239, 229, 0.028) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.42), transparent 42rem);
-  content: '';
 }
 
 a {
@@ -69,6 +55,7 @@ h4 {
   font-family: var(--font-display);
   color: var(--ivory);
   letter-spacing: 0;
+  text-wrap: balance;
 }
 
 h1 {
@@ -173,9 +160,11 @@ pre {
 }
 
 .page-header__title {
+  font-family: var(--font-display);
   font-size: var(--type-page-title-size);
   font-weight: 700;
-  line-height: 1.04;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
   color: var(--ivory);
   margin-bottom: 1rem;
 }
@@ -251,4 +240,12 @@ section {
   .page-split {
     padding-top: 3.5rem;
   }
+}
+
+/* Shared display treatments */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }

@@ -1,12 +1,12 @@
 # Dushyant Garg
 
-> Dushyant Garg is a Product Manager / Builder working on practical AI products, product systems, and open-source tools. Based in Orlando, FL. Reach: dushyantgarg3@gmail.com.
+> Dushyant Garg is an AI product engineer and builder at Surround Sound Media, working on practical AI products and open-source tools for AI agents. Based in Orlando, FL. Reach: dushyantgarg3@gmail.com.
 
 Homepage: https://dushyantgarg.com
 
 ## About
 
-Dushyant works across product and engineering at the point where unclear workflows need to become useful software. His work spans customer-facing product workflows, open-source AI tooling, and product systems that help teams inspect and ship what they build.
+Dushyant is an AI product engineer at Surround Sound Media. He works across product and engineering at the point where unclear workflows need to become useful software. His work spans customer-facing product workflows, open-source AI tooling, and product systems that help teams inspect and ship what they build.
 
 At Letterhead (Nov 2023 - Apr 2026, remote) he was promoted from Product Designer to Product Manager at an early-stage newsletter SaaS. He shipped customer-facing collaboration workflows, owned browser-based deliverability automation, reworked promotions into an enterprise-ready monetization feature, drove GDPR and localization work, rebuilt activity-log infrastructure, designed an initial PreFlight agent prototype, and trained teammates on agentic development workflows.
 
@@ -60,6 +60,7 @@ See https://dushyantgarg.com/tools for the broader work catalog.
 
 ## Background
 
+- Surround Sound Media - AI Product Engineer (current)
 - Letterhead - Product Manager / Product Designer (Nov 2023 - Apr 2026, remote)
 - Wooo Social Games - Product Manager (Mar - Aug 2023, Miami, FL)
 - Chronoblast / Zygobot Studio - Technical Designer / Programmer (Oct 2022 - Mar 2023)

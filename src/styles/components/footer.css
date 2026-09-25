@@ -3,7 +3,6 @@
    ============================================================ */
 .site-footer {
   border-top: 1px solid var(--line);
-  margin-top: 3rem;
   position: relative;
   z-index: var(--z-content);
   color: var(--dim);
@@ -13,8 +12,6 @@
   max-width: var(--layout-max-w);
   margin: 0 auto;
   padding: 1.4rem var(--gutter);
-  font-family: var(--font-display);
-  font-size: var(--type-small-size);
   display: flex;
   justify-content: space-between;
   align-items: center;
