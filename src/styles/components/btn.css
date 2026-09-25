@@ -12,12 +12,9 @@
   background: transparent;
   color: var(--ivory);
   padding: 0.8rem 1.4rem;
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  font-variation-settings: 'wdth' 120;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
   line-height: 1;
   cursor: pointer;
   text-decoration: none;

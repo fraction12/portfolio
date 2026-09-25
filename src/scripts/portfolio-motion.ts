@@ -321,14 +321,15 @@ function initScrollFade(root: ParentNode) {
       revealObserver?.unobserve(el);
       el.dataset.motionReveal = 'visible';
 
+      // Fade and settle; headings arrive a beat after the content around them.
+      const headingDelay = el.matches('h1, h2, h3') || el.querySelector(':scope > h1, :scope > h2') ? 0.15 : 0;
       const reveal = motionAnimate(el, {
         opacity: [0, 1],
-        x: [-34, 0],
-        filter: ['blur(5px)', 'blur(0px)'],
+        y: [10, 0],
       }, {
-        duration: 0.62,
-        delay: Math.min(index % 4, 3) * 0.035,
-        easing: [0.22, 1, 0.36, 1],
+        duration: 0.9,
+        delay: Math.min(index % 4, 3) * 0.07 + headingDelay,
+        easing: [0.2, 0.7, 0.2, 1],
       });
 
       addCleanup(() => stopControl(reveal));

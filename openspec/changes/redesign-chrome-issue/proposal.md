@@ -4,7 +4,7 @@ Dushyant is now an AI product engineer and builder at Surround Sound Media, not 
 
 ## What Changes
 
-- New visual system ("Chrome Issue"): plaster ground, ink type, a wide variable display face (Anybody) for headings, Hanken Grotesk for body, Martian Mono for labels, chrome-gradient lettering for the biggest type.
+- New visual system ("Chrome Issue"): plaster ground, ink type, Funnel Display for headings, Funnel Sans for body and Geist Mono for labels, with chrome-gradient lettering on the name only. Motion is a quiet fade and settle, with headings arriving a beat later; no type-width animation.
 - New homepage:
   - a chrome masthead
   - a plaster arched window onto a night garden painted in the manner of Accornero's Flora print (layered canvases with parallax and gentle sway)

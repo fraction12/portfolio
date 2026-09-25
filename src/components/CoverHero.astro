@@ -97,33 +97,38 @@
     display: block;
     margin-bottom: 0.3em;
     font-family: var(--font-display);
-    font-weight: 500;
-    font-style: italic;
-    font-size: clamp(1.2rem, 3vw, 2.4rem);
-    font-variation-settings: 'wdth' 120;
-    letter-spacing: 0.02em;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2.4vw, 1.9rem);
+    letter-spacing: -0.02em;
     line-height: 1;
+    color: var(--ivory-2);
   }
 
   .masthead b {
     display: block;
-    font-weight: 900;
-    text-transform: uppercase;
+    font-weight: 700;
     font-size: var(--type-hero-name-size);
-    letter-spacing: -0.02em;
-    font-variation-settings: 'wdth' 150;
+    letter-spacing: -0.045em;
+    padding-bottom: 0.06em;
     filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.12));
   }
 
+  /* Fade and settle, one piece after another. */
   @media (prefers-reduced-motion: no-preference) {
-    .masthead b {
-      animation: stretch 2.8s cubic-bezier(.2, .8, .1, 1) .2s both;
+    .masthead small,
+    .masthead b,
+    .window,
+    .cover__role {
+      animation: settle 0.9s cubic-bezier(.2, .7, .2, 1) both;
     }
+    .masthead b { animation-delay: 0.11s; }
+    .window { animation-delay: 0.27s; }
+    .cover__role { animation-delay: 0.41s; }
   }
 
-  @keyframes stretch {
-    from { font-variation-settings: 'wdth' 50; letter-spacing: 0.1em; opacity: 0; }
-    to { font-variation-settings: 'wdth' 150; letter-spacing: -0.02em; opacity: 1; }
+  @keyframes settle {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
   }
 
   /* ---- the window ---- */
@@ -132,7 +137,7 @@
     z-index: 2;
     display: grid;
     width: min(380px, 78vw);
-    margin-top: clamp(-40px, -3vw, -10px);
+    margin-top: clamp(-28px, -2vw, -8px);
   }
 
   .niche {

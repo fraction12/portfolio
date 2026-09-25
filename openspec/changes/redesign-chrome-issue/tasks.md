@@ -3,6 +3,7 @@
 - [x] 1.1 Replace dark tokens with the plaster / ink / chrome palette and new type families
 - [x] 1.2 Split display and body font roles; headings use the wide display face
 - [x] 1.3 Restyle buttons, cards, nav and footer for the light system
+- [x] 1.4 Replace the wide display face and width animations with Funnel Display / Funnel Sans / Geist Mono and fade-and-settle motion
 
 ## 2. Homepage
 

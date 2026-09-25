@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Chrome Issue Visual System
-The site SHALL use a light plaster ground, ink text, a wide variable display face for headings and chrome-gradient lettering for the largest type, with dark "night" surfaces reserved for the homepage work section and the cover window.
+The site SHALL use a light plaster ground, ink text, a modern grotesk display face for headings, chrome-gradient lettering only on the homepage name, and quiet fade-and-settle motion without animated type width, with dark "night" surfaces reserved for the homepage work section and the cover window.
 
 #### Scenario: Any page renders
 - **WHEN** any page renders

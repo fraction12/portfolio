@@ -76,15 +76,11 @@ const { entries } = Astro.props;
 
   .screening__title {
     margin: 0;
-    font-weight: 900;
-    text-transform: uppercase;
-    font-size: clamp(3rem, 10vw, 8.5rem);
-    line-height: 0.8;
-    font-variation-settings: 'wdth' 110;
-    background: var(--chrome-night);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    color: var(--bone);
   }
 
   .screening__all {
@@ -179,15 +175,11 @@ const { entries } = Astro.props;
   .still__meta h3 {
     margin: 0;
     color: var(--bone);
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
-    line-height: 0.95;
-    font-variation-settings: 'wdth' 90;
-    transition: font-variation-settings 1s cubic-bezier(.2, .7, .2, 1);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
   }
-
-  .still:hover .still__meta h3 { font-variation-settings: 'wdth' 125; }
   .still__meta .mono-label { color: var(--bone-3); }
 
   @media (max-width: 860px) {
@@ -202,6 +194,6 @@ const { entries } = Astro.props;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .still__frame img, .still__meta h3 { transition: none; }
+    .still__frame img { transition: none; }
   }
 </style>

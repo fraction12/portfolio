@@ -162,10 +162,9 @@ pre {
 .page-header__title {
   font-family: var(--font-display);
   font-size: var(--type-page-title-size);
-  font-weight: 900;
-  font-variation-settings: 'wdth' 110;
-  text-transform: uppercase;
-  line-height: 0.86;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
   color: var(--ivory);
   margin-bottom: 1rem;
 }
@@ -255,7 +254,6 @@ section {
 .mono-label {
   font-family: var(--font-mono);
   font-size: 11px;
-  font-variation-settings: 'wdth' 87.5;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }

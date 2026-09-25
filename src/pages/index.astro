@@ -91,11 +91,10 @@ const email = 'dushyantgarg3@gmail.com';
   }
 
   .home-block__title {
-    font-weight: 900;
-    text-transform: uppercase;
-    font-size: clamp(3rem, 10vw, 8.5rem);
-    line-height: 0.8;
-    font-variation-settings: 'wdth' 110;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
   }
 
   .home-block__all {
@@ -119,8 +118,8 @@ const email = 'dushyantgarg3@gmail.com';
   }
 
   .about .home-block__title {
-    font-size: clamp(2.4rem, 6vw, 5rem);
-    line-height: 0.85;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 0.95;
   }
 
   .about__text {
@@ -174,11 +173,10 @@ const email = 'dushyantgarg3@gmail.com';
 
   .essays__title {
     font-family: var(--font-display);
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: clamp(1.2rem, 2.6vw, 2rem);
-    line-height: 1.05;
-    font-variation-settings: 'wdth' 90;
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
   }
 
   .contact__inner {
@@ -190,20 +188,19 @@ const email = 'dushyantgarg3@gmail.com';
 
   .contact__mail {
     font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(1.4rem, 5vw, 4rem);
-    line-height: 1;
-    font-variation-settings: 'wdth' 100;
+    font-weight: 600;
+    font-size: clamp(1.3rem, 4vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
     text-decoration: none;
     overflow-wrap: anywhere;
     background: linear-gradient(180deg, #2a2b30 0%, #6c7078 45%, #111215 55%, #6c7078 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    transition: font-variation-settings 0.8s cubic-bezier(.2, .7, .2, 1);
   }
 
-  .contact__mail:hover { font-variation-settings: 'wdth' 120; }
+  .contact__mail:hover { text-decoration: underline; text-decoration-color: var(--line-3); text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
 
   .contact__links {
     display: flex;
@@ -218,6 +215,6 @@ const email = 'dushyantgarg3@gmail.com';
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .essays a::before, .contact__mail { transition: none; }
+    .essays a::before { transition: none; }
   }
 </style>
