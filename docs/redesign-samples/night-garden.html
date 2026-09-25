@@ -1,0 +1,452 @@
+<title>Night Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --black: #060508;
+    --black-2: #0d0b10;
+    --bone: #efe9e1;
+    --bone-2: #b9b0a6;
+    --bone-3: #7c746c;
+    --neon: #ff2e4a;
+    --neon-soft: rgba(255, 46, 74, .55);
+    --petal: #f4a9b8;
+    --marigold: #f4b93a;
+    --sub: #fff6c9;
+    --leaf: #2e5b36;
+    --line: rgba(239, 233, 225, .1);
+    --display: 'Italiana', 'Didot', 'Bodoni 72', Georgia, serif;
+    --sans: 'Instrument Sans', 'Helvetica Neue', Arial, system-ui, sans-serif;
+    --mono: 'DM Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--black); color: var(--bone); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  :focus-visible { outline: 1px solid var(--neon); outline-offset: 4px; }
+  .wrap { width: min(1240px, 100%); margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+
+  /* grain over everything, like film stock */
+  .grain { position: fixed; inset: -50%; z-index: 50; pointer-events: none; opacity: .07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 1s steps(6) infinite; }
+  @keyframes grain { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-3%)} 60%{transform:translate(-2%,-1%)} 80%{transform:translate(3%,3%)} 100%{transform:translate(0,0)} }
+
+  /* ---------- Nav ---------- */
+  .nav { position: absolute; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 10; }
+  .nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 22px; }
+  .brand { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .brand i { width: 8px; height: 8px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 12px var(--neon), 0 0 24px var(--neon); }
+  .nav ul { list-style: none; display: flex; gap: clamp(14px, 3vw, 32px); margin: 0; padding: 0; }
+  .nav a.l { font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; color: var(--bone-2); transition: color .3s, text-shadow .3s; }
+  .nav a.l:hover { color: var(--bone); text-shadow: 0 0 12px var(--neon); }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; height: clamp(600px, 88vh, 900px); overflow: hidden; isolation: isolate; background: radial-gradient(ellipse 60% 50% at 50% 55%, #1a0710 0%, var(--black) 70%); }
+  #flora { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+  .ring { position: absolute; left: 50%; top: 52%; width: min(980px, 118vw); height: clamp(170px, 24vw, 260px); transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
+  .ring .band {
+    position: absolute; inset: 0; border-radius: 50% / 22%;
+    background: repeating-linear-gradient(90deg, rgba(255,46,74,.0) 0 26px, rgba(255,60,86,.9) 26px 28px, rgba(255,46,74,0) 28px 54px);
+    background-size: 54px 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent), linear-gradient(transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-composite: source-in; mask-composite: intersect;
+    mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent), linear-gradient(transparent, #000 10%, #000 90%, transparent);
+    filter: drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 22px rgba(255,46,74,.5));
+    opacity: .55;
+    animation: spin 14s linear infinite;
+  }
+  .ring .rim { position: absolute; left: 6%; right: 6%; height: 2px; background: var(--neon); border-radius: 2px; box-shadow: 0 0 8px var(--neon), 0 0 30px var(--neon); opacity: .8;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); }
+  .ring .rim.t { top: 0; } .ring .rim.b { bottom: 0; }
+  @keyframes spin { to { background-position: 540px 0; } }
+
+  .hero-copy { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; text-align: center; pointer-events: none; padding-inline: 16px; }
+  .hero-copy > div { display: grid; gap: 18px; justify-items: center; }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--bone-2); }
+  .name { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(3.6rem, 12vw, 10.5rem); line-height: .86; letter-spacing: .01em; text-shadow: 0 0 40px rgba(0,0,0,.9), 0 0 80px rgba(0,0,0,.9); }
+  .role { font-size: clamp(15px, 1.8vw, 19px); color: var(--bone); letter-spacing: .02em; text-shadow: 0 0 20px #000; }
+  .role span { color: var(--neon); text-shadow: 0 0 14px rgba(255,46,74,.6); }
+  .scroll-cue { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 3; font-family: var(--mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--bone-3); text-decoration: none; }
+
+  /* letterbox bars on the hero, like the film opening */
+  .hero::before, .hero::after { content: ""; position: absolute; left: 0; right: 0; height: 0; background: #000; z-index: 4; transition: height 1.6s cubic-bezier(.7,0,.2,1); }
+  .hero::before { top: 0; } .hero::after { bottom: 0; }
+  .js .hero.open::before, .js .hero.open::after { height: 0; }
+  .js .hero:not(.open)::before, .js .hero:not(.open)::after { height: 50%; }
+
+  /* ---------- Sections ---------- */
+  section.block { padding-block: clamp(80px, 12vw, 150px); position: relative; }
+  .sec-title { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(40px, 6vw, 80px); }
+  .sec-title h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(2.8rem, 7vw, 6rem); line-height: .9; }
+  .sec-title p { margin: 0; max-width: 40ch; color: var(--bone-2); }
+  .mono { font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--bone-3); }
+
+  /* ---------- Film stills ---------- */
+  .reel { display: grid; gap: clamp(72px, 10vw, 140px); }
+  .still { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; align-items: end; text-decoration: none; }
+  .still .screen { grid-column: 1 / span 9; position: relative; }
+  .still .meta { grid-column: 10 / span 3; display: grid; gap: 12px; padding-bottom: 8px; }
+  .still.flip .screen { grid-column: 4 / span 9; grid-row: 1; }
+  .still.flip .meta { grid-column: 1 / span 3; grid-row: 1; text-align: right; justify-items: end; }
+  .frame { position: relative; aspect-ratio: 2.39 / 1; overflow: hidden; background: #000; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.04); transition: box-shadow .8s; }
+  .frame img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: contrast(1.12) saturate(.55) brightness(.55); transform: scale(1.06); transition: filter 1s, transform 1.6s cubic-bezier(.2,.7,.2,1); }
+  .frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,.75) 100%), linear-gradient(0deg, rgba(120,0,20,.35), transparent 50%); mix-blend-mode: multiply; }
+  .frame .hud { position: absolute; top: 12px; left: 14px; right: 14px; display: flex; justify-content: space-between; z-index: 2; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+  .frame .hud .rec::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--neon); margin-right: 8px; box-shadow: 0 0 8px var(--neon); vertical-align: 1px; animation: blink 1.6s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: .15; } }
+  .subtitle { position: absolute; left: 8%; right: 8%; bottom: 7%; z-index: 2; text-align: center; font-family: var(--sans); font-weight: 500; font-size: clamp(13px, 1.5vw, 19px); line-height: 1.35; color: var(--sub); text-shadow: 0 2px 2px #000, 0 0 10px #000, 0 0 2px #000; text-wrap: balance; }
+  .still:hover .frame img, .still:focus-visible .frame img { filter: contrast(1.05) saturate(.95) brightness(.85); transform: scale(1); }
+  .still:hover .frame, .still:focus-visible .frame { box-shadow: 0 0 0 1px rgba(255,46,74,.5), 0 0 60px -10px rgba(255,46,74,.55); }
+  .meta h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.4rem); line-height: .95; transition: text-shadow .6s, color .6s; }
+  .still:hover .meta h3 { color: #fff; text-shadow: 0 0 18px rgba(255,46,74,.8); }
+  .meta p { margin: 0; color: var(--bone-2); font-size: 15px; }
+  .meta .big { font-family: var(--display); font-size: clamp(3.4rem, 7vw, 5.6rem); line-height: .85; color: var(--neon); text-shadow: 0 0 20px rgba(255,46,74,.6); }
+
+  /* ---------- About ---------- */
+  .about { display: grid; grid-template-columns: auto 1fr; gap: clamp(28px, 6vw, 90px); align-items: center; }
+  .oval { width: clamp(180px, 22vw, 280px); aspect-ratio: 3 / 4; border-radius: 50%; overflow: hidden; position: relative; box-shadow: 0 0 0 1px rgba(255,46,74,.4), 0 0 80px -10px rgba(255,46,74,.5); }
+  .oval img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.2) brightness(.9); }
+  .oval::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, #ff2e4a, #3a0010); mix-blend-mode: multiply; }
+  .about h2 { margin: 0 0 24px; font-family: var(--display); font-weight: 400; font-size: clamp(2.1rem, 4.4vw, 3.8rem); line-height: 1.05; text-wrap: balance; }
+  .about h2 em { font-style: normal; color: var(--petal); }
+  .about .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 36px; color: var(--bone-2); max-width: 760px; }
+  .about .cols p { margin: 0; }
+
+  /* ---------- Credits ---------- */
+  .credits { display: grid; gap: 30px; max-width: 900px; margin-inline: auto; }
+  .credit { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 4vw, 48px); align-items: baseline; text-decoration: none; }
+  .credit .when { text-align: right; font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--bone-3); font-variant-numeric: tabular-nums; }
+  .credit .t { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2.1rem); line-height: 1.12; transition: color .4s, text-shadow .4s; }
+  .credit .t small { display: block; margin-top: 6px; font-family: var(--sans); font-size: 14px; color: var(--bone-3); line-height: 1.4; }
+  .credit:hover .t { color: #fff; text-shadow: 0 0 16px rgba(255,46,74,.7); }
+  .credits-head { text-align: center; margin-bottom: 56px; }
+  .credits-head h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(2.8rem, 7vw, 6rem); line-height: .9; }
+
+  /* ---------- Contact ---------- */
+  .contact { text-align: center; display: grid; gap: 26px; justify-items: center; }
+  .neon { margin: 0; font-family: var(--display); font-size: clamp(3.4rem, 11vw, 9rem); line-height: .9; color: #ffe3e7;
+    text-shadow: 0 0 4px #fff, 0 0 12px var(--neon), 0 0 30px var(--neon), 0 0 70px var(--neon), 0 0 120px rgba(255,46,74,.6); }
+  .js .neon.in { animation: flicker 2.2s linear both; }
+  @keyframes flicker { 0%, 8%, 12%, 30%, 34% { opacity: .15; } 10%, 32%, 100% { opacity: 1; } }
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn { display: inline-flex; padding: 13px 22px; border: 1px solid rgba(239,233,225,.3); border-radius: 999px; text-decoration: none; font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; transition: border-color .3s, box-shadow .3s, background .3s; }
+  .btn:hover { border-color: var(--neon); box-shadow: 0 0 24px -4px var(--neon); }
+  .btn.solid { background: var(--neon); border-color: var(--neon); color: #1a0006; }
+  .email { font-family: var(--mono); font-size: 14px; color: var(--bone-2); user-select: all; }
+  footer { border-top: 1px solid var(--line); padding-block: 26px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--bone-3); }
+
+  /* ---------- Reveal ---------- */
+  .js .rise { opacity: 0; transform: translateY(24px); filter: blur(6px); transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.7,.2,1), filter 1.2s ease; transition-delay: var(--d, 0s); }
+  .js .rise.in { opacity: 1; transform: none; filter: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .rise { opacity: 1; transform: none; filter: none; }
+  }
+
+  @media (max-width: 860px) {
+    .still .screen, .still.flip .screen { grid-column: 1 / -1; grid-row: 1; }
+    .still .meta, .still.flip .meta { grid-column: 1 / -1; grid-row: 2; text-align: left; justify-items: start; }
+    .about { grid-template-columns: 1fr; }
+    .about .cols { grid-template-columns: 1fr; }
+    .subtitle { font-size: 12.5px; bottom: 5%; }
+  }
+  @media (max-width: 560px) {
+    .nav ul li:nth-child(3) { display: none; }
+    .credit { grid-template-columns: 1fr; gap: 4px; }
+    .credit .when { text-align: left; }
+    .frame .hud { font-size: 9.5px; }
+    .frame { aspect-ratio: 16 / 9; }
+  }
+</style>
+
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="brand" href="#top"><i></i>Dushyant Garg</a>
+    <ul>
+      <li><a class="l" href="#work">Work</a></li>
+      <li><a class="l" href="#writing">Writing</a></li>
+      <li><a class="l" href="#about">About</a></li>
+      <li><a class="l" href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="ring" aria-hidden="true"><div class="band"></div><div class="rim t"></div><div class="rim b"></div></div>
+  <canvas id="flora" aria-hidden="true"></canvas>
+  <div class="hero-copy">
+    <div>
+      <span class="kicker">A night garden of agent tools</span>
+      <h1 class="name">Dushyant Garg</h1>
+      <p class="role">AI Product Engineer &amp; Builder <span>·</span> Surround Sound Media</p>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#work">Now showing ↓</a>
+</header>
+
+<section class="block" id="work">
+  <div class="wrap">
+    <div class="sec-title rise">
+      <h2>Now showing</h2>
+      <p>Six things I built. Each still is the real product. The subtitle is what it does.</p>
+    </div>
+
+    <div class="reel">
+      <a class="still rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/kv-capsules-pti-poster.jpg" alt="KV Capsules explainer frame" loading="lazy">
+          <div class="hud"><span class="rec">Research</span><span>Gemma 4 · 12B · local</span></div>
+          <p class="subtitle">Same model. Different runtime. The agent stops rereading what it already knows.</p>
+        </div></div>
+        <div class="meta"><span class="big">13.8×</span><h3>KV Capsules</h3><p>Reusable attention state for local tool-using agents. Paper and explainer.</p></div>
+      </a>
+
+      <a class="still flip rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/octocheck-dashboard.png" alt="OctoCheck dashboard" loading="lazy">
+          <div class="hud"><span class="rec">Live</span><span>GitHub App · local CI</span></div>
+          <p class="subtitle">GitHub asks for the work. My machine decides what actually runs.</p>
+        </div></div>
+        <div class="meta"><span class="mono">Infrastructure</span><h3>OctoCheck</h3><p>Private local CI with a policy gate in the middle.</p></div>
+      </a>
+
+      <a class="still rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/tradespec-preview.jpg" alt="TradeSpec site" loading="lazy">
+          <div class="hud"><span class="rec">Private alpha</span><span>Specialty contractors</span></div>
+          <p class="subtitle">Every quantity in the bid points back to the sheet it came from.</p>
+        </div></div>
+        <div class="meta"><span class="mono">Product</span><h3>TradeSpec</h3><p>Evidence-linked bid review for lightning protection estimators.</p></div>
+      </a>
+
+      <a class="still flip rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/openspec-studio-demo-poster.jpg" alt="OpenSpec Studio" loading="lazy">
+          <div class="hud"><span class="rec">Public alpha</span><span>Tauri · desktop</span></div>
+          <p class="subtitle">Proposals, tasks, validation. One window instead of twelve folders.</p>
+        </div></div>
+        <div class="meta"><span class="mono">Developer tools</span><h3>OpenSpec Studio</h3><p>A local workbench for spec-driven development.</p></div>
+      </a>
+
+      <a class="still rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/potato-demo-poster.jpg" alt="Potato terminal cockpit" loading="lazy">
+          <div class="hud"><span class="rec">Open source</span><span>Rust · terminal</span></div>
+          <p class="subtitle">Codex, Claude Code and friends, in one room, with one task list.</p>
+        </div></div>
+        <div class="meta"><span class="mono">Developer tools</span><h3>Potato</h3><p>A terminal cockpit for coordinating real coding agents.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="about" style="background: linear-gradient(180deg, transparent, #12040a 40%, transparent)">
+  <div class="wrap about">
+    <div class="oval rise"><img src="media/avatar.jpg" alt="Portrait of Dushyant Garg" loading="lazy"></div>
+    <div>
+      <h2 class="rise">I build the quiet machinery that lets agents <em>do real work.</em></h2>
+      <div class="cols rise" style="--d:.1s">
+        <p>I'm an AI product engineer at Surround Sound Media. I came up through product management, so I start with the person and work back to the system.</p>
+        <p>After hours I build in public: memory, task boards, local CI, display surfaces, research. Small tools, local-first, easy to inspect.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="writing">
+  <div class="wrap">
+    <div class="credits-head rise"><span class="mono">Written by</span><h2>Dushyant Garg</h2></div>
+    <div class="credits">
+      <a class="credit rise" href="https://dushyantg.substack.com/p/the-house-s01e01-cascade" target="_blank" rel="noopener"><span class="when">Mar 12, 2026 · 5 min</span><span class="t">The House, S01E01: “Cascade”<small>A weekly series about me and my AI agents.</small></span></a>
+      <a class="credit rise" href="https://dushyantg.substack.com/p/i-am-not-middleware" target="_blank" rel="noopener"><span class="when">Mar 1, 2026 · 2 min</span><span class="t">I Am Not Middleware<small>My agents shipped 25 tickets while I slept.</small></span></a>
+      <a class="credit rise" href="https://dushyantg.substack.com/p/silicon-valley-is-spending-billions" target="_blank" rel="noopener"><span class="when">Feb 15, 2026 · 9 min</span><span class="t">They're Ignoring a $2.2 Trillion Industry<small>498,000 specialty contractors still bid with pen, paper and Excel.</small></span></a>
+      <a class="credit rise" href="https://dushyantg.substack.com/p/the-taste-for-ai-knowing-when-to" target="_blank" rel="noopener"><span class="when">Feb 1, 2026 · 5 min</span><span class="t">The Taste for AI: Knowing When to Stop<small>The skill isn't using AI more. It's knowing when to pivot.</small></span></a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="contact">
+  <div class="wrap contact">
+    <span class="mono rise">After hours</span>
+    <p class="neon rise">Say hello</p>
+    <div class="btns rise">
+      <a class="btn solid" href="mailto:dushyantgarg3@gmail.com">Email me</a>
+      <a class="btn" href="https://github.com/fraction12" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://linkedin.com/in/dushyantgarg" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <span class="email">dushyantgarg3@gmail.com</span>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Night Garden · Direction B</span><span>Sample · not live</span></div></footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.querySelector('.hero');
+
+  /* ---------- reveals ---------- */
+  if (!reduce && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js');
+    requestAnimationFrame(function () { requestAnimationFrame(function () { hero.classList.add('open'); }); });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.rise').forEach(function (el) { io.observe(el); });
+    setTimeout(function () { document.querySelectorAll('.rise').forEach(function (el) { el.classList.add('in'); }); }, 5000);
+  }
+
+  /* ---------- generative flora ---------- */
+  var cv = document.getElementById('flora'), ctx = cv.getContext('2d');
+  var W, H, DPR, flowers = [], leaves = [], petals = [], t0 = performance.now();
+  var mouse = { x: -999, y: -999, tx: -999, ty: -999 };
+  var seed = 11;
+  function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+  function R(a, b) { return a + rnd() * (b - a); }
+
+  var SPECIES = [
+    { k: 'poppy',  c: ['#e3262f', '#ff5a3c', '#8e0f1a'], w: 3 },
+    { k: 'lily',   c: ['#f6f1ea', '#f2b6c8', '#c4466a'], w: 2 },
+    { k: 'tiger',  c: ['#ff7a1a', '#ffb347', '#5a1d06'], w: 2 },
+    { k: 'daisy',  c: ['#f4b93a', '#ffd76a', '#8a4b0b'], w: 2 },
+    { k: 'glory',  c: ['#7fb2ff', '#cfe0ff', '#2c4ea8'], w: 2 },
+    { k: 'iris',   c: ['#9a62e0', '#d6b3ff', '#4a1f86'], w: 2 },
+    { k: 'blossom',c: ['#f4a9b8', '#ffe1e8', '#b8385a'], w: 3 }
+  ];
+  function pickSpecies() { var tot = 0, i; for (i = 0; i < SPECIES.length; i++) tot += SPECIES[i].w; var r = rnd() * tot; for (i = 0; i < SPECIES.length; i++) { r -= SPECIES[i].w; if (r <= 0) return SPECIES[i]; } return SPECIES[0]; }
+
+  function petalPath(g, len, wid, tip) {
+    g.beginPath(); g.moveTo(0, 0);
+    g.bezierCurveTo(wid, -len * .25, wid * tip, -len * .9, 0, -len);
+    g.bezierCurveTo(-wid * tip, -len * .9, -wid, -len * .25, 0, 0);
+    g.closePath();
+  }
+  function paintFlower(sp, r) {
+    var size = Math.ceil(r * 2.6), c = document.createElement('canvas');
+    c.width = c.height = size * DPR; var g = c.getContext('2d'); g.scale(DPR, DPR); g.translate(size / 2, size / 2);
+    var col = sp.c, n, i, grad;
+    function fillPetal(len, wid, tip, a, light) {
+      g.save(); g.rotate(a); petalPath(g, len, wid, tip);
+      grad = g.createLinearGradient(0, 0, 0, -len);
+      grad.addColorStop(0, col[2]); grad.addColorStop(.35, col[0]); grad.addColorStop(1, light ? col[1] : col[0]);
+      g.fillStyle = grad; g.fill();
+      g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = .8; g.stroke();
+      g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = .6; g.beginPath(); g.moveTo(0, -len * .1); g.quadraticCurveTo(wid * .15, -len * .5, 0, -len * .85); g.stroke();
+      g.restore();
+    }
+    if (sp.k === 'poppy') { n = 5; for (i = 0; i < n; i++) fillPetal(r, r * .95, .9, i / n * Math.PI * 2 + R(-.2, .2), true);
+      g.fillStyle = '#1b0508'; g.beginPath(); g.arc(0, 0, r * .22, 0, 7); g.fill();
+      for (i = 0; i < 18; i++) { var a = rnd() * 7, d = R(r * .12, r * .3); g.fillStyle = '#2a0a0e'; g.beginPath(); g.arc(Math.cos(a) * d, Math.sin(a) * d, 1.3, 0, 7); g.fill(); } }
+    else if (sp.k === 'lily' || sp.k === 'tiger') { n = 6; for (i = 0; i < n; i++) fillPetal(r, r * .38, .35, i / n * Math.PI * 2 + (i % 2) * .08, true);
+      if (sp.k === 'tiger') for (i = 0; i < 40; i++) { var a2 = rnd() * 7, d2 = R(r * .15, r * .75); g.fillStyle = 'rgba(60,10,0,.8)'; g.beginPath(); g.arc(Math.cos(a2) * d2, Math.sin(a2) * d2, R(.7, 1.8), 0, 7); g.fill(); }
+      g.strokeStyle = sp.k === 'tiger' ? '#8a2b06' : '#d9b36a'; g.lineWidth = 1;
+      for (i = 0; i < 6; i++) { var a3 = i / 6 * 7 + .3; g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(Math.cos(a3) * r * .3, Math.sin(a3) * r * .3 - 4, Math.cos(a3) * r * .62, Math.sin(a3) * r * .62); g.stroke(); g.fillStyle = '#b8431b'; g.beginPath(); g.ellipse(Math.cos(a3) * r * .64, Math.sin(a3) * r * .64, 2.6, 1.3, a3, 0, 7); g.fill(); } }
+    else if (sp.k === 'daisy') { n = 22; for (i = 0; i < n; i++) fillPetal(r, r * .16, .6, i / n * Math.PI * 2, true);
+      grad = g.createRadialGradient(0, 0, 0, 0, 0, r * .3); grad.addColorStop(0, '#ffcf4a'); grad.addColorStop(1, '#7a3c05'); g.fillStyle = grad; g.beginPath(); g.arc(0, 0, r * .3, 0, 7); g.fill(); }
+    else if (sp.k === 'glory') {
+      grad = g.createRadialGradient(0, 0, r * .1, 0, 0, r); grad.addColorStop(0, '#fff6d8'); grad.addColorStop(.25, col[1]); grad.addColorStop(.8, col[0]); grad.addColorStop(1, col[2]);
+      g.fillStyle = grad; g.beginPath(); for (i = 0; i <= 10; i++) { var a4 = i / 10 * Math.PI * 2, rr = i % 2 ? r * .88 : r; g.lineTo(Math.cos(a4) * rr, Math.sin(a4) * rr); } g.closePath(); g.fill();
+      g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 1; for (i = 0; i < 5; i++) { var a5 = i / 5 * 7; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(a5) * r * .95, Math.sin(a5) * r * .95); g.stroke(); }
+      g.fillStyle = '#ffe07a'; g.beginPath(); g.arc(0, 0, r * .1, 0, 7); g.fill(); }
+    else if (sp.k === 'iris') { for (i = 0; i < 3; i++) fillPetal(r, r * .6, .8, i / 3 * 7 + .5, true); for (i = 0; i < 3; i++) fillPetal(r * .7, r * .3, .5, i / 3 * 7 + 1.55, false);
+      g.fillStyle = '#ffd24a'; for (i = 0; i < 3; i++) { g.save(); g.rotate(i / 3 * 7 + .5); g.fillRect(-1.5, -r * .6, 3, r * .45); g.restore(); } }
+    else { n = 5; for (i = 0; i < n; i++) fillPetal(r, r * .7, 1, i / n * Math.PI * 2, true);
+      g.fillStyle = '#fff3c2'; for (i = 0; i < 8; i++) { var a6 = i / 8 * 7; g.beginPath(); g.arc(Math.cos(a6) * r * .22, Math.sin(a6) * r * .22, 1.2, 0, 7); g.fill(); } }
+    return { img: c, size: size };
+  }
+  function paintLeaf(len, wid, col) {
+    var c = document.createElement('canvas'); c.width = Math.ceil(wid * 2.4) * DPR; c.height = Math.ceil(len + 4) * DPR;
+    var g = c.getContext('2d'); g.scale(DPR, DPR); g.translate(wid * 1.2, len + 2);
+    petalPath(g, len, wid, .5);
+    var grad = g.createLinearGradient(-wid, 0, wid, 0); grad.addColorStop(0, col); grad.addColorStop(.5, '#3f7d45'); grad.addColorStop(1, '#0f2412');
+    g.fillStyle = grad; g.fill();
+    g.strokeStyle = 'rgba(160,210,150,.35)'; g.lineWidth = .8; g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -len * .95); g.stroke();
+    return { img: c, w: wid * 2.4, h: len + 4 };
+  }
+
+  function layout() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = W * DPR; cv.height = H * DPR;
+    seed = 11; flowers = []; leaves = []; petals = [];
+    var scale = Math.max(.6, Math.min(1.25, W / 1200));
+    var count = Math.round(Math.min(64, W / 22));
+    var tries = 0;
+    while (flowers.length < count && tries < 3000) {
+      tries++;
+      var x = rnd() * W, y = rnd() * H;
+      var dx = (x - W / 2) / (W * .36), dy = (y - H * .52) / (H * .26);
+      if (dx * dx + dy * dy < 1) continue;           // keep the centre clear for the name
+      var sp = pickSpecies();
+      var rad = (sp.k === 'blossom' ? R(9, 16) : sp.k === 'daisy' ? R(14, 26) : R(18, 40)) * scale;
+      var ok = true;
+      for (var j = 0; j < flowers.length; j++) { var f = flowers[j], ddx = f.x - x, ddy = f.y - y; if (ddx * ddx + ddy * ddy < Math.pow((f.r + rad) * .95, 2)) { ok = false; break; } }
+      if (!ok) continue;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      flowers.push({ x: x, y: y, r: rad, rot: R(0, 7), sprite: paintFlower(sp, rad), delay: 150 + dist * 420 + R(0, 500), ph: R(0, 7), sw: R(.02, .06) });
+    }
+    // leaves hug each flower
+    flowers.forEach(function (f) {
+      var nl = f.r > 20 * scale ? 3 : 1;
+      for (var k = 0; k < nl; k++) {
+        var len = f.r * R(1.2, 2.2), wid = len * R(.16, .26);
+        leaves.push({ x: f.x, y: f.y, rot: R(0, 7), sprite: paintLeaf(len, wid, ['#1c3a20', '#244a2a', '#173019'][k % 3]), delay: f.delay - 150, ph: f.ph, sw: f.sw * .8 });
+      }
+    });
+    for (var p = 0; p < 26; p++) petals.push({ x: R(0, W), y: R(-H, H), s: R(3, 7), vy: R(.15, .45), vx: R(-.25, .15), rot: R(0, 7), vr: R(-.02, .02), c: rnd() < .7 ? '#ff4b63' : '#ffb3c1' });
+  }
+
+  function ease(x) { return x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3); }
+
+  function draw(now) {
+    var t = now - t0;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    mouse.x += (mouse.tx - mouse.x) * .08; mouse.y += (mouse.ty - mouse.y) * .08;
+
+    function sprite(o, w, h, anchorBottom) {
+      var b = reduce ? 1 : ease((t - o.delay) / 1400); if (b <= 0) return;
+      var sway = reduce ? 0 : Math.sin(t / 1000 * .9 + o.ph) * o.sw;
+      var md = Math.hypot(o.x - mouse.x, o.y - mouse.y), push = md < 160 ? (1 - md / 160) * .25 : 0;
+      ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.rot + sway + push);
+      ctx.scale(.3 + .7 * b, .3 + .7 * b); ctx.globalAlpha = b;
+      if (anchorBottom) ctx.drawImage(o.sprite.img, -w / 2, -h + 2, w, h);
+      else ctx.drawImage(o.sprite.img, -w / 2, -h / 2, w, h);
+      ctx.restore();
+    }
+    leaves.forEach(function (l) { sprite(l, l.sprite.w, l.sprite.h, true); });
+    flowers.forEach(function (f) { sprite(f, f.sprite.size, f.sprite.size, false); });
+
+    if (!reduce) petals.forEach(function (p) {
+      p.y += p.vy; p.x += p.vx + Math.sin((t / 1000) + p.rot) * .2; p.rot += p.vr;
+      if (p.y > H + 10) { p.y = -10; p.x = R(0, W); }
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = .75; ctx.fillStyle = p.c;
+      ctx.beginPath(); ctx.ellipse(0, 0, p.s, p.s * .55, 0, 0, 7); ctx.fill(); ctx.restore();
+    });
+
+    // red torch-light that follows the cursor
+    if (mouse.x > -500) {
+      ctx.globalCompositeOperation = 'lighter';
+      var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 240);
+      g.addColorStop(0, 'rgba(255,46,74,.20)'); g.addColorStop(1, 'rgba(255,46,74,0)');
+      ctx.fillStyle = g; ctx.fillRect(mouse.x - 240, mouse.y - 240, 480, 480);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+
+  layout();
+  requestAnimationFrame(draw);
+  var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { layout(); t0 = performance.now() - 6000; if (reduce) requestAnimationFrame(draw); }, 150); });
+  hero.addEventListener('pointermove', function (e) { var r = cv.getBoundingClientRect(); mouse.tx = e.clientX - r.left; mouse.ty = e.clientY - r.top; if (mouse.x < -500) { mouse.x = mouse.tx; mouse.y = mouse.ty; } });
+  hero.addEventListener('pointerleave', function () { mouse.tx = mouse.ty = -999; mouse.x = mouse.y = -999; });
+})();
+</script>
