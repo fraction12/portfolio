@@ -12,7 +12,7 @@
 }
 
 .section-head__name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-h2-size);
   font-weight: 700;
   letter-spacing: 0;

@@ -18,7 +18,7 @@ interface Props {
 
 const {
   title = 'Dushyant Garg',
-  description = 'Dushyant Garg — Product Manager and builder working on practical AI products, product systems, and open-source tools.',
+  description = 'Dushyant Garg — AI product engineer and builder at Surround Sound Media, making tools for AI agents.',
   current = 'home',
   ogImage = '/og-default.png',
   includeIdentitySchema = false,
@@ -41,7 +41,9 @@ const personSchema = includeIdentitySchema
       name: 'Dushyant Garg',
       url: siteOrigin + '/',
       description:
-        'Product Manager and builder working on practical AI products, product systems, and open-source tools.',
+        'AI product engineer and builder at Surround Sound Media, making practical AI products and open-source tools for AI agents.',
+      jobTitle: 'AI Product Engineer',
+      worksFor: { '@type': 'Organization', name: 'Surround Sound Media' },
       sameAs: [
         'https://github.com/fraction12',
         'https://linkedin.com/in/dushyantgarg',
@@ -72,32 +74,7 @@ const websiteSchema = includeIdentitySchema
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#080807" />
-  <script is:inline>
-    // Dark-only theme guard. Runs before paint and before Astro swaps so
-    // stale stored light-mode preferences cannot affect the UI.
-    (function () {
-      var state = window.__portfolioThemeState || (window.__portfolioThemeState = {});
-      function forceDark(doc) {
-        doc.documentElement.setAttribute('data-theme', 'dark');
-        doc.documentElement.setAttribute('data-theme-pref', 'dark');
-        var meta = doc.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', '#080807');
-        try {
-          localStorage.removeItem('portfolio-theme-v2');
-        } catch (e) {}
-      }
-      forceDark(document);
-
-      if (!state.installed) {
-        state.installed = true;
-
-        document.addEventListener('astro:before-swap', function (ev) {
-          forceDark(ev.newDocument);
-        });
-      }
-    })();
-  </script>
+  <meta name="theme-color" content="#ece8e1" />
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
@@ -121,7 +98,7 @@ const websiteSchema = includeIdentitySchema
   <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly summary" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&family=Hanken+Grotesk:ital,wght@0,300..700;1,300..500&family=Martian+Mono:wdth,wght@75..112.5,300..500&display=swap" rel="stylesheet" />
   {personSchema && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
   )}

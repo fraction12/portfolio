@@ -1,48 +1,61 @@
 /* ============================================================
-   QUIET INDEX TOKENS
-   Dark luxury portfolio system.
+   CHROME ISSUE TOKENS
+   Plaster ground, ink type, chrome display lettering. The work section
+   and the cover window drop into night; everything else stays light.
 
-   Theme model:
-     Dark only.
+   Token names are historical: --ink* are surfaces, --ivory* are text.
    ============================================================ */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* Surfaces */
-  --ink:          #080807;
-  --ink-1:        #0e0d0c;
-  --ink-2:        #171512;
+  /* Surfaces (plaster) */
+  --ink:          #ece8e1;
+  --ink-1:        #e3ded5;
+  --ink-2:        #d2ccc1;
 
-  /* Text */
-  --ivory:        #f5efe5;
-  --ivory-2:      #d8d0c4;
-  --dim:          #9a9287;
-  --dim-2:        #6f675d;
+  /* Text (ink) */
+  --ivory:        #0d0d0f;
+  --ivory-2:      #3b3b40;
+  --dim:          #6c6b70;
+  --dim-2:        #8d8a86;
 
-  /* Accent */
-  --signal:       #ff6a2a;
-  --signal-hov:   #ff9a68;
-  --signal-dim:   rgba(255, 106, 42, 0.12);
-  --signal-glow:  rgba(255, 106, 42, 0.30);
+  /* Night: the screening room and the garden window */
+  --night:        #0b0b0d;
+  --night-2:      #16161a;
+  --bone:         #eeebe6;
+  --bone-2:       #b3aea6;
+  --bone-3:       #77736d;
+  --subtitle:     #fbf6e4;
+
+  /* Accent: used sparingly, for focus and small signals */
+  --signal:       #0d0d0f;
+  --signal-hov:   #3b3b40;
+  --signal-dim:   rgba(13, 13, 15, 0.08);
+  --signal-glow:  rgba(13, 13, 15, 0.18);
+
+  /* Chrome lettering */
+  --chrome: linear-gradient(180deg, #2a2b30 0%, #f7f8fa 38%, #5d6168 50%, #111215 52%, #9aa0a8 72%, #eef0f3 90%, #6c7078 100%);
+  --chrome-night: linear-gradient(180deg, #6c7078 0%, #f7f8fa 40%, #8a9098 52%, #3a3d43 56%, #c9cdd3 80%, #eef0f3 100%);
 
   /* Semantic colors, used sparingly */
-  --status-live:  #7fb58b;
-  --status-agent: #9fb8b0;
-  --status-hot:   #ff6a2a;
-  --status-cold:  #a2aecb;
-  --status-warn:  #d09a55;
+  --status-live:  #3f7a4a;
+  --status-agent: #4d6a63;
+  --status-hot:   #b3261e;
+  --status-cold:  #4a5a86;
+  --status-warn:  #9a6a22;
 
   /* Lines */
-  --line:         rgba(245, 239, 229, 0.11);
-  --line-2:       rgba(245, 239, 229, 0.17);
-  --line-3:       rgba(245, 239, 229, 0.34);
+  --line:         rgba(13, 13, 15, 0.12);
+  --line-2:       rgba(13, 13, 15, 0.18);
+  --line-3:       rgba(13, 13, 15, 0.36);
 
   /* Typography */
-  --font-display: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Anybody', 'Arial Black', Impact, system-ui, sans-serif;
+  --font-body:    'Hanken Grotesk', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --font-mono:    'Martian Mono', ui-monospace, Menlo, monospace;
 
-  --type-hero-name-size:  clamp(3rem, 7vw, 5rem);
-  --type-page-title-size: clamp(2.2rem, 5vw, 3.6rem);
+  --type-hero-name-size:  clamp(4.4rem, 17.5vw, 16rem);
+  --type-page-title-size: clamp(3rem, 9vw, 7.5rem);
   --type-h1-size:         clamp(1.7rem, 3vw, 2.1rem);
   --type-h2-size:         1.05rem;
   --type-h3-size:         1.05rem;
@@ -80,15 +93,15 @@
   --radius-pill: 999px;
 
   /* Layout */
-  --layout-max-w:        1080px;
+  --layout-max-w:        1280px;
   --layout-max-w-narrow: 1080px;
   --layout-nav-h:        64px;
 
   /* Elevation */
-  --shadow-card-hover:    0 20px 44px rgba(0, 0, 0, 0.32);
+  --shadow-card-hover:    0 28px 40px -22px rgba(0, 0, 0, 0.45);
   --shadow-connect-hover: 0 16px 34px rgba(0, 0, 0, 0.24);
-  --surface-card:         rgba(255, 255, 255, 0.035);
-  --surface-raised:       rgba(255, 255, 255, 0.055);
+  --surface-card:         rgba(255, 255, 255, 0.35);
+  --surface-raised:       rgba(255, 255, 255, 0.5);
 
   /* Motion */
   --motion-fast: 0.16s;
@@ -112,7 +125,7 @@
 }
 
 .type-hero {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-hero-name-size);
   font-weight: 700;
   letter-spacing: 0;
@@ -120,7 +133,7 @@
 }
 
 .type-page-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-page-title-size);
   font-weight: 700;
   letter-spacing: 0;
@@ -128,7 +141,7 @@
 }
 
 .type-h1 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-h1-size);
   font-weight: 700;
   letter-spacing: 0;
@@ -136,7 +149,7 @@
 }
 
 .type-h2 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-h2-size);
   font-weight: 700;
   letter-spacing: 0;
@@ -146,28 +159,28 @@
 }
 
 .type-h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-h3-size);
   font-weight: 700;
   line-height: 1.35;
 }
 
 .type-h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-h4-size);
   font-weight: 700;
   line-height: 1.4;
 }
 
 .type-body {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-body-size);
   font-weight: 400;
   line-height: 1.7;
 }
 
 .type-small {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-small-size);
   font-weight: 400;
   line-height: 1.5;
@@ -177,7 +190,7 @@
 .type-mono-sm,
 .type-mono-xs,
 .type-mono-md {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--type-caption-size);
   font-weight: 500;
   letter-spacing: 0;

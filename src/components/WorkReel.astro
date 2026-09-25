@@ -1,0 +1,207 @@
+---
+import type { HomeReelEntry } from '../config/featured-work';
+
+interface Props {
+  entries: HomeReelEntry[];
+}
+const { entries } = Astro.props;
+---
+
+<section id="work" class="screening" aria-labelledby="work-heading">
+  <div class="screening__inner">
+    <div class="screening__head" data-motion-reveal>
+      <h2 id="work-heading" class="screening__title">Work</h2>
+      <a class="screening__all mono-label" href="/tools">All work</a>
+    </div>
+
+    <div class="reel">
+      {entries.map(({ detail, subtitle, label, image }, index) => (
+        <a class:list={['still', { 'still--flip': index % 2 === 1 }]} href={detail.detailPath} data-motion-reveal>
+          <div class="still__screen">
+            <div class="still__frame">
+              <img
+                src={image}
+                alt={detail.demo.alt ?? detail.demo.label}
+                width="1280"
+                height="800"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+              <p class="still__subtitle">{subtitle}</p>
+            </div>
+          </div>
+          <div class="still__meta">
+            <h3>{detail.artifact.name}</h3>
+            <span class="mono-label">{label}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .screening {
+    position: relative;
+    isolation: isolate;
+    background: var(--night);
+    color: var(--bone);
+    padding-block: clamp(70px, 10vw, 130px);
+  }
+
+  /* film grain */
+  .screening::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .screening__inner {
+    max-width: var(--layout-max-w);
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+  }
+
+  .screening__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: clamp(40px, 6vw, 70px);
+  }
+
+  .screening__title {
+    margin: 0;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(3rem, 10vw, 8.5rem);
+    line-height: 0.8;
+    font-variation-settings: 'wdth' 110;
+    background: var(--chrome-night);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .screening__all {
+    color: var(--bone-2);
+    text-decoration: none;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(238, 235, 230, 0.3);
+    white-space: nowrap;
+  }
+
+  .screening__all:hover {
+    color: var(--bone);
+    border-color: var(--bone);
+  }
+
+  .reel {
+    display: grid;
+    gap: clamp(80px, 11vw, 150px);
+  }
+
+  .still {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+    align-items: end;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .still__screen { grid-column: 1 / span 9; }
+  .still__meta { grid-column: 10 / span 3; display: grid; gap: 8px; padding-bottom: 6px; }
+  .still--flip .still__screen { grid-column: 4 / span 9; grid-row: 1; }
+  .still--flip .still__meta { grid-column: 1 / span 3; grid-row: 1; text-align: right; justify-items: end; }
+
+  .still__frame {
+    position: relative;
+    aspect-ratio: 2.39 / 1;
+    overflow: hidden;
+    background: #000;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: box-shadow 1.2s ease;
+  }
+
+  .still__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+    filter: grayscale(1) contrast(1.1) brightness(0.55);
+    transform: scale(1.05);
+    transition: filter 1.6s ease, transform 2.4s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  .still__frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.7) 100%);
+  }
+
+  .still__subtitle {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    bottom: 7%;
+    z-index: 2;
+    margin: 0;
+    text-align: center;
+    font-weight: 500;
+    font-size: clamp(13px, 1.45vw, 18px);
+    line-height: 1.35;
+    color: var(--subtitle);
+    text-shadow: 0 2px 2px #000, 0 0 10px #000;
+    text-wrap: balance;
+  }
+
+  .still:hover .still__frame img,
+  .still:focus-visible .still__frame img {
+    filter: grayscale(0) contrast(1.02) brightness(0.88);
+    transform: scale(1);
+  }
+
+  .still:hover .still__frame,
+  .still:focus-visible .still__frame {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 30px 80px -30px rgba(200, 210, 230, 0.25);
+  }
+
+  .still:focus-visible { outline: 2px solid var(--bone); outline-offset: 8px; }
+
+  .still__meta h3 {
+    margin: 0;
+    color: var(--bone);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    line-height: 0.95;
+    font-variation-settings: 'wdth' 90;
+    transition: font-variation-settings 1s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  .still:hover .still__meta h3 { font-variation-settings: 'wdth' 125; }
+  .still__meta .mono-label { color: var(--bone-3); }
+
+  @media (max-width: 860px) {
+    .still__screen, .still--flip .still__screen { grid-column: 1 / -1; grid-row: 1; }
+    .still__meta, .still--flip .still__meta { grid-column: 1 / -1; grid-row: 2; text-align: left; justify-items: start; }
+    .still__subtitle { font-size: 12.5px; bottom: 5%; }
+  }
+
+  @media (max-width: 600px) {
+    .still__frame { aspect-ratio: 16 / 9; }
+    .reel { gap: 64px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .still__frame img, .still__meta h3 { transition: none; }
+  }
+</style>
