@@ -12,6 +12,11 @@
     --ink-2: #3b3b40;
     --ink-3: #75747a;
     --silver: #b9bec5;
+    --night: #0b0b0d;
+    --bone: #eeebe6;
+    --bone-2: #b3aea6;
+    --bone-3: #77736d;
+    --sub: #fbf6e4;
     --line: rgba(13, 13, 15, .14);
     --holo: linear-gradient(100deg, #cfd6ff, #ffd6f0 25%, #d6fff4 50%, #fff3c9 75%, #cfd6ff);
     --display: 'Anybody', 'Arial Black', Impact, system-ui, sans-serif;
@@ -52,7 +57,7 @@
     -webkit-text-stroke: 1px rgba(13,13,15,.18);
     filter: drop-shadow(0 18px 18px rgba(0,0,0,.12));
   }
-  .js .masthead b { animation: stretch 1.8s cubic-bezier(.2,.8,.1,1) .1s both; }
+  .js .masthead b { animation: stretch 2.8s cubic-bezier(.2,.8,.1,1) .2s both; }
   @keyframes stretch { from { font-variation-settings: 'wdth' 50; letter-spacing: .1em; opacity: 0; } to { font-variation-settings: 'wdth' 150; letter-spacing: -.02em; opacity: 1; } }
 
   .cover-body { display: grid; grid-template-columns: 1fr minmax(220px, 360px) 1fr; gap: clamp(16px, 3vw, 40px); align-items: center; margin-top: clamp(-40px, -3vw, -10px); position: relative; z-index: 2; }
@@ -84,37 +89,36 @@
   .head h2.in, .head h2 { font-variation-settings: 'wdth' 110; }
   .head p { margin: 0; max-width: 34ch; color: var(--ink-2); }
 
-  /* ---------- Lookbook ---------- */
-  .looks { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(22px, 3vw, 40px) clamp(18px, 2.4vw, 32px); }
-  .look { text-decoration: none; display: grid; gap: 16px; perspective: 900px; }
-  .arch {
-    position: relative; aspect-ratio: 4 / 5; border-radius: 999px 999px 4px 4px; display: grid; place-items: center; padding: 18% 9% 12%;
-    background: linear-gradient(180deg, var(--plaster-3), var(--plaster-2) 70%, var(--plaster));
-    box-shadow: inset 12px 0 22px -10px rgba(0,0,0,.2), inset -12px 0 22px -12px rgba(255,255,255,.8), inset 0 20px 36px -18px rgba(0,0,0,.22);
-  }
-  .card {
-    width: 100%; border-radius: 6px; overflow: hidden; background: #fff; transform: rotate(var(--r, -2deg)) translateZ(0);
-    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 24px 30px -18px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.12);
-    transition: transform .9s cubic-bezier(.2,.7,.2,1), box-shadow .9s;
-    position: relative;
-  }
-  .card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; filter: grayscale(.85) contrast(1.05); transition: filter .9s; }
-  .card::after { content: ""; position: absolute; inset: 0; background: var(--holo); background-size: 300% 100%; mix-blend-mode: soft-light; opacity: 0; transition: opacity .6s, background-position 1.4s; }
-  .look:hover .card, .look:focus-visible .card { transform: rotate(0) translateY(-10px) scale(1.04); box-shadow: 0 40px 50px -24px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.12); }
-  .look:hover .card img, .look:focus-visible .card img { filter: none; }
-  .look:hover .card::after { opacity: .9; background-position: 100% 0; }
-  .caption { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; align-items: baseline; }
-  .caption .n { grid-row: span 2; font-family: var(--display); font-weight: 300; font-size: 44px; line-height: .8; font-variation-settings: 'wdth' 60; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-  .caption h3 { margin: 0; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 22px; line-height: 1; font-variation-settings: 'wdth' 110; }
-  .caption p { margin: 0; color: var(--ink-2); font-size: 14.5px; }
-  .caption .mono { grid-column: 2; color: var(--ink-3); margin-top: 6px; }
-  .look.feature { grid-column: span 2; }
-  .look.feature .arch { aspect-ratio: 16 / 10.4; border-radius: 999px 999px 4px 4px / 60% 60% 4px 4px; padding: 11% 12% 8%; }
+  /* ---------- Screening room (film stills) ---------- */
+  .screening { background: var(--night); color: var(--bone); border-top: 0; position: relative; isolation: isolate; }
+  .screening::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .screening .head h2 { background: linear-gradient(180deg, #6c7078 0%, #f7f8fa 40%, #8a9098 52%, #3a3d43 56%, #c9cdd3 80%, #eef0f3 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .screening .head p { color: var(--bone-2); }
+  .reel { display: grid; gap: clamp(80px, 11vw, 150px); }
+  .still { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; align-items: end; text-decoration: none; }
+  .still .screen { grid-column: 1 / span 9; }
+  .still .meta { grid-column: 10 / span 3; display: grid; gap: 10px; padding-bottom: 6px; }
+  .still.flip .screen { grid-column: 4 / span 9; grid-row: 1; }
+  .still.flip .meta { grid-column: 1 / span 3; grid-row: 1; text-align: right; justify-items: end; }
+  .frame { position: relative; aspect-ratio: 2.39 / 1; overflow: hidden; background: #000; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.05); transition: box-shadow 1.2s ease; }
+  .frame img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) contrast(1.1) brightness(.55); transform: scale(1.05); transition: filter 1.6s ease, transform 2.4s cubic-bezier(.2,.7,.2,1); }
+  .frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,.7) 100%); }
+  .frame .hud { position: absolute; top: 12px; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; z-index: 2; color: rgba(255,255,255,.62); }
+  .subtitle { position: absolute; left: 8%; right: 8%; bottom: 7%; z-index: 2; margin: 0; text-align: center; font-family: var(--sans); font-weight: 500; font-size: clamp(13px, 1.45vw, 18px); line-height: 1.35; color: var(--sub); text-shadow: 0 2px 2px #000, 0 0 10px #000; text-wrap: balance; }
+  .still:hover .frame img, .still:focus-visible .frame img { filter: grayscale(0) contrast(1.02) brightness(.88); transform: scale(1); }
+  .still:hover .frame, .still:focus-visible .frame { box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 30px 80px -30px rgba(200,210,230,.25); }
+  .meta .n { font-family: var(--display); font-weight: 300; font-size: 44px; line-height: .8; font-variation-settings: 'wdth' 60; color: var(--bone-3); font-variant-numeric: tabular-nums; }
+  .meta h3 { margin: 0; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: .95; font-variation-settings: 'wdth' 90; transition: font-variation-settings 1s cubic-bezier(.2,.7,.2,1); }
+  .still:hover .meta h3 { font-variation-settings: 'wdth' 125; }
+  .meta p { margin: 0; color: var(--bone-2); font-size: 15px; }
+  .meta .mono { color: var(--bone-3); }
+  .meta .big { font-family: var(--display); font-weight: 900; font-size: clamp(3rem, 6vw, 5rem); line-height: .8; font-variation-settings: 'wdth' 120; background: linear-gradient(180deg, #6c7078, #f7f8fa 45%, #3a3d43 55%, #eef0f3); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
   /* ---------- Interview / about ---------- */
   .qa { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 80px); }
   .pull { margin: 0; font-family: var(--display); font-weight: 700; font-style: italic; font-size: clamp(2rem, 4.2vw, 3.6rem); line-height: 1; font-variation-settings: 'wdth' 80; text-wrap: balance; }
-  .pull span { background: var(--holo); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 1px var(--ink); animation: holo 8s linear infinite; }
+  .pull span { background: var(--holo); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 1px var(--ink); }
   @keyframes holo { to { background-position: 200% 0; } }
   .qa dl { margin: 0; display: grid; gap: 22px; }
   .qa dt { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 15px; font-variation-settings: 'wdth' 120; }
@@ -148,8 +152,8 @@
   footer { border-top: 1px solid var(--line); padding-block: 22px; }
   footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--ink-3); }
 
-  .js .rise { opacity: 0; transform: translateY(30px); transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
-  .js .rise.in { opacity: 1; transform: none; }
+  .js .rise { opacity: 0; transform: translateY(18px); filter: blur(6px); transition: opacity 1.4s ease, transform 1.4s cubic-bezier(.2,.7,.2,1), filter 1.4s ease; transition-delay: var(--d, 0s); }
+  .js .rise.in { opacity: 1; transform: none; filter: none; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -159,19 +163,19 @@
   @media (max-width: 920px) {
     .cover-body { grid-template-columns: 1fr 1fr; }
     .niche { grid-column: 1 / -1; grid-row: 1; width: min(300px, 70%); justify-self: center; }
-    .looks { grid-template-columns: 1fr 1fr; }
-    .look.feature { grid-column: 1 / -1; }
+    .still .screen, .still.flip .screen { grid-column: 1 / -1; grid-row: 1; }
+    .still .meta, .still.flip .meta { grid-column: 1 / -1; grid-row: 2; text-align: left; justify-items: start; }
     .qa { grid-template-columns: 1fr; }
   }
   @media (max-width: 600px) {
     .top nav a:nth-child(3) { display: none; }
     .cover-body { grid-template-columns: 1fr; }
     .lines.r { text-align: left; justify-items: start; }
-    .looks { grid-template-columns: 1fr; }
+    .frame { aspect-ratio: 16 / 9; }
+    .subtitle { font-size: 12.5px; bottom: 5%; }
     .head { grid-template-columns: 1fr; }
     .contents a { grid-template-columns: 1fr; gap: 4px; }
     .contents .rt { display: none; }
-    .look.feature .arch { aspect-ratio: 4 / 4; }
   }
 </style>
 
@@ -179,7 +183,7 @@
   <div class="top">
     <span class="mono">Dushyant Garg</span>
     <nav aria-label="Primary">
-      <a href="#looks">Looks</a>
+      <a href="#looks">Work</a>
       <a href="#interview">Interview</a>
       <a href="#contents">Writing</a>
       <a href="#back">Contact</a>
@@ -201,7 +205,7 @@
       <div class="niche"><img src="media/avatar.jpg" alt="Portrait of Dushyant Garg" width="460" height="460"></div>
       <div class="lines r">
         <div class="line"><a href="#contents"><span class="big">“I am not middleware”</span><span class="sm">25 tickets shipped overnight, and what that did to my job.</span></a></div>
-        <div class="line"><a href="#looks"><span class="big">Six looks for the agent era</span><span class="sm">Tools for memory, planning, display and review.</span></a></div>
+        <div class="line"><a href="#looks"><span class="big">Now showing: five tools</span><span class="sm">Research, local CI, a product and two developer tools.</span></a></div>
       </div>
     </div>
 
@@ -209,29 +213,49 @@
   </div>
 </header>
 
-<section class="block" id="looks">
+<section class="block screening" id="looks">
   <div class="wrap">
-    <div class="head"><h2 class="rise">The Looks</h2><p class="rise">Everything here is real, shipped and in use. Hover to see it in colour.</p></div>
-    <div class="looks">
-      <a class="look feature rise" href="#">
-        <div class="arch"><div class="card" style="--r:-1.5deg"><img src="media/kv-capsules-pti-poster.jpg" alt="KV Capsules explainer" loading="lazy"></div></div>
-        <div class="caption"><span class="n">01</span><h3>KV Capsules + PTI</h3><p>Reusable attention state for local agents. 13.8× faster on a repeated-work stream.</p><span class="mono">Research · paper + video</span></div>
+    <div class="head"><h2 class="rise">Now showing</h2><p class="rise">Five things I built. Each still is the real product, and the subtitle says what it does. Hover to see it in colour.</p></div>
+    <div class="reel">
+      <a class="still rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/kv-capsules-pti-poster.jpg" alt="KV Capsules explainer" loading="lazy">
+          <div class="hud mono"><span>Research</span><span>Gemma 4 · 12B · local</span></div>
+          <p class="subtitle">Same model, different runtime. The agent stops rereading what it already knows.</p>
+        </div></div>
+        <div class="meta"><span class="big">13.8×</span><h3>KV Capsules + PTI</h3><p>Reusable attention state for local tool-using agents.</p><span class="mono">Paper + explainer</span></div>
       </a>
-      <a class="look rise" style="--d:.08s" href="#">
-        <div class="arch"><div class="card" style="--r:2.5deg"><img src="media/octocheck-dashboard.png" alt="OctoCheck dashboard" loading="lazy"></div></div>
-        <div class="caption"><span class="n">02</span><h3>OctoCheck</h3><p>Private local CI with a policy gate.</p><span class="mono">GitHub App · live</span></div>
+      <a class="still flip rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/octocheck-dashboard.png" alt="OctoCheck dashboard" loading="lazy">
+          <div class="hud mono"><span>Live</span><span>GitHub App · local CI</span></div>
+          <p class="subtitle">GitHub asks for the work. My machine decides what actually runs.</p>
+        </div></div>
+        <div class="meta"><span class="n">02</span><h3>OctoCheck</h3><p>Private local CI with a policy gate in the middle.</p><span class="mono">GitHub App · live</span></div>
       </a>
-      <a class="look rise" href="#">
-        <div class="arch"><div class="card" style="--r:-3deg"><img src="media/tradespec-preview.jpg" alt="TradeSpec" loading="lazy"></div></div>
-        <div class="caption"><span class="n">03</span><h3>TradeSpec</h3><p>Bid review traced to the source sheet.</p><span class="mono">Product · private alpha</span></div>
+      <a class="still rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/tradespec-preview.jpg" alt="TradeSpec site" loading="lazy">
+          <div class="hud mono"><span>Private alpha</span><span>Specialty contractors</span></div>
+          <p class="subtitle">Every quantity in the bid points back to the sheet it came from.</p>
+        </div></div>
+        <div class="meta"><span class="n">03</span><h3>TradeSpec</h3><p>Evidence-linked bid review for lightning protection estimators.</p><span class="mono">Product · private alpha</span></div>
       </a>
-      <a class="look rise" style="--d:.08s" href="#">
-        <div class="arch"><div class="card" style="--r:2deg"><img src="media/openspec-studio-demo-poster.jpg" alt="OpenSpec Studio" loading="lazy"></div></div>
-        <div class="caption"><span class="n">04</span><h3>OpenSpec Studio</h3><p>A workbench for spec-driven repos.</p><span class="mono">Desktop · public alpha</span></div>
+      <a class="still flip rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/openspec-studio-demo-poster.jpg" alt="OpenSpec Studio" loading="lazy">
+          <div class="hud mono"><span>Public alpha</span><span>Desktop</span></div>
+          <p class="subtitle">Proposals, tasks and validation in one window instead of twelve folders.</p>
+        </div></div>
+        <div class="meta"><span class="n">04</span><h3>OpenSpec Studio</h3><p>A local workbench for spec-driven development.</p><span class="mono">Desktop · public alpha</span></div>
       </a>
-      <a class="look rise" style="--d:.16s" href="#">
-        <div class="arch"><div class="card" style="--r:-2deg"><img src="media/microcanvas-demo-poster.jpg" alt="Microcanvas" loading="lazy"></div></div>
-        <div class="caption"><span class="n">05</span><h3>Microcanvas</h3><p>A display surface for agent-made artifacts.</p><span class="mono">macOS · CLI</span></div>
+      <a class="still rise" href="#">
+        <div class="screen"><div class="frame">
+          <img src="media/microcanvas-demo-poster.jpg" alt="Microcanvas" loading="lazy">
+          <div class="hud mono"><span>Early</span><span>macOS · CLI</span></div>
+          <p class="subtitle">Agents make things. This is where they show them, and prove they look right.</p>
+        </div></div>
+        <div class="meta"><span class="n">05</span><h3>Microcanvas</h3><p>A display surface for agent-made artifacts.</p><span class="mono">macOS · CLI</span></div>
       </a>
     </div>
   </div>
@@ -286,16 +310,6 @@
     setTimeout(function () { document.querySelectorAll('.rise').forEach(function (el) { el.classList.add('in'); }); }, 5000);
   }
 
-  // subtle 3D tilt on look cards
-  if (!reduce) document.querySelectorAll('.look').forEach(function (el) {
-    var card = el.querySelector('.card');
-    el.addEventListener('pointermove', function (e) {
-      var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      card.style.transform = 'translateY(-10px) scale(1.04) rotateY(' + (x * 10) + 'deg) rotateX(' + (-y * 8) + 'deg)';
-    });
-    el.addEventListener('pointerleave', function () { card.style.transform = ''; });
-  });
-
   /* ---------- chrome balloon stars ---------- */
   if (!window.THREE) return;
   var cv = document.getElementById('stars'), cover = document.querySelector('.cover');
@@ -338,7 +352,7 @@
     grp.add(new THREE.Mesh(new THREE.SphereGeometry(.62, 32, 24), mat));
     return grp;
   }
-  var spots = [ [-.45, .26, 1.0], [.45, .34, .8], [-.4, -.38, .6], [.47, -.34, 1.05], [.2, .46, .45] ];
+  var spots = [ [-.45, .24, .95], [.46, -.3, 1.0], [.22, .44, .4] ];
   var stars = spots.map(function (s, k) { var st = makeStar(); st.userData = { sx: s[0], sy: s[1], sc: s[2], ph: k * 1.7, rs: (k % 2 ? 1 : -1) * (.12 + k * .03) }; st.rotation.set(k, k * 2, k * .5); scene.add(st); return st; });
 
   var W = 0, H = 0, mx = 0, my = 0, tmx = 0, tmy = 0, scrollY = 0;
@@ -353,13 +367,13 @@
       var u = st.userData, sc = u.sc * (narrow ? .4 : Math.min(.75, W / 1900));
       st.scale.setScalar(sc);
       st.position.x = u.sx * vw + mx * (k + 1) * .15;
-      st.position.y = u.sy * vh + Math.sin(t * .6 + u.ph) * .25 - my * (k + 1) * .1 + scrollY * .004 * (k + 1);
-      st.position.z = k === 4 ? -3 : 0;
-      if (!reduce) { st.rotation.y += u.rs * .01; st.rotation.x += u.rs * .004; }
+      st.position.y = u.sy * vh + Math.sin(t * .35 + u.ph) * .2 - my * (k + 1) * .1 + scrollY * .004 * (k + 1);
+      st.position.z = k === 2 ? -3 : 0;
+      if (!reduce) { st.rotation.y += u.rs * .004; st.rotation.x += u.rs * .0015; }
     });
   }
   function frame(now) {
-    var t = now / 1000; mx += (tmx - mx) * .05; my += (tmy - my) * .05;
+    var t = now / 1000; mx += (tmx - mx) * .025; my += (tmy - my) * .025;
     place(t); renderer.render(scene, camera);
     if (!reduce) requestAnimationFrame(frame);
   }
