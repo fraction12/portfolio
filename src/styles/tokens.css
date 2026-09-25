@@ -1,6 +1,6 @@
 /* ============================================================
    CHROME ISSUE TOKENS
-   Plaster ground, ink type, chrome lettering on the name only. The work section
+   Plaster ground and ink type; chrome lives only in the stars. The work section
    and the cover window drop into night; everything else stays light.
 
    Token names are historical: --ink* are surfaces, --ivory* are text.
@@ -33,10 +33,6 @@
   --signal-dim:   rgba(13, 13, 15, 0.08);
   --signal-glow:  rgba(13, 13, 15, 0.18);
 
-  /* Chrome lettering */
-  --chrome: linear-gradient(180deg, #2a2b30 0%, #f7f8fa 38%, #5d6168 50%, #111215 52%, #9aa0a8 72%, #eef0f3 90%, #6c7078 100%);
-  --chrome-night: linear-gradient(180deg, #6c7078 0%, #f7f8fa 40%, #8a9098 52%, #3a3d43 56%, #c9cdd3 80%, #eef0f3 100%);
-
   /* Semantic colors, used sparingly */
   --status-live:  #3f7a4a;
   --status-agent: #4d6a63;
@@ -54,7 +50,7 @@
   --font-body:    'Funnel Sans', 'Helvetica Neue', Arial, system-ui, sans-serif;
   --font-mono:    'Geist Mono', ui-monospace, Menlo, monospace;
 
-  --type-hero-name-size:  clamp(4.4rem, 15vw, 13rem);
+  --type-hero-name-size:  clamp(3rem, 9vw, 7.5rem);
   --type-page-title-size: clamp(2.8rem, 7vw, 6rem);
   --type-h1-size:         clamp(1.7rem, 3vw, 2.1rem);
   --type-h2-size:         1.05rem;

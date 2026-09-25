@@ -7,7 +7,7 @@
 
 ## 2. Homepage
 
-- [x] 2.1 Cover: chrome masthead, plaster window, role line
+- [x] 2.1 Cover: role label, full name in ink, one plain line, plaster window
 - [x] 2.2 Paint the Flora-style night garden behind the window (layered canvases, parallax, reduced-motion support, pause when off screen)
 - [x] 2.3 Chrome balloon stars via on-demand three.js, with cleanup on page swap
 - [x] 2.4 Work screening room of film stills linking to project pages

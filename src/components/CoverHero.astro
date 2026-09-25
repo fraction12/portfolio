@@ -1,16 +1,15 @@
 ---
-// The homepage cover: chrome masthead, a plaster window onto a painted night
-// garden, and a single line saying who this is. The garden and stars are
+// The homepage cover: who this is, then a plaster window onto a painted night
+// garden. The garden and stars are
 // drawn client-side; the markup renders complete without them.
 ---
 
 <header class="cover" data-cover>
   <canvas class="cover__stars" aria-hidden="true" data-cover-stars></canvas>
   <div class="cover__inner">
-    <h1 class="masthead">
-      <small>Dushyant</small>
-      <b class="chrome-type">Garg</b>
-    </h1>
+    <p class="cover__kicker mono-label">AI product engineer · Surround Sound Media</p>
+    <h1 class="cover__name">Dushyant Garg</h1>
+    <p class="cover__line">I build tools for AI agents, and write about what I learn.</p>
 
     <div class="window" aria-hidden="true">
       <div class="niche">
@@ -27,8 +26,6 @@
       </div>
       <div class="sill"></div>
     </div>
-
-    <p class="cover__role">AI product engineer at Surround Sound Media.</p>
   </div>
 </header>
 
@@ -86,44 +83,42 @@
     justify-items: center;
   }
 
-  .masthead {
-    margin: 8px 0 0;
-    line-height: 0.78;
-    text-align: center;
-    width: 100%;
-  }
-
-  .masthead small {
-    display: block;
-    margin-bottom: 0.3em;
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(1.2rem, 2.4vw, 1.9rem);
-    letter-spacing: -0.02em;
-    line-height: 1;
+  .cover__kicker {
+    margin-top: clamp(20px, 4vw, 48px);
+    font-size: 12.5px;
     color: var(--ivory-2);
+    text-align: center;
   }
 
-  .masthead b {
-    display: block;
+  .cover__name {
+    margin-top: 12px;
     font-weight: 700;
     font-size: var(--type-hero-name-size);
-    letter-spacing: -0.045em;
-    padding-bottom: 0.06em;
-    filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.12));
+    line-height: 1;
+    letter-spacing: -0.05em;
+    text-align: center;
+  }
+
+  .cover__line {
+    margin-top: 14px;
+    max-width: 40ch;
+    text-align: center;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--dim);
+    text-wrap: balance;
   }
 
   /* Fade and settle, one piece after another. */
   @media (prefers-reduced-motion: no-preference) {
-    .masthead small,
-    .masthead b,
-    .window,
-    .cover__role {
+    .cover__kicker,
+    .cover__name,
+    .cover__line,
+    .window {
       animation: settle 0.9s cubic-bezier(.2, .7, .2, 1) both;
     }
-    .masthead b { animation-delay: 0.11s; }
-    .window { animation-delay: 0.27s; }
-    .cover__role { animation-delay: 0.41s; }
+    .cover__name { animation-delay: 0.1s; }
+    .cover__line { animation-delay: 0.23s; }
+    .window { animation-delay: 0.35s; }
   }
 
   @keyframes settle {
@@ -137,7 +132,7 @@
     z-index: 2;
     display: grid;
     width: min(380px, 78vw);
-    margin-top: clamp(-28px, -2vw, -8px);
+    margin-top: clamp(28px, 4vw, 44px);
   }
 
   .niche {
@@ -217,14 +212,7 @@
     box-shadow: 0 16px 20px -10px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
   }
 
-  .cover__role {
-    margin-top: clamp(26px, 3vw, 38px);
-    text-align: center;
-    font-size: clamp(15px, 1.5vw, 18px);
-    color: var(--ivory-2);
-  }
-
   @media (max-width: 600px) {
-    .window { width: min(300px, 76vw); margin-top: 18px; }
+    .window { width: min(300px, 76vw); }
   }
 </style>

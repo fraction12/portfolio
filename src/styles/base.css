@@ -243,14 +243,6 @@ section {
 }
 
 /* Shared display treatments */
-.chrome-type {
-  background: var(--chrome);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(13, 13, 15, 0.16);
-}
-
 .mono-label {
   font-family: var(--font-mono);
   font-size: 11px;
