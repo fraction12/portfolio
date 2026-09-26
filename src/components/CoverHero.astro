@@ -1,7 +1,14 @@
 ---
 // The homepage cover: who this is, then a plaster window onto a painted night
-// garden. The garden and stars are
-// drawn client-side; the markup renders complete without them.
+// garden. The garden is a stack of painted layers (docs/assets/garden) that
+// shift with the pointer; the markup renders complete without any script.
+import { gardenForegroundTravel, gardenInsects, gardenInsectTravel, gardenLayers } from '../config/garden';
+
+// Firefly positions (% of the scene) and start delays (s).
+const fireflies = [
+  [22, 58, 0], [38, 52, 1.7], [61, 55, 3.1], [74, 49, 0.8], [47, 63, 2.4],
+  [30, 66, 4.2], [68, 64, 1.2], [55, 47, 3.6], [15, 50, 2.9], [83, 58, 0.4],
+];
 ---
 
 <header class="cover" data-cover>
@@ -14,11 +21,41 @@
     <div class="window" aria-hidden="true">
       <div class="niche">
         <div class="pane" data-cover-pane>
-          <canvas class="g-sky"></canvas>
-          <canvas class="g-far"></canvas>
-          <canvas class="g-lawn"></canvas>
-          <canvas class="g-mid"></canvas>
-          <canvas class="g-near"></canvas>
+          <div class="stage">
+            {gardenLayers.map((layer, index) => (
+              <img
+                class="layer"
+                src={`/garden/${layer.name}.webp`}
+                alt=""
+                width="1000"
+                height="1500"
+                decoding="async"
+                fetchpriority={index === 0 ? 'high' : undefined}
+                style={`--travel: ${layer.travel};`}
+              />
+            ))}
+
+            <div class="layer layer--life" style={`--travel: ${gardenInsectTravel};`}>
+              {fireflies.map(([x, y, delay]) => (
+                <span class="firefly" style={`left: ${x}%; top: ${y}%; --delay: ${delay}s;`}></span>
+              ))}
+              {gardenInsects.map(insect => (
+                <span
+                  class:list={['insect', `insect--${insect.name}`]}
+                  style={`left: ${insect.x}%; top: ${insect.y}%; width: ${insect.size}%; --rotate: ${insect.rotate}deg; --drift: ${insect.drift}s; --flap: ${insect.flap}s;`}
+                >
+                  <img class="insect__open" src={`/garden/${insect.name}.webp`} alt="" width="200" height="200" decoding="async" />
+                  {insect.closed && (
+                    <img class="insect__closed" src={`/garden/${insect.closed}.webp`} alt="" width="200" height="200" decoding="async" />
+                  )}
+                </span>
+              ))}
+            </div>
+
+            <div class="layer layer--foreground" style={`--travel: ${gardenForegroundTravel};`}>
+              <img src="/garden/foreground.webp" alt="" width="1000" height="1500" decoding="async" />
+            </div>
+          </div>
           <span class="glass"></span>
           <span class="bar bar--h"></span>
           <span class="bar bar--v"></span>
@@ -30,7 +67,7 @@
 </header>
 
 <script>
-  import { initGarden } from '../scripts/garden.js';
+  import { initGardenParallax } from '../scripts/garden-parallax';
 
   let stops: Array<() => void> = [];
 
@@ -39,7 +76,7 @@
     if (!cover) return;
     const pane = cover.querySelector<HTMLElement>('[data-cover-pane]');
     const stars = cover.querySelector<HTMLCanvasElement>('[data-cover-stars]');
-    if (pane) stops.push(initGarden(pane));
+    if (pane) stops.push(initGardenParallax(pane));
     if (stars) {
       import('../scripts/chrome-stars.js')
         .then(({ initChromeStars }) => initChromeStars(cover, stars))
@@ -166,19 +203,115 @@
     box-shadow: 0 0 0 1px rgba(13, 13, 15, 0.25);
   }
 
-  .pane canvas {
+  /* The stage matches the artwork (2:3) and fills the pane's height. The pane
+     is always a little narrower than 2:3, so the sides crop evenly and the
+     window bars at 34% line up with the painting. */
+  .stage {
     position: absolute;
-    top: -30px;
-    left: -30px;
-    width: calc(100% + 60px);
-    height: calc(100% + 60px);
-    display: block;
-    will-change: transform;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    aspect-ratio: 2 / 3;
+    transform: translateX(-50%);
   }
 
-  .pane .g-far { filter: blur(1.1px) saturate(.8); }
-  .pane .g-lawn { filter: blur(.3px); }
-  .pane .g-mid { filter: blur(.4px) brightness(.9); }
+  /* Each layer moves with the pointer by its own travel (px), driven by
+     --gx / --gy in [-1, 1]. The slight scale hides the edges as it moves. */
+  .layer {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform:
+      translate3d(calc(var(--gx, 0) * var(--travel) * 1px), calc(var(--gy, 0) * var(--travel) * 0.6px), 0)
+      scale(1.08);
+  }
+
+  .layer--foreground img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 100%;
+  }
+
+  .insect {
+    position: absolute;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    rotate: var(--rotate);
+  }
+
+  .insect img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .insect__closed { opacity: 0; }
+
+  .firefly {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 233, 160, 0.95), rgba(255, 214, 120, 0) 70%);
+    box-shadow: 0 0 10px 3px rgba(255, 210, 120, 0.35);
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* A breeze through the flowers at the glass. */
+    .layer--foreground img { animation: breeze 9s ease-in-out infinite; }
+
+    /* Butterflies drift in slow loops and close their wings now and then;
+       the dragonfly and bee hover in place. */
+    .insect { animation: drift var(--drift) ease-in-out infinite; }
+    .insect__closed { animation: flap var(--flap) steps(1, end) infinite; }
+    .insect--dragonfly,
+    .insect--bee { animation-name: hover; }
+
+    .firefly { animation: glow 4.5s ease-in-out var(--delay) infinite, float 11s ease-in-out var(--delay) infinite; }
+  }
+
+  @keyframes breeze {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    50% { transform: rotate(0.35deg) translateX(1.5px); }
+  }
+
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(18%, -22%) rotate(4deg); }
+    50% { transform: translate(34%, -6%) rotate(-3deg); }
+    75% { transform: translate(12%, 14%) rotate(2deg); }
+  }
+
+  @keyframes hover {
+    0%, 100% { transform: translate(0, 0); }
+    30% { transform: translate(6%, -5%); }
+    60% { transform: translate(-4%, 3%); }
+  }
+
+  /* Wings mostly open, with two quick beats per cycle. */
+  @keyframes flap {
+    0%, 62% { opacity: 0; }
+    64% { opacity: 1; }
+    67% { opacity: 0; }
+    70% { opacity: 1; }
+    73%, 100% { opacity: 0; }
+  }
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.9; }
+  }
+
+  @keyframes float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 8px -12px; }
+  }
 
   .glass {
     position: absolute;

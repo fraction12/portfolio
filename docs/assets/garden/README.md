@@ -1,6 +1,10 @@
 # Night garden assets
 
-Original botanical night-garden artwork for the arched portfolio hero, generated with the built-in imagegen tool. Assets are in [`public/garden`](../../../public/garden/), available at `/garden/` when deployed. This commit supplies the artwork; `CoverHero.astro` and `garden.js` still use the existing procedural canvas renderer.
+Original botanical night-garden artwork for the arched portfolio hero, generated with the built-in imagegen tool.
+
+- **Sources** (full-size PNGs and `garden-manifest.json`) live in [`source/`](source/). They are not deployed.
+- **Web copies** in [`public/garden`](../../../public/garden/) are what the site loads: 1000 px WebP layers and 200 px WebP insect sprites, about 1.4 MB in total. Rebuild them with `npm run garden:assets` (`scripts/build-garden-assets.mjs`) after changing a source.
+- **The hero** (`src/components/CoverHero.astro`) stacks the layers, animates the insects from the manifest placements (`src/config/garden.ts`), and moves each layer with the pointer (`src/scripts/garden-parallax.ts`).
 
 ## Contents
 
