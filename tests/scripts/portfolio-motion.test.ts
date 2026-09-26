@@ -11,7 +11,7 @@ describe('portfolio motion helpers', () => {
     expect(win.matchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
   });
 
-  it('does not reveal elements inside the hero motion root twice', () => {
+  it('does not reveal elements inside the detail scroll stage twice', () => {
     const outside = { closest: vi.fn(() => null) };
     const inside = { closest: vi.fn(() => ({})) };
     const root = {

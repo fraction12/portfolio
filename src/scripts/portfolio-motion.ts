@@ -1,4 +1,4 @@
-import { animate, stagger } from 'motion';
+import { animate } from 'motion';
 
 type MotionControl = {
   stop?: () => void;
@@ -73,7 +73,7 @@ function motionAnimate(target: unknown, keyframes: Record<string, unknown>, opti
 }
 
 function markReady(root: ParentNode) {
-  root.querySelectorAll<HTMLElement>('[data-motion-item], [data-motion-card], [data-motion-reveal], [data-home-work-slot], [data-home-scroll-slot], [data-writing-list], [data-writing-row]')
+  root.querySelectorAll<HTMLElement>('[data-motion-card], [data-motion-reveal], [data-writing-list], [data-writing-row]')
     .forEach(el => {
       el.dataset.motionReady = 'true';
     });
@@ -81,7 +81,7 @@ function markReady(root: ParentNode) {
 
 export function getRevealCandidates(root: ParentNode = document): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR))
-    .filter(el => !el.closest('[data-portfolio-motion-root], [data-detail-scroll-stage], [data-home-work-section]'));
+    .filter(el => !el.closest('[data-detail-scroll-stage]'));
 }
 
 function markRevealCandidates(root: ParentNode) {
@@ -89,173 +89,6 @@ function markRevealCandidates(root: ParentNode) {
     el.dataset.motionReveal = 'pending';
     el.style.setProperty('--motion-reveal-index', String(index));
   });
-}
-
-function initHeroEntrance(root: ParentNode) {
-  const items = Array.from(root.querySelectorAll<HTMLElement>('[data-motion-item]'));
-  const activityDays = Array.from(root.querySelectorAll<HTMLElement>('[data-github-activity-day]'));
-  const controls: MotionControl[] = [];
-
-  if (items.length) {
-    controls.push(motionAnimate(items, { opacity: [0.86, 1], y: [8, 0] }, {
-      duration: 0.42,
-      delay: stagger(0.075),
-      easing: [0.22, 1, 0.36, 1],
-    }));
-  }
-
-  if (activityDays.length) {
-    controls.push(motionAnimate(activityDays, { opacity: [0.72, 1], scale: [0.96, 1] }, {
-      duration: 0.18,
-      delay: stagger(0.003, { startDelay: 0.22 }),
-      easing: [0.22, 1, 0.36, 1],
-    }));
-  }
-
-  addCleanup(() => controls.forEach(stopControl));
-}
-
-function initNavMagneticField(root: ParentNode) {
-  const nav = root.querySelector<HTMLElement>('.top-nav');
-  const field = root.querySelector<HTMLElement>('[data-nav-field]');
-  if (!nav || !field) return;
-
-  const marks = Array.from(field.querySelectorAll<HTMLElement>('[data-nav-field-dot]')).map((el, index) => ({
-    el,
-    index,
-    x: Number(el.dataset.x || 0),
-    y: Number(el.dataset.y || 0),
-    opacity: Number(el.dataset.opacity || 0.12),
-    offsetX: 0,
-    offsetY: 0,
-    glow: 0,
-    scale: 1,
-  }));
-  if (!marks.length) return;
-
-  const fieldOpacity = Number.parseFloat(window.getComputedStyle(field).opacity || '0.82') || 0.82;
-  const reveal = motionAnimate(field, {
-    opacity: [0, fieldOpacity],
-  }, {
-    duration: 0.7,
-    delay: 0.1,
-    easing: 'ease-out',
-  });
-
-  let frame = 0;
-  let fieldRect = field.getBoundingClientRect();
-  let pointerX = fieldRect.width * 0.58;
-  let pointerY = fieldRect.height * 0.38;
-  let targetX = pointerX;
-  let targetY = pointerY;
-  let hasPointer = false;
-  let exclusionRects: Array<{ left: number; top: number; right: number; bottom: number }> = [];
-
-  const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
-
-  const measure = () => {
-    fieldRect = field.getBoundingClientRect();
-    exclusionRects = Array.from(nav.querySelectorAll<HTMLElement>('.top-nav__brand, .top-nav__links'))
-      .map(el => {
-        const rect = el.getBoundingClientRect();
-        const pad = 10;
-        return {
-          left: rect.left - fieldRect.left - pad,
-          top: rect.top - fieldRect.top - pad,
-          right: rect.right - fieldRect.left + pad,
-          bottom: rect.bottom - fieldRect.top + pad,
-        };
-      });
-  };
-
-  const updatePointer = (event: PointerEvent) => {
-    if (event.pointerType === 'touch') return;
-    hasPointer = true;
-    targetX = event.clientX - fieldRect.left;
-    targetY = event.clientY - fieldRect.top;
-  };
-
-  const clearPointer = () => {
-    hasPointer = false;
-  };
-
-  const render = (time = performance.now()) => {
-    pointerX += (targetX - pointerX) * 0.08;
-    pointerY += (targetY - pointerY) * 0.08;
-
-    marks.forEach(mark => {
-      const markX = fieldRect.width * mark.x / 100;
-      const markY = fieldRect.height * mark.y / 100;
-      const dx = pointerX - markX;
-      const dy = pointerY - markY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const radius = Math.min(180, Math.max(110, fieldRect.width * 0.12));
-      const influence = hasPointer ? clamp(1 - distance / radius) : 0;
-      const attraction = influence * influence;
-      const ambientX = Math.sin(time * 0.00022 + mark.index * 0.19) * 0.25;
-      const ambientY = Math.cos(time * 0.00018 + mark.index * 0.13) * 0.3;
-      const targetOffsetX = dx * attraction * 0.42;
-      const targetOffsetY = dy * attraction * 0.42;
-      const targetGlow = attraction;
-      const targetScale = 1 + attraction * 1.75;
-
-      mark.offsetX += (targetOffsetX - mark.offsetX) * 0.075;
-      mark.offsetY += (targetOffsetY - mark.offsetY) * 0.075;
-      mark.glow += (targetGlow - mark.glow) * 0.08;
-      mark.scale += (targetScale - mark.scale) * 0.08;
-
-      const driftY = ambientY;
-      const currentX = markX + ambientX + mark.offsetX;
-      const currentY = markY + driftY + mark.offsetY;
-      const isExcluded = exclusionRects.some(rect => (
-        currentX >= rect.left
-        && currentX <= rect.right
-        && currentY >= rect.top
-        && currentY <= rect.bottom
-      ));
-      const opacity = isExcluded ? 0 : mark.opacity + mark.glow * 0.62;
-
-      mark.el.style.opacity = opacity.toFixed(3);
-      mark.el.style.transform = `translate3d(calc(-50% + ${(ambientX + mark.offsetX).toFixed(2)}px), calc(-50% + ${(driftY + mark.offsetY).toFixed(2)}px), 0) scale(${mark.scale.toFixed(3)})`;
-    });
-
-    frame = window.requestAnimationFrame(render);
-  };
-
-  measure();
-  frame = window.requestAnimationFrame(render);
-
-  window.addEventListener('pointermove', updatePointer, { passive: true });
-  window.addEventListener('pointerleave', clearPointer);
-  window.addEventListener('blur', clearPointer);
-  window.addEventListener('resize', measure);
-
-  addCleanup(() => {
-    stopControl(reveal);
-    if (frame) window.cancelAnimationFrame(frame);
-    window.removeEventListener('pointermove', updatePointer);
-    window.removeEventListener('pointerleave', clearPointer);
-    window.removeEventListener('blur', clearPointer);
-    window.removeEventListener('resize', measure);
-  });
-}
-
-function initGithubActivityPulse(root: ParentNode) {
-  const activityDays = Array.from(root.querySelectorAll<HTMLElement>('[data-github-activity-day]'));
-  if (!activityDays.length) return;
-
-  const pulse = motionAnimate(activityDays, {
-    opacity: [1, 0.64, 1],
-    scale: [1, 0.92, 1],
-  }, {
-    duration: 1.8,
-    delay: stagger(0.01, { from: 'last' }),
-    repeat: Infinity,
-    repeatDelay: 1.2,
-    easing: 'ease-in-out',
-  });
-
-  addCleanup(() => stopControl(pulse));
 }
 
 function initCards(root: ParentNode) {
@@ -344,91 +177,6 @@ function initScrollFade(root: ParentNode) {
     revealObserver?.disconnect();
     revealObserver = undefined;
   });
-}
-
-function initHomeWorkSlots(root: ParentNode) {
-  const section = root.querySelector<HTMLElement>('[data-home-work-section]');
-  if (!section) return;
-
-  const slots = Array.from(section.querySelectorAll<HTMLElement>('[data-home-work-slot]'));
-  if (!slots.length) return;
-
-  slots.forEach(slot => {
-    slot.dataset.homeWorkSlot = 'pending';
-  });
-
-  const frame = window.requestAnimationFrame(() => {
-    slots.forEach((slot, index) => {
-      slot.dataset.homeWorkSlot = 'visible';
-
-      const reveal = motionAnimate(slot, {
-        opacity: [0, 1],
-        x: [-34, 0],
-        filter: ['blur(5px)', 'blur(0px)'],
-      }, {
-        duration: 0.62,
-        delay: 0.28 + index * 0.085,
-        easing: [0.22, 1, 0.36, 1],
-      });
-
-      addCleanup(() => stopControl(reveal));
-    });
-  });
-
-  addCleanup(() => window.cancelAnimationFrame(frame));
-}
-
-function initHomeScrollSlots(root: ParentNode) {
-  const sections = Array.from(root.querySelectorAll<HTMLElement>('[data-home-scroll-section]'));
-  if (!sections.length) return;
-
-  const slots = sections.flatMap(section => (
-    Array.from(section.querySelectorAll<HTMLElement>('[data-home-scroll-slot]'))
-  ));
-  if (!slots.length) return;
-
-  if (typeof window.IntersectionObserver !== 'function') {
-    slots.forEach(slot => {
-      slot.dataset.homeScrollSlot = 'visible';
-    });
-    return;
-  }
-
-  slots.forEach(slot => {
-    slot.dataset.homeScrollSlot = 'pending';
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-
-      const section = entry.target as HTMLElement;
-      observer.unobserve(section);
-
-      const sectionSlots = Array.from(section.querySelectorAll<HTMLElement>('[data-home-scroll-slot]'));
-      sectionSlots.forEach((slot, index) => {
-        slot.dataset.homeScrollSlot = 'visible';
-
-        const reveal = motionAnimate(slot, {
-          opacity: [0, 1],
-          x: [-34, 0],
-          filter: ['blur(5px)', 'blur(0px)'],
-        }, {
-          duration: 0.62,
-          delay: index * 0.085,
-          easing: [0.22, 1, 0.36, 1],
-        });
-
-        addCleanup(() => stopControl(reveal));
-      });
-    });
-  }, {
-    rootMargin: '0px 0px -18% 0px',
-    threshold: 0.12,
-  });
-
-  sections.forEach(section => observer.observe(section));
-  addCleanup(() => observer.disconnect());
 }
 
 function initWritingListSlots(root: ParentNode) {
@@ -572,15 +320,11 @@ function initDetailScrollStage(root: ParentNode) {
 export function initPortfolioMotion(root: ParentNode = document) {
   cleanupPortfolioMotion();
 
-  const hasMotionRoot = root.querySelector('[data-portfolio-motion-root]');
-  const hasNavField = root.querySelector('[data-nav-field]');
   const hasMotionCards = root.querySelector('[data-motion-card]');
   const hasDetailScrollStage = root.querySelector('[data-detail-scroll-stage]');
-  const hasHomeWorkSlots = root.querySelector('[data-home-work-slot]');
-  const hasHomeScrollSlots = root.querySelector('[data-home-scroll-slot]');
   const hasWritingListSlots = root.querySelector('[data-writing-list]');
   const hasRevealCandidates = getRevealCandidates(root).length > 0;
-  if (!hasMotionRoot && !hasNavField && !hasMotionCards && !hasDetailScrollStage && !hasHomeWorkSlots && !hasHomeScrollSlots && !hasWritingListSlots && !hasRevealCandidates) return;
+  if (!hasMotionCards && !hasDetailScrollStage && !hasWritingListSlots && !hasRevealCandidates) return;
 
   markRevealCandidates(root);
   markReady(root);
@@ -590,12 +334,6 @@ export function initPortfolioMotion(root: ParentNode = document) {
     getRevealCandidates(root).forEach(el => {
       el.dataset.motionReveal = 'visible';
     });
-    root.querySelectorAll<HTMLElement>('[data-home-work-slot]').forEach(el => {
-      el.dataset.homeWorkSlot = 'visible';
-    });
-    root.querySelectorAll<HTMLElement>('[data-home-scroll-slot]').forEach(el => {
-      el.dataset.homeScrollSlot = 'visible';
-    });
     root.querySelectorAll<HTMLElement>('[data-writing-list], [data-writing-row]').forEach(el => {
       el.dataset.writingMotion = 'visible';
     });
@@ -603,13 +341,8 @@ export function initPortfolioMotion(root: ParentNode = document) {
   }
 
   document.documentElement.dataset.portfolioMotion = 'enhanced';
-  initNavMagneticField(root);
-  initHeroEntrance(root);
   initScrollFade(root);
-  initHomeWorkSlots(root);
-  initHomeScrollSlots(root);
   initWritingListSlots(root);
-  initGithubActivityPulse(root);
   initCards(root);
   initDetailScrollStage(root);
 }

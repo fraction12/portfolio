@@ -9,12 +9,12 @@ The site SHALL use a light plaster ground, ink text, a modern grotesk display fa
 - **AND** text SHALL keep readable contrast against its surface.
 
 ### Requirement: Painted Garden Cover
-The homepage cover SHALL show an arched window onto a painted night garden that reads as a real view with depth.
+The homepage cover SHALL show an arched window onto a painted night garden that reads as a real view with depth, built from layered original artwork served as compressed web images.
 
 #### Scenario: Cover renders with motion allowed
 - **WHEN** the homepage loads and the viewer allows motion
 - **THEN** the garden SHALL render in layers (sky, distance, lawn, mid-ground, foreground) that shift at different rates with the pointer and sway gently
-- **AND** painting SHALL pause while the window is off screen.
+- **AND** pointer tracking SHALL pause while the window is off screen.
 
 #### Scenario: Viewer prefers reduced motion
 - **WHEN** the viewer prefers reduced motion

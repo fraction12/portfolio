@@ -12,6 +12,7 @@
 - [x] 2.3 Chrome balloon stars via on-demand three.js, with cleanup on page swap
 - [x] 2.4 Work screening room of film stills linking to project pages
 - [x] 2.5 Writing (titles and dates) and email-led contact
+- [x] 2.6 Replace the code-drawn garden with the painted artwork layers, animated insects and fireflies
 
 ## 3. Positioning and copy
 

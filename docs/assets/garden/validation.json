@@ -1,0 +1,233 @@
+{
+  "pngCount": 16,
+  "checksPassed": true,
+  "pixelIdenticalRecomposition": true,
+  "recompositionMethod": "Read exported layer PNGs and independently render the stack again with sRGB Core Graphics; compare every RGBA channel.",
+  "maximumChannelDifference": 0,
+  "files": [
+    {
+      "file": "bee.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "f49064f2e22295f44074303927bb582301b733853b563c2daf6f8a3fe187f956"
+    },
+    {
+      "file": "butterfly-admiral-closed.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "972f5cffcad4133f76ee5a9f5e5668dac4dc9bee6561662c22a9fb936c708966"
+    },
+    {
+      "file": "butterfly-admiral.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "25eccdf95f17528c51cad40c8c41c92501693228714f57541aedb6b8374e829f"
+    },
+    {
+      "file": "butterfly-blue-closed.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "9e16e3b3042302778d14589d5ef812e1be6111ac248b54f19a9dba010412fb54"
+    },
+    {
+      "file": "butterfly-blue.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "2f880602237479a0c4e24ceb10419911bc439ac21f7a79f8a68993467a142a02"
+    },
+    {
+      "file": "butterfly-swallowtail-closed.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "65a1fe02640fd7b8c0a7b985823912aa60ad9368bc3582b49cc20d63a1f50508"
+    },
+    {
+      "file": "butterfly-swallowtail.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "279cd3faa80fecc7dfc058925deb82cb4a9b3f8bbbfafbf8ef28438c6249c053"
+    },
+    {
+      "file": "dragonfly.png",
+      "dimensions": [
+        600,
+        600
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "984b39de59ef6f60cbbebe45d71c35b1dc0b54f2bfaa6387cea8c2f7cfd308b6"
+    },
+    {
+      "file": "garden-full.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        255,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "6f5dca5c00537da1c282546bae71d1f8c13edc7bb572a6459cc258454a287417"
+    },
+    {
+      "file": "garden-preview-arch.png",
+      "dimensions": [
+        600,
+        900
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "484684ad4968652c7920deef0dc49e56cc1cd63f07dc28b17b9a514c2e0f592e"
+    },
+    {
+      "file": "layer-1-sky.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        255,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "b18cc2ee218463166e6c982dba163fc4b49227a069f2dbabb6c48be97c52e418"
+    },
+    {
+      "file": "layer-2-distance.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        254
+      ],
+      "sRGB": true,
+      "sha256": "14f0cec84649cc3c774e03ab4a2de9c1e2c601f2f1cae7b79d230d5bf37203e1"
+    },
+    {
+      "file": "layer-3-lawn.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        254
+      ],
+      "sRGB": true,
+      "sha256": "6305e742c5f60ba6189649ebd786ef4156434f8c5105e5f03adcd87c1ab4fe71"
+    },
+    {
+      "file": "layer-4-midground.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        254
+      ],
+      "sRGB": true,
+      "sha256": "b64a88d2ce3516022b34b3dfed46a55dec0d97aeb83ff3b12fbbacc8c54e5206"
+    },
+    {
+      "file": "layer-5-foreground-clean.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        254
+      ],
+      "sRGB": true,
+      "sha256": "59910f61cf0795123eaf1e7e617f393bece825f25cfaab41c9589d70d86b4797"
+    },
+    {
+      "file": "layer-5-foreground.png",
+      "dimensions": [
+        2000,
+        3000
+      ],
+      "mode": "RGBA",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "sRGB": true,
+      "sha256": "4d4a286a4807e8230b69dba6ae7db3122bfea48b45d469c1b37dd65ab3fa176f"
+    }
+  ]
+}
