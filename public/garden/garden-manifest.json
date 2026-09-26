@@ -1,0 +1,100 @@
+{
+  "title": "Night Garden — portfolio parallax assets",
+  "generation": "Built-in imagegen",
+  "canvas": {
+    "width": 2000,
+    "height": 3000,
+    "colorSpace": "sRGB",
+    "format": "PNG"
+  },
+  "referenceGenerationSize": {
+    "width": 1024,
+    "height": 1536
+  },
+  "export": "Garden layers upscaled from 1024 × 1536 generated originals with high-quality Core Graphics resampling.",
+  "stackBackToFront": [
+    "layer-1-sky.png",
+    "layer-2-distance.png",
+    "layer-3-lawn.png",
+    "layer-4-midground.png",
+    "layer-5-foreground.png"
+  ],
+  "fullScene": "garden-full.png",
+  "archPreview": {
+    "file": "garden-preview-arch.png",
+    "width": 600,
+    "height": 900,
+    "shape": "Semicircular upper arch of radius 300 px, spring line at y=300 px; transparent outside; no frame."
+  },
+  "windowBars": {
+    "horizontalY": 1020,
+    "verticalX": 1000,
+    "verticalYRange": [
+      0,
+      1020
+    ]
+  },
+  "animatedInsects": {
+    "foregroundReplacement": "layer-5-foreground-clean.png",
+    "spriteCanvas": [
+      600,
+      600
+    ],
+    "origin": "Placement centers in full-scene pixels, top-left origin. Rotation is CSS clockwise degrees.",
+    "placements": [
+      {
+        "file": "butterfly-swallowtail.png",
+        "closed": "butterfly-swallowtail-closed.png",
+        "center": [
+          625,
+          1270
+        ],
+        "size": 130,
+        "rotation": 12.605
+      },
+      {
+        "file": "butterfly-admiral.png",
+        "closed": "butterfly-admiral-closed.png",
+        "center": [
+          1315,
+          1760
+        ],
+        "size": 105,
+        "rotation": -17.189
+      },
+      {
+        "file": "butterfly-blue.png",
+        "closed": "butterfly-blue-closed.png",
+        "center": [
+          1110,
+          1480
+        ],
+        "size": 65,
+        "rotation": 9.167
+      },
+      {
+        "file": "dragonfly.png",
+        "center": [
+          1360,
+          1205
+        ],
+        "size": 106,
+        "rotation": -22.918
+      },
+      {
+        "file": "bee.png",
+        "center": [
+          492,
+          2040
+        ],
+        "size": 48,
+        "rotation": 20.054
+      }
+    ]
+  },
+  "parallax": {
+    "edgeHandling": "Clip all layers to the same arch; use scale(1.08) around center before translating to cover outer-frame edges.",
+    "staticInspection": "Opposite extremes rendered at layer translations of 0/15/30/45/60 px horizontally and 0/9/18/27/36 px vertically. This is an image-composite inspection, not a live browser test.",
+    "smallMotion": "Use much smaller travel in the website hero, and respect reduced-motion preferences."
+  }
+}
