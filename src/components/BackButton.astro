@@ -9,10 +9,27 @@ const { href, label = 'Back' } = Astro.props;
 <a
   class="back-button"
   href={href}
-  onclick={`if (window.history.length > 1) { window.history.back(); return false; }`}
+  data-back-button
 >
   {label}
 </a>
+
+<script>
+  // Capture precedes ClientRouter's document listener. A handled Back click
+  // must not also start navigation to the fallback href. This bundled script
+  // runs once; delegation continues to work after Astro swaps the page body.
+  document.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element
+      ? event.target.closest<HTMLAnchorElement>('a[data-back-button]')
+      : null;
+    if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+    if (window.history.length > 1) {
+      event.preventDefault();
+      window.history.back();
+    }
+  }, { capture: true });
+</script>
 
 <style>
   .back-button {

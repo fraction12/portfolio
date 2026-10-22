@@ -13,6 +13,14 @@ const originalCwd = process.cwd();
 const originalToken = process.env.GITHUB_TOKEN;
 const syntheticImage = await sharp({ create: { width: 24, height: 24, channels: 3, background: '#345678' } }).png().toBuffer();
 const intercepted = [];
+const scriptPolicyViolations = [];
+function inspectScriptPolicy(html, route) {
+  if (/<[a-z][^>]*\son[a-z]+\s*=/i.test(html)) scriptPolicyViolations.push(route + ': inline event handler');
+  for (const [, attributes, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    if (/\bsrc\s*=/.test(attributes) || /type=["']application\/ld\+json["']/.test(attributes) || !body.trim()) continue;
+    scriptPolicyViolations.push(route + ': executable inline script');
+  }
+}
 
 // The production renderer reads only build-copied public snapshots. No real
 // GitHub credential or outbound connection is used, and failed synthetic APIs
@@ -36,6 +44,7 @@ try {
     const response = await app.fetch(new Request(origin + route));
     const html = await response.text();
     assert.equal(response.status, 200, route);
+    inspectScriptPolicy(html, route);
     assert.match(html, /Dushyant Garg/);
     assert.ok(html.includes(`rel="canonical" href="${origin + route}"`), route + ' canonical');
     assert.match(html, /astro-view-transitions-enabled/);
@@ -59,7 +68,7 @@ try {
   for (const route of ['/missing-synthetic-page', '/api/play', '/.env', '/.git/HEAD', '/_isr']) {
     const response = await app.fetch(new Request(origin + route));
     assert.equal(response.status, 404, route);
-    await response.body?.cancel();
+    inspectScriptPolicy(await response.text(), route);
     checks.push({ route, status: response.status });
   }
   const foreign = await app.fetch(new Request(origin + '/', { method: 'POST', headers: { Origin: 'https://foreign.example', 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'synthetic=1' }));
@@ -71,7 +80,12 @@ try {
   assert.ok(existsSync(path.join(staticRoot, 'sitemap-index.xml')));
   const details = readdirSync(path.join(staticRoot, 'tools')).filter(name => existsSync(path.join(staticRoot, 'tools', name, 'index.html')));
   assert.ok(details.length >= 15);
-  for (const name of details) assert.match(readFileSync(path.join(staticRoot, 'tools', name, 'index.html'), 'utf8'), /Dushyant Garg/);
+  for (const name of details) {
+    const html = readFileSync(path.join(staticRoot, 'tools', name, 'index.html'), 'utf8');
+    assert.match(html, /Dushyant Garg/);
+    inspectScriptPolicy(html, '/tools/' + name);
+  }
+  assert.deepEqual(scriptPolicyViolations, [], 'Every emitted page must work without executable inline scripts or event handlers');
   assert.equal(JSON.parse(readFileSync(path.join(functionRoot, '.vc-config.json'), 'utf8')).runtime, 'nodejs24.x');
   console.log(JSON.stringify({ checks, staticDetailRoutes: details.length, network: 'all outbound fetch intercepted', interceptedCount: intercepted.length }));
 } finally {
