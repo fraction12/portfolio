@@ -15,6 +15,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://dushyantgarg.com',
   output: 'server',
+  // Preserve Astro 6 whitespace behavior across the security upgrade.
+  compressHTML: true,
   adapter: vercel(),
   integrations: [
     // @astrojs/sitemap only auto-discovers prerendered routes under SSR.
