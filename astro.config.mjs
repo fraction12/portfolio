@@ -17,6 +17,8 @@ export default defineConfig({
   output: 'server',
   // Preserve Astro 6 whitespace behavior across the security upgrade.
   compressHTML: true,
+  // CSP permits local script files, so do not inline small processed scripts.
+  vite: { build: { assetsInlineLimit: 0 } },
   adapter: vercel(),
   integrations: [
     // @astrojs/sitemap only auto-discovers prerendered routes under SSR.
