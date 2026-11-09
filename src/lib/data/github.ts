@@ -1,12 +1,10 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import bundledSnapshot from '../../data/snapshots/github.json';
 import { GITHUB_USER, GITHUB_REPO } from '../../config/packages';
 import { isAgentAuthor } from '../../config/agents';
 import type { CommitRecord } from './shifts';
 
 const TOKEN = process.env.GITHUB_TOKEN || '';
 const HEATMAP_WEEK_COUNT = 28;
-const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/github.json');
 
 export type HeatmapCell = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
 
@@ -33,10 +31,7 @@ type HeatmapGraphqlData = {
   };
 };
 
-function readSnapshot(): GithubSnapshot {
-  try { return JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8')); }
-  catch { return { fetchedAt: null, totalStars: null, commits7d: null, commits30d: null, heatmap: null }; }
-}
+let snapshot: GithubSnapshot = bundledSnapshot;
 
 function assertNoGraphqlErrors(json: GraphqlResponse<unknown>, label: string): void {
   if (Array.isArray(json.errors) && json.errors.length > 0) {
@@ -48,28 +43,28 @@ function assertNoGraphqlErrors(json: GraphqlResponse<unknown>, label: string): v
 export async function loadGithub(): Promise<GithubSnapshot> {
   if (!TOKEN) {
     console.warn('[github] GITHUB_TOKEN unset; using snapshot');
-    return readSnapshot();
+    return snapshot;
   }
   try {
     const [stars, heatmap] = await Promise.all([fetchTotalStars(), fetchHeatmap()]);
-    const snapshot: GithubSnapshot = {
+    const latest: GithubSnapshot = {
       fetchedAt: new Date().toISOString(),
       totalStars: stars,
       commits7d: heatmap.filter(c => withinDays(c.date, 7)).reduce((s, c) => s + c.count, 0),
       commits30d: heatmap.filter(c => withinDays(c.date, 30)).reduce((s, c) => s + c.count, 0),
       heatmap
     };
-    try { fs.writeFileSync(SNAPSHOT_PATH, JSON.stringify(snapshot, null, 2)); } catch {}
+    snapshot = latest;
     return snapshot;
   } catch (err) {
     console.warn('[github] fetch failed, using snapshot:', err);
-    return readSnapshot();
+    return snapshot;
   }
 }
 
 async function fetchTotalStars(): Promise<number> {
   const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&type=owner`, {
-    headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' },
+    headers: { 'User-Agent': 'portfolio', Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' },
     signal: AbortSignal.timeout(5000)
   });
   if (!res.ok) throw new Error(`github repos ${res.status}`);
@@ -91,7 +86,7 @@ async function fetchHeatmap(): Promise<HeatmapCell[]> {
   `;
   const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: { 'User-Agent': 'portfolio', Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({ query, variables: { login: GITHUB_USER } }),
     signal: AbortSignal.timeout(5000)
   });
@@ -162,7 +157,7 @@ export async function fetchGithubCommits(sinceDays = 180, perPage = 100): Promis
     const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
     const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?per_page=${perPage}&since=${encodeURIComponent(since)}`;
     const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' },
+      headers: { 'User-Agent': 'portfolio', Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' },
       signal: AbortSignal.timeout(5000)
     });
     if (!res.ok) throw new Error(`github commits ${res.status}`);
@@ -246,6 +241,7 @@ export async function fetchAllRepoCommits(limit = 12): Promise<CommitRecord[]> {
     const res = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       headers: {
+        'User-Agent': 'portfolio',
         Authorization: `Bearer ${TOKEN}`,
         'Content-Type': 'application/json',
         Accept: 'application/json'

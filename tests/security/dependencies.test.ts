@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest';
 const lock = JSON.parse(readFileSync(new URL('../../package-lock.json', import.meta.url), 'utf8'));
 const floors: Record<string, number[]> = {
   astro: [7, 2, 8],
-  '@astrojs/vercel': [11, 0, 3],
   sharp: [0, 35, 5],
   vitest: [4, 1, 12],
 };

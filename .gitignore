@@ -1,5 +1,9 @@
 # Vercel
 .vercel
+.wrangler/
+.dev.vars
+.dev.vars.*
+public/_worker-media/
 
 # Build output
 dist/
