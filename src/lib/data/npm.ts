@@ -1,21 +1,15 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import bundledSnapshot from '../../data/snapshots/npm.json';
 import { npmPackages } from '../../config/packages';
-
-const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/npm.json');
 
 export type NpmSnapshot = {
   fetchedAt: string | null;
   packages: Record<string, { downloadsLastMonth: number }>;
 };
 
-function readSnapshot(): NpmSnapshot {
-  try { return JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8')); }
-  catch { return { fetchedAt: null, packages: {} }; }
-}
+let snapshot: NpmSnapshot = bundledSnapshot;
 
 export async function loadNpm(): Promise<NpmSnapshot> {
-  if (npmPackages.length === 0) return readSnapshot();
+  if (npmPackages.length === 0) return snapshot;
   try {
     const entries = await Promise.all(
       npmPackages.map(async name => {
@@ -27,12 +21,12 @@ export async function loadNpm(): Promise<NpmSnapshot> {
         return [name, { downloadsLastMonth: json.downloads }] as const;
       })
     );
-    const snapshot: NpmSnapshot = { fetchedAt: new Date().toISOString(), packages: Object.fromEntries(entries) };
-    try { fs.writeFileSync(SNAPSHOT_PATH, JSON.stringify(snapshot, null, 2)); } catch {}
+    const latest: NpmSnapshot = { fetchedAt: new Date().toISOString(), packages: Object.fromEntries(entries) };
+    snapshot = latest;
     return snapshot;
   } catch (err) {
     console.warn('[npm] fetch failed, using snapshot:', err);
-    return readSnapshot();
+    return snapshot;
   }
 }
 

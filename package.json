@@ -5,31 +5,41 @@
   "scripts": {
     "dev": "astro dev",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
-    "preview": "astro preview",
+    "preview": "wrangler dev",
     "astro": "astro",
     "typecheck": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "lint": "npm run typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
     "garden:assets": "node scripts/build-garden-assets.mjs",
-    "test:built": "node scripts/verify-built-security.mjs"
+    "test:built": "node scripts/verify-built-security.mjs",
+    "cloudflare:deploy": "wrangler deploy",
+    "prebuild": "node scripts/prepare-worker-media.mjs",
+    "pretypecheck": "node scripts/prepare-worker-media.mjs",
+    "pretest": "node scripts/prepare-worker-media.mjs",
+    "predev": "node scripts/prepare-worker-media.mjs",
+    "pretest:watch": "node scripts/prepare-worker-media.mjs"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "14.4.6",
     "@astrojs/sitemap": "3.7.4",
-    "@astrojs/vercel": "11.0.16",
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
     "astro": "7.4.2",
     "motion": "^12.40.0",
     "three": "0.128.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
+    "miniflare": "5.20261109.0-beta",
     "sharp": "0.35.5",
     "typescript": "^5.9.3",
-    "vitest": "4.1.12"
+    "vitest": "4.1.12",
+    "wrangler": "4.159.0"
   },
   "overrides": {
     "path-to-regexp": "6.3.0"
-  }
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "npm@11.19.1"
 }

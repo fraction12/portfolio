@@ -1,5 +1,4 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import bundledSnapshot from '../../data/snapshots/substack.json';
 
 export type Essay = {
   title: string;
@@ -16,26 +15,12 @@ export type SubstackSnapshot = {
 };
 
 const FEED_URL = 'https://dushyantg.substack.com/feed';
-const SNAPSHOT_PATH = path.join(process.cwd(), 'src/data/snapshots/substack.json');
-
-function readSnapshot(): Essay[] {
-  try {
-    const raw = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8')) as { fetchedAt: string | null; essays: Array<Omit<Essay, 'publishedAt'> & { publishedAt: string }> };
-    return raw.essays.map(e => ({
-      ...e,
-      title: decodeXml(e.title),
-      description: decodeXml(e.description),
-      publishedAt: new Date(e.publishedAt)
-    })).filter(e => isSafeEssayLink(e.link));
-  } catch { return []; }
-}
-
-function writeSnapshot(essays: Essay[]) {
-  try {
-    const data = { fetchedAt: new Date().toISOString(), essays: essays.map(e => ({ ...e, publishedAt: e.publishedAt.toISOString() })) };
-    fs.writeFileSync(SNAPSHOT_PATH, JSON.stringify(data, null, 2));
-  } catch {}
-}
+let snapshot: Essay[] = bundledSnapshot.essays.map(e => ({
+  ...e,
+  title: decodeXml(e.title),
+  description: decodeXml(e.description),
+  publishedAt: new Date(e.publishedAt)
+})).filter(e => isSafeEssayLink(e.link));
 
 export function decodeXml(input = ''): string {
   return input
@@ -115,10 +100,10 @@ export async function fetchEssays(): Promise<Essay[]> {
     const res = await fetch(FEED_URL, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) throw new Error(`substack feed ${res.status}`);
     const essays = parseFeed(await res.text());
-    writeSnapshot(essays);
+    snapshot = essays;
     return essays;
   } catch (err) {
     console.warn('[substack] fetch failed, falling back to snapshot:', err);
-    return readSnapshot();
+    return snapshot;
   }
 }

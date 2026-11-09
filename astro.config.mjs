@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
@@ -19,7 +19,8 @@ export default defineConfig({
   compressHTML: true,
   // CSP permits local script files, so do not inline small processed scripts.
   vite: { build: { assetsInlineLimit: 0 } },
-  adapter: vercel(),
+  adapter: cloudflare({ imageService: 'compile' }),
+  session: false,
   integrations: [
     // @astrojs/sitemap only auto-discovers prerendered routes under SSR.
     // Any new SSR page (prerender = false) MUST be added to customPages —

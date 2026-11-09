@@ -17,16 +17,16 @@ derive from it. Don't change this without also updating:
 
 The layout emits verification meta tags only when the corresponding env var
 is set. Tokens are public by design, so they use the `PUBLIC_` prefix and
-are safe to commit to Vercel env config.
+are safe to expose in those meta tags.
 
 | Provider | Env var | Where to get it |
 | --- | --- | --- |
 | Google Search Console | `PUBLIC_GOOGLE_SITE_VERIFICATION` | Search Console → Add property → HTML tag method → copy the `content` value |
 | Bing Webmaster Tools  | `PUBLIC_BING_SITE_VERIFICATION`   | Bing Webmaster → Add site → Meta tag method → copy the `content` value |
 
-Set each var in Vercel under Project → Settings → Environment Variables
-(Production scope), then redeploy. When absent, no verification tag is
-emitted.
+Set each variable in Cloudflare Workers Builds under Build Variables and Secrets
+before the production build. See [the hosting guide](cloudflare-hosting.md) for
+the build settings and cutover steps. When absent, no verification tag is emitted.
 
 ## Submission checklist (one-time, per search engine)
 
