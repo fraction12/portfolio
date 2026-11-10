@@ -29,7 +29,7 @@ This PR prepares the repository. It does not create or change the Workers Builds
 The repository uses Astro 7.4.2 with `output: 'server'`.
 The homepage, `/tools`, and `/writing` fetch live GitHub, Substack, npm, and PyPI data.
 `/tools` also renders pagination from its query string. `/llms.txt` logs each request.
-There are 21 prerendered tool pages, a prerendered `/robots.txt`, two sitemap files, and an SSR custom 404.
+There are 21 prerendered tool pages, prerendered `/robots.txt` and `/llms-full.txt`, generated sitemaps with a `/sitemap.xml` alias, and an SSR custom 404.
 There is no local RSS endpoint, form submission API, existing middleware, or resume file.
 The newsletter form submits to Substack. The research PDF remains at its existing public URL.
 Fonts still load from Google Fonts. Images, OG images, videos, and the favicon retain their public paths.
@@ -96,7 +96,8 @@ Its synthetic request constructor exists only in the test runtime and is never d
 
 Wrangler's HTTP proxy rewrites an HTTPS `Location` back to its HTTP upstream protocol.
 The parity report records that raw response. `test:built` verifies the actual Worker's 308 HTTPS targets directly.
-The local HTTPS listener verifies the 307 `www` redirect with its path and query intact.
+The migration's local HTTPS listener verified the then-current 307 `www` redirect.
+The current Worker uses a permanent 301, checked by `test:built` with its path and query intact.
 Local tests do not verify Cloudflare's production TLS or edge cache behavior.
 
 ## Verified results
@@ -144,7 +145,7 @@ After merge:
 1. Connect Workers Builds with the settings above and disable non-production branch builds.
 2. Configure the runtime secret and any public verification variables before the first production build.
 3. Verify the resulting Worker URL, live data, videos, PDF, robots, sitemap, and 404.
-4. Attach both domains separately during the planned cutover. Then verify certificate coverage, HTTP-to-HTTPS 308, and `www`-to-apex 307.
+4. Attach both domains separately during the planned cutover. Then verify certificate coverage, HTTP-to-HTTPS 308, and `www`-to-apex 301.
 5. Repeat the parity checks against the production Worker and confirm cache behavior and analytics expectations.
 
 DNS, domain attachments, production deployment, and Vercel project settings are outside this PR.

@@ -11,7 +11,46 @@ const staticRoot = path.join(root, 'dist/client');
 const origin = 'https://dushyantgarg.com';
 const intercepted = [];
 const scriptPolicyViolations = [];
+const pageTitles = new Set();
+const pageDescriptions = new Set();
+function inspectPageMetadata(html, canonical) {
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const meta = name => html.match(new RegExp(`<meta (?:name|property)="${name}" content="([^"]+)"`))?.[1];
+  const description = meta('description');
+  assert.ok(title && description, canonical + ' title and description');
+  assert.ok(!pageTitles.has(title), canonical + ' unique title');
+  assert.ok(!pageDescriptions.has(description), canonical + ' unique description');
+  pageTitles.add(title);
+  pageDescriptions.add(description);
+  assert.ok(html.includes(`rel="canonical" href="${canonical}"`), canonical);
+  assert.equal(meta('og:title'), title);
+  assert.equal(meta('og:description'), description);
+  assert.equal(meta('og:url'), canonical.replaceAll('&', '&amp;'));
+  assert.equal(meta('og:type'), 'website');
+  assert.match(meta('og:image') ?? '', /^https:\/\/dushyantgarg\.com\//);
+  assert.equal(meta('twitter:title'), title);
+  assert.equal(meta('twitter:description'), description);
+  assert.equal(meta('twitter:card'), 'summary_large_image');
+  assert.equal(meta('twitter:image'), meta('og:image'));
+  assert.equal([...html.matchAll(/<h1\b/gi)].length, 1, canonical + ' single h1');
+  let previousHeading = 0;
+  for (const [, level] of html.matchAll(/<h([1-6])\b/gi)) {
+    assert.ok(Number(level) <= previousHeading + 1, canonical + ' heading hierarchy');
+    previousHeading = Number(level);
+  }
+  assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
+  return [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)]
+    .map(([, json]) => JSON.parse(json));
+}
 function inspectScriptPolicy(html, route) {
+  const beacons = [...html.matchAll(/<script\b([^>]*\bdata-cf-beacon\s*=[^>]*)><\/script>/gi)];
+  assert.equal(beacons.length, 1, route + ' has exactly one Cloudflare beacon');
+  assert.equal([...html.matchAll(/\bsrc="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js"/g)].length, 1, route);
+  assert.match(beacons[0][1], /\bsrc="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js"/, route);
+  assert.match(beacons[0][1], /\bdefer\b/, route);
+  const beaconConfig = beacons[0][1].match(/\bdata-cf-beacon=(["'])(.*?)\1/);
+  assert.ok(beaconConfig, route + ' beacon config');
+  assert.deepEqual(JSON.parse(beaconConfig[2].replaceAll('&quot;', '"')), { token: 'c33d546f96f44238b04d4e0e662507c8' }, route);
   if (/<[a-z][^>]*\son[a-z]+\s*=/i.test(html)) scriptPolicyViolations.push(route + ': inline event handler');
   for (const [, attributes, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
     if (/\bsrc\s*=/.test(attributes) || /type=["']application\/ld\+json["']/.test(attributes) || !body.trim()) continue;
@@ -66,13 +105,32 @@ const app = {
 try {
   assert.equal(typeof app.fetch, 'function');
   const checks = [];
-  for (const route of ['/', '/tools/', '/writing/']) {
+  for (const route of ['/', '/tools/', '/tools/?page=2', '/tools/?page=3', '/writing/']) {
     const response = await app.fetch(new Request(origin + route));
     const html = await response.text();
     assert.equal(response.status, 200, route);
     inspectScriptPolicy(html, route);
     assert.match(html, /Dushyant Garg/);
-    assert.ok(html.includes(`rel="canonical" href="${origin + route}"`), route + ' canonical');
+    const schemas = inspectPageMetadata(html, origin + route);
+    if (route === '/') {
+      const person = schemas.find(schema => schema['@type'] === 'Person');
+      assert.equal(person.name, 'Dushyant Garg');
+      assert.equal(person.jobTitle, 'AI Product Engineer');
+      assert.equal(person.url, origin + '/');
+      assert.ok(person.sameAs.includes('https://github.com/fraction12'));
+      assert.ok(schemas.some(schema => schema['@type'] === 'WebSite' && schema.url === origin + '/'));
+    }
+    if (route === '/writing/') {
+      const writing = schemas.find(schema => schema['@type'] === 'CollectionPage');
+      const essays = writing.mainEntity.itemListElement;
+      assert.ok(essays.length > 0);
+      for (const { item } of essays) {
+        assert.equal(item['@type'], 'BlogPosting');
+        assert.match(item.url, /^https:\/\/dushyantg\.substack\.com\/p\//);
+        assert.ok(html.includes(`href="${item.url}"`), item.url + ' rendered essay link');
+        assert.ok(Number.isFinite(Date.parse(item.datePublished)));
+      }
+    }
     assert.match(html, /astro-view-transitions-enabled/);
     assert.doesNotMatch(html, /Astro Error|Internal Server Error/);
     checks.push({ route, status: response.status });
@@ -80,7 +138,7 @@ try {
   for (const [url, status, location] of [
     ['http://dushyantgarg.com/tools/?page=2', 308, 'https://dushyantgarg.com/tools/?page=2'],
     ['http://www.dushyantgarg.com/tools/?page=2', 308, 'https://www.dushyantgarg.com/tools/?page=2'],
-    ['https://www.dushyantgarg.com/tools/?page=2', 307, 'https://dushyantgarg.com/tools/?page=2'],
+    ['https://www.dushyantgarg.com/tools/?page=2', 301, 'https://dushyantgarg.com/tools/?page=2'],
   ]) {
     const response = await app.fetch(new Request(url));
     assert.equal(response.status, status);
@@ -88,11 +146,17 @@ try {
     await response.body?.cancel();
     checks.push({ route: url, status });
   }
-  const text = await app.fetch(new Request(origin + '/llms.txt'));
-  assert.equal(text.status, 200);
-  assert.match(text.headers.get('content-type'), /text\/plain/);
-  assert.match(await text.text(), /Dushyant Garg/);
-  checks.push({ route: '/llms.txt', status: text.status });
+  for (const route of ['/llms.txt', '/llms-full.txt']) {
+    const text = await app.fetch(new Request(origin + route));
+    assert.equal(text.status, 200);
+    assert.match(text.headers.get('content-type'), /text\/plain/);
+    const markdown = await text.text();
+    assert.match(markdown, /^# Dushyant Garg/);
+    assert.match(markdown, /https:\/\/github\.com\/fraction12/);
+    assert.match(markdown, /https:\/\/dushyantg\.substack\.com\/p\//);
+    assert.doesNotMatch(markdown, /portfolio runs on Astro and Vercel/);
+    checks.push({ route, status: text.status });
+  }
 
   const image = await app.fetch(new Request(origin + '/_image?href=%2Fdushyant-garg-avatar.jpg&w=16&h=16&f=webp'));
   assert.equal(image.status, 200);
@@ -122,7 +186,9 @@ try {
   for (const route of ['/missing-synthetic-page', '/api/play', '/_isr']) {
     const response = await app.fetch(new Request(origin + route));
     assert.equal(response.status, 404, route);
-    inspectScriptPolicy(await response.text(), route);
+    const html = await response.text();
+    inspectScriptPolicy(html, route);
+    assert.match(html, /<meta name="robots" content="noindex, follow"/);
     checks.push({ route, status: response.status });
   }
   for (const route of ['/.env', '/.git/HEAD']) {
@@ -139,12 +205,46 @@ try {
 
   assert.ok(existsSync(path.join(staticRoot, 'robots.txt')));
   assert.ok(existsSync(path.join(staticRoot, 'sitemap-index.xml')));
+  const sitemap = await app.fetch(new Request(origin + '/sitemap.xml'));
+  assert.equal(sitemap.status, 200);
+  assert.match(sitemap.headers.get('content-type'), /xml/);
+  const sitemapIndex = await sitemap.text();
+  assert.equal(sitemapIndex, readFileSync(path.join(staticRoot, 'sitemap-index.xml'), 'utf8'));
+  const sitemapUrls = [];
+  for (const [, url] of sitemapIndex.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    assert.ok(url.startsWith(origin + '/'));
+    const response = await app.fetch(new Request(url));
+    assert.equal(response.status, 200);
+    sitemapUrls.push(...[...(await response.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, loc]) => loc));
+  }
+  for (const url of sitemapUrls) {
+    assert.ok(url.startsWith(origin + '/'), url);
+    assert.doesNotMatch(url, /404|llms|robots|substack|index\.html/);
+  }
+  for (const route of ['/', '/tools/', '/tools/?page=2', '/tools/?page=3', '/writing/']) {
+    assert.ok(sitemapUrls.includes(origin + route), route + ' in sitemap');
+  }
+  const robots = await app.fetch(new Request(origin + '/robots.txt'));
+  assert.equal(robots.status, 200);
+  const robotsText = await robots.text();
+  assert.ok(robotsText.includes(`Sitemap: ${origin}/sitemap.xml`));
+  for (const crawler of ['*', 'Googlebot', 'Bingbot', 'GPTBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended', 'Applebot', 'Amazonbot', 'meta-externalagent', 'FacebookBot', 'DuckAssistBot', 'CCBot']) {
+    assert.ok(robotsText.includes(`User-agent: ${crawler}\nAllow: /`), crawler);
+  }
   const details = readdirSync(path.join(staticRoot, 'tools')).filter(name => existsSync(path.join(staticRoot, 'tools', name, 'index.html')));
   assert.ok(details.length >= 15);
   for (const name of details) {
     const html = readFileSync(path.join(staticRoot, 'tools', name, 'index.html'), 'utf8');
     assert.match(html, /Dushyant Garg/);
     inspectScriptPolicy(html, '/tools/' + name);
+    const canonical = `${origin}/tools/${name}/`;
+    assert.ok(sitemapUrls.includes(canonical), canonical + ' in sitemap');
+    const schemas = inspectPageMetadata(html, canonical);
+    const tool = schemas.find(schema => schema['@type'] === (name === 'kv-capsules-pti' ? 'CreativeWork' : 'SoftwareApplication'));
+    assert.ok(tool, canonical + ' accurate tool schema');
+    assert.equal(tool.url, canonical);
+    assert.equal(tool.author.name, 'Dushyant Garg');
+    assert.ok(html.includes('<h2'), canonical + ' server-rendered content');
   }
   assert.deepEqual(scriptPolicyViolations, [], 'Every emitted page must work without executable inline scripts or event handlers');
   assert.equal(config.name, 'portfolio');

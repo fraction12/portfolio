@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
-// `?raw` imports the file as a string at build time — keeps the content
-// editable as plain text in src/data/llms.txt without code-escaping.
-import llmsTxtContent from '../data/llms.txt?raw';
+import biography from '../data/llms.txt?raw';
+import { buildDiscoveryText } from '../lib/discovery';
+
+const llmsTxtContent = buildDiscoveryText(biography, 'summary');
 
 // Keep request logging even when other portfolio responses are cached.
 export const prerender = false;

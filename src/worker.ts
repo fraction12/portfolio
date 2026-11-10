@@ -21,7 +21,7 @@ export default {
       response = new Response(null, { status: 308, headers: { Location: url.href } });
     } else if (url.hostname === 'www.dushyantgarg.com') {
       url.hostname = 'dushyantgarg.com';
-      response = new Response(null, { status: 307, headers: { Location: url.href, 'Cache-Control': staticCacheControl } });
+      response = new Response(null, { status: 301, headers: { Location: url.href, 'Cache-Control': staticCacheControl } });
     } else if (/^\/\.(?:env(?:\.|$)|git(?:\/|$))/.test(url.pathname)) {
       response = new Response('Forbidden\n', { status: 403, headers: {
         'Content-Type': 'text/plain; charset=utf-8',
