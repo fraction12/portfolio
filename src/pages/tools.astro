@@ -9,6 +9,7 @@ import { CATEGORY_ORDER, type Artifact } from '../config/packages';
 import { flagshipWorkSlugs } from '../config/featured-work';
 import { toolDetails, type ToolDetail } from '../config/tool-details';
 import { loadSignalData } from '../lib/data';
+import { catalogPageSize } from '../lib/discovery';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
 
@@ -76,7 +77,7 @@ const orderedDetails: ToolDetail[] = [...toolDetails].sort((a, b) => {
   return compareEditorialPriority(a, b);
 });
 
-const pageSize = 9;
+const pageSize = catalogPageSize;
 const requestedPage = Number(Astro.url.searchParams.get('page') ?? '1');
 const totalPages = Math.max(1, Math.ceil(orderedDetails.length / pageSize));
 const currentPage = Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= totalPages
@@ -91,8 +92,11 @@ const pageHref = (page: number) => page === 1 ? '/tools' : `/tools?page=${page}`
 
 <Layout
   current="tools"
-  title="Work — Dushyant Garg"
-  description="Selected product work, open-source systems, and experiments by Dushyant Garg."
+  title={currentPage === 1 ? 'Work — Dushyant Garg' : `Work, page ${currentPage} — Dushyant Garg`}
+  description={currentPage === 1
+    ? 'Selected product work, open-source systems, and experiments by Dushyant Garg.'
+    : `Page ${currentPage} of Dushyant Garg's work. Browse ${visibleDetails.map(detail => detail.artifact.name).join(', ')}.`}
+  canonicalPath={currentPage === 1 ? '/tools/' : `/tools/?page=${currentPage}`}
   ogImage="/og/work.png"
 >
   <div class="page-shell">

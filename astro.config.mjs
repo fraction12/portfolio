@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
+import { copyFile } from 'node:fs/promises';
+import { catalogPageUrls } from './src/lib/discovery.ts';
 
 // https://astro.build/config
 // `output: 'server'` makes every page SSR by default; pages that set
@@ -22,19 +24,21 @@ export default defineConfig({
   adapter: cloudflare({ imageService: 'compile' }),
   session: false,
   integrations: [
-    // @astrojs/sitemap only auto-discovers prerendered routes under SSR.
-    // Any new SSR page (prerender = false) MUST be added to customPages —
-    // prerendered pages (prerender = true) are discovered automatically.
     sitemap({
+      filter: page => !/\.(?:txt|xml)\/?$/.test(new URL(page).pathname),
       customPages: [
         'https://dushyantgarg.com/',
-        'https://dushyantgarg.com/tools/',
+        ...catalogPageUrls,
         'https://dushyantgarg.com/writing/',
-        // llms.txt is a static asset in public/, not a route, so it
-        // isn't auto-discovered. Listing it here surfaces it to any
-        // crawler indexing the XML sitemap.
-        'https://dushyantgarg.com/llms.txt',
       ],
     }),
+    {
+      name: 'sitemap-alias',
+      hooks: {
+        'astro:build:done': async ({ dir }) => {
+          await copyFile(new URL('sitemap-index.xml', dir), new URL('sitemap.xml', dir));
+        },
+      },
+    },
   ],
 });

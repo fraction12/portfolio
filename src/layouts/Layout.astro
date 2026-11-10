@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import JsonLd from '../components/JsonLd.astro';
 import '../styles/base.css';
 import '../styles/animations.css';
 
@@ -10,6 +11,8 @@ interface Props {
   description?: string;
   current?: 'home' | 'tools' | 'writing' | 'contact';
   ogImage?: string;
+  canonicalPath?: string;
+  noindex?: boolean;
   /** When true, adds Person + WebSite JSON-LD for the canonical portfolio. Use on the home page only. */
   includeIdentitySchema?: boolean;
 }
@@ -20,10 +23,14 @@ const {
   current = 'home',
   ogImage = '/og-default.png',
   includeIdentitySchema = false,
+  canonicalPath,
+  noindex = false,
 } = Astro.props;
 
 const siteOrigin = (Astro.site ?? new URL('https://dushyantgarg.com')).origin;
-const canonical = new URL(Astro.url.pathname, siteOrigin).toString();
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, siteOrigin);
+if (!canonicalUrl.pathname.endsWith('/')) canonicalUrl.pathname += '/';
+const canonical = canonicalUrl.toString();
 const ogTitle = title.includes('Dushyant Garg') ? title : `${title} — Dushyant Garg`;
 
 // Verification tokens are read from build-time env. Import.meta.env.PUBLIC_*
@@ -36,6 +43,7 @@ const personSchema = includeIdentitySchema
   ? {
       '@context': 'https://schema.org',
       '@type': 'Person',
+      '@id': siteOrigin + '/#person',
       name: 'Dushyant Garg',
       url: siteOrigin + '/',
       description:
@@ -54,12 +62,14 @@ const websiteSchema = includeIdentitySchema
   ? {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
+      '@id': siteOrigin + '/#website',
       name: 'Dushyant Garg',
       url: siteOrigin + '/',
       description:
         'Canonical portfolio of Dushyant Garg — product work, open-source builds, and writing.',
       author: {
         '@type': 'Person',
+        '@id': siteOrigin + '/#person',
         name: 'Dushyant Garg',
         url: siteOrigin + '/',
       },
@@ -75,6 +85,7 @@ const websiteSchema = includeIdentitySchema
   <meta name="theme-color" content="#ece8e1" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, follow" />}
   <link rel="canonical" href={canonical} />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={ogTitle} />
@@ -90,20 +101,18 @@ const websiteSchema = includeIdentitySchema
   {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
   {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <!-- Advertises the llms.txt summary (https://llmstxt.org) so agents
-       fetching any page can discover the machine-readable portfolio
-       digest without guessing at /llms.txt by convention. -->
-  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly summary" />
+  <link rel="describedby" type="text/plain" href={new URL('/llms.txt', siteOrigin).href} title="Portfolio summary for AI readers" />
+  <link rel="alternate" type="text/plain" href={new URL('/llms-full.txt', siteOrigin).href} title="Full portfolio for AI readers" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  {personSchema && (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
-  )}
-  {websiteSchema && (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema).replace(/</g, '\\u003c')} />
-  )}
+  {personSchema && <JsonLd data={personSchema} />}
+  {websiteSchema && <JsonLd data={websiteSchema} />}
+  <slot name="head" />
   <ClientRouter fallback="animate" />
+  <!-- Cloudflare Web Analytics -->
+  <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "c33d546f96f44238b04d4e0e662507c8"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </head>
 <body>
   <Nav current={current} />

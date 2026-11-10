@@ -4,6 +4,7 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import { toolDetails, type ToolDetail } from '../../config/tool-details';
 import BackButton from '../../components/BackButton.astro';
+import JsonLd from '../../components/JsonLd.astro';
 
 export function getStaticPaths() {
   return toolDetails.map(detail => ({
@@ -28,6 +29,20 @@ const detailOgImages: Record<string, string> = {
 };
 const hasReadyMedia = detail.demo.status === 'ready' && Boolean(detail.demo.src || detail.demo.embedUrl);
 const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch demo';
+const siteOrigin = (Astro.site ?? new URL('https://dushyantgarg.com')).origin;
+const toolSchema = {
+  '@context': 'https://schema.org',
+  '@type': artifact.slug === 'kv-capsules-pti' ? 'CreativeWork' : 'SoftwareApplication',
+  name: artifact.name,
+  description: detail.summary,
+  url: new URL(`${detail.detailPath}/`, siteOrigin).href,
+  author: {
+    '@type': 'Person',
+    '@id': siteOrigin + '/#person',
+    name: 'Dushyant Garg',
+    url: siteOrigin + '/',
+  },
+};
 ---
 
 <Layout
@@ -36,6 +51,7 @@ const mediaCtaLabel = detail.demo.type === 'image' ? 'View preview' : 'Watch dem
   description={pageDescription}
   ogImage={detailOgImages[artifact.slug] ?? '/og/work.png'}
 >
+  <JsonLd slot="head" data={toolSchema} />
   <div class="page-shell detail-shell">
     <BackButton href="/tools" label="Back" />
     <header class="detail-hero">

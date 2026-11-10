@@ -6,8 +6,38 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Writing from '../components/Writing.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { fetchEssays, isSafeEssayLink } from '../lib/data/substack';
 
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=1800');
+const essays = (await fetchEssays()).filter(essay => isSafeEssayLink(essay.link));
+const siteOrigin = (Astro.site ?? new URL('https://dushyantgarg.com')).origin;
+const writingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Writing — Dushyant Garg',
+  url: siteOrigin + '/writing/',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: essays.map((essay, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'BlogPosting',
+        headline: essay.title,
+        description: essay.description,
+        url: essay.link,
+        ...(Number.isFinite(essay.publishedAt.getTime()) ? { datePublished: essay.publishedAt.toISOString() } : {}),
+        author: {
+          '@type': 'Person',
+          '@id': siteOrigin + '/#person',
+          name: 'Dushyant Garg',
+          url: siteOrigin + '/',
+        },
+      },
+    })),
+  },
+};
 ---
 
 <Layout
@@ -16,6 +46,7 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
   description="Essays by Dushyant Garg on product work, AI systems, and building useful software."
   ogImage="/og/writing.png"
 >
+  <JsonLd slot="head" data={writingSchema} />
   <div class="page-shell">
     <div class="page-split">
       <PageHeader
@@ -26,7 +57,7 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 
     <section class="writing-section" aria-label="Essays">
       <div>
-        <Writing />
+        <Writing essays={essays} />
       </div>
     </section>
 

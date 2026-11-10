@@ -17,7 +17,7 @@ describe('portfolio response hardening', () => {
       return [key, sources];
     }));
     expect(directives.get('default-src')).toEqual(["'self'"]);
-    expect(directives.get('script-src')).toEqual(["'self'"]);
+    expect(directives.get('script-src')).toEqual(["'self'", 'https://static.cloudflareinsights.com']);
     expect(directives.get('script-src-attr')).toEqual(["'none'"]);
     for (const key of ['object-src', 'frame-src', 'frame-ancestors', 'base-uri']) {
       expect(directives.get(key), key).toEqual(["'none'"]);
@@ -33,7 +33,7 @@ describe('portfolio response hardening', () => {
     expect(directives.get('style-src')).toEqual(["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com']);
     expect(directives.get('font-src')).toEqual(["'self'", 'https://fonts.gstatic.com']);
     expect(directives.get('img-src')).toEqual(["'self'", 'data:']);
-    expect(directives.get('connect-src')).toEqual(["'self'"]);
+    expect(directives.get('connect-src')).toEqual(["'self'", 'https://cloudflareinsights.com']);
     expect(directives.get('media-src')).toEqual(["'self'"]);
     expect(directives.get('form-action')).toEqual(["'self'", 'https://dushyantg.substack.com']);
   });

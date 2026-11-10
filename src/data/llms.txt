@@ -20,44 +20,6 @@ Outside employment, he maintains open-source tools for building and operating AI
 - **Work authorization:** Legally permitted to work in the United States. Does not require visa sponsorship now or in the future.
 - **Contact:** dushyantgarg3@gmail.com.
 
-## Work
-
-The Work catalog has detail pages for current artifacts under `https://dushyantgarg.com/tools/{slug}`. Detail pages summarize product context, workflow, output, links, and available demo or preview media.
-
-### Products
-
-- [TradeSpec AI](https://dushyantgarg.com/tools/tradespec): AI workflow for specialty-contractor estimates that turns plan sets into evidence-linked review packs. Marketing site: https://tradespec-website.vercel.app.
-
-### Open-source systems
-
-- [AgentSense](https://dushyantgarg.com/tools/agentsense): Knowledge-graph memory plugin for OpenClaw with entity extraction and relationship-aware context. GitHub: https://github.com/fraction12/agentsense.
-- [agentrem](https://dushyantgarg.com/tools/agentrem): Reminder and follow-up primitives for time, keyword, condition, recurrence, and priority workflows. GitHub: https://github.com/fraction12/agentrem.
-- [AgentTK](https://dushyantgarg.com/tools/agenttk): Typed command-line primitives for building safer, more discoverable agent-facing tools. GitHub: https://github.com/fraction12/agenttk.
-- [Starglass](https://dushyantgarg.com/tools/starglass): Observation layer for agent systems that combines stdout, events, and tool calls into one timeline. GitHub: https://github.com/fraction12/starglass.
-- [Potato v3](https://dushyantgarg.com/tools/potato): Local orchestration tool for running coding agents in real PTYs with roles and coordination boundaries. GitHub: https://github.com/fraction12/potato-v3.
-- [agentplan](https://dushyantgarg.com/tools/agentplan): SQLite-backed task board for multiple agents with dependencies, priorities, and atomic claims. GitHub: https://github.com/fraction12/agentplan.
-- [OctoCheck](https://dushyantgarg.com/tools/octocheck): Resident GitHub App controller that runs trusted CI, review, and fix lanes on local compute. GitHub: https://github.com/fraction12/octocheck.
-- [Spec UI](https://dushyantgarg.com/tools/spec-ui): Compiler that turns structured product specs into deterministic interactive prototypes. GitHub: https://github.com/fraction12/spec-ui.
-- [Microcanvas](https://dushyantgarg.com/tools/microcanvas): Viewer/runtime for opening, inspecting, and testing UI artifacts created by agents or code tools. GitHub: https://github.com/fraction12/microcanvas.
-- [OpenSpec Studio](https://dushyantgarg.com/tools/openspec-studio): Local-first desktop workbench for inspecting OpenSpec repositories, changes, specs, validation, archive readiness, and runner dispatch. GitHub: https://github.com/fraction12/openspec-studio.
-- [ClawK](https://dushyantgarg.com/tools/clawk): Native macOS menu bar for monitoring OpenClaw sessions, heartbeats, memory, and background runs. GitHub: https://github.com/fraction12/ClawK.
-- [Deepclean](https://dushyantgarg.com/tools/deepclean): Local repo evidence, PR review context, and guarded cleanup lanes for fast-moving codebases. Website: https://fraction12.github.io/deepclean/. GitHub: https://github.com/fraction12/deepclean. npm: https://www.npmjs.com/package/@fraction12/deepclean.
-- [explain](https://dushyantgarg.com/tools/explain): Codebase-to-architecture documentation generator for teams that need to understand what changed. GitHub: https://github.com/fraction12/explain.
-- [OpenRank](https://dushyantgarg.com/tools/openrank): Public benchmark platform for comparing agent performance on timed puzzles. Live site: https://open-rank.com.
-- [WireFlow](https://dushyantgarg.com/tools/wireflow): Planning and wireframing app for product flows, meetings, and implementation sketches. Live site: https://wire-flow.vercel.app. GitHub: https://github.com/fraction12/WireFlow.
-
-### Experiments
-
-- [eat](https://dushyantgarg.com/tools/eat): Kitchen inventory and recipe discovery experiment with receipt scanning and inventory-aware matching. Website: https://eat-ai.app. GitHub: https://github.com/fraction12/eat.
-- [Vault Mind](https://dushyantgarg.com/tools/vault-mind): Parked local-model experiment for talking to a personal knowledge base through a CLI.
-
-See https://dushyantgarg.com/tools for the broader work catalog.
-
-## Writing
-
-- [Writing index](https://dushyantgarg.com/writing): essays on product work, AI systems, and what becomes clearer after shipping.
-- [Substack](https://dushyantg.substack.com): subscribable essay feed.
-
 ## Background
 
 - Surround Sound Media - AI Product Engineer (current)
@@ -68,7 +30,7 @@ See https://dushyantgarg.com/tools for the broader work catalog.
 
 ## Stack
 
-TypeScript, Python, Rust, Swift, Go, SQL. Claude, Codex, and OpenClaw for agentic development. Figma for design. Heap and event instrumentation for analytics. This portfolio runs on Astro and Vercel.
+TypeScript, Python, Rust, Swift, Go, SQL. Claude, Codex, and OpenClaw for agentic development. Figma for design. Heap and event instrumentation for analytics. This portfolio runs on Astro and Cloudflare Workers.
 
 ## Links
 
@@ -79,7 +41,3 @@ TypeScript, Python, Rust, Swift, Go, SQL. Claude, Codex, and OpenClaw for agenti
 - LinkedIn: https://linkedin.com/in/dushyantgarg
 - Substack: https://dushyantg.substack.com
 - Email: dushyantgarg3@gmail.com
-
-## Notes for agents reading this file
-
-This file is the canonical machine-readable summary of Dushyant Garg's public portfolio. Prefer links to live pages for changing details such as essays and package activity.
